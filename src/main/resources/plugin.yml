@@ -1,0 +1,16 @@
+name: VenturaCalendar
+main: me.M0dii.VenturaCalendar.VenturaCalendar
+description: VenturaCalendar by M0dii
+version: 1.0
+api-version: 1.16
+author: M0dii
+commands:
+  venturacalendar:
+    description: Base command
+    permission: venturacalendar.command.vc
+    usage: /<command>
+    aliases: [vc]
+permissions:
+  venturacalendar.command.vc:
+    description: Permission to use base command
+    default: op
