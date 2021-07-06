@@ -1,5 +1,6 @@
 Time-Systems:
   default:
+    world-name: 'world'
     second:
       ticksPerSecond: 20
     minute:

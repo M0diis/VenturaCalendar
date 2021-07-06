@@ -2,12 +2,12 @@ package me.M0dii.VenturaCalendar.Base.DateUtils;
 
 import java.util.ArrayList;
 
-public class TimeSystem {
-	
-	//TimeSystem name
+public class TimeSystem
+{
+	private final String worldName;
 	private final String name;
 	
-	//Date parameters.
+	// Date parameters.
 	private final long ticksPerSecond;
 	private final long secondsPerMinute;
 	private final long minutesPerHour;
@@ -29,7 +29,7 @@ public class TimeSystem {
 	private final long yearZero;
 	private final long eraZero;
 	
-	//Date parameter names.
+	// Date parameter names.
 	private final ArrayList<String> dayNames;
 	private final ArrayList<String> monthNames;
 	private final ArrayList<String> eraNames;
@@ -38,7 +38,8 @@ public class TimeSystem {
 	 * Is called when an instance of this class is created.
 	 * Declares all class variables with the given parameters (sets the time-system).
 	 */
-	public TimeSystem(String name,
+	public TimeSystem(String worldname,
+			          String name,
 					  long ticksPerSecond,
 					  long secondsPerMinute,
 					  long minutesPerHour,
@@ -63,6 +64,7 @@ public class TimeSystem {
 					  ArrayList<String> monthNames,
 					  ArrayList<String> eraNames) {
 		
+		this.worldName          = worldname;
 		this.name 				= name;
 		
 		this.ticksPerSecond 	= ticksPerSecond;
@@ -94,8 +96,9 @@ public class TimeSystem {
 	 * Is called when an instance of this class is created.
 	 * Declares all variables with a TimeSystem Object.
 	 */
-	public TimeSystem(TimeSystem timeSystem){
-		
+	public TimeSystem(TimeSystem timeSystem)
+	{
+		this.worldName = timeSystem.getWorldName();
 		this.name = timeSystem.getName();
 		
 		this.ticksPerSecond 	= timeSystem.getTicksPerSecond();
@@ -124,14 +127,15 @@ public class TimeSystem {
 		
 	}
 	
-	
-	/*
-	 * Getters for the time-system properties.
-	 */
 	public String getName() {
 		return name;
 	}
-
+	
+	public String getWorldName()
+	{
+		return this.worldName;
+	}
+	
 	public long getTicksPerSecond() {
 		return ticksPerSecond;
 	}

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class CommandCaller implements CommandExecutor, TabCompleter
+public class CmdExecutor implements CommandExecutor, TabCompleter
 {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,

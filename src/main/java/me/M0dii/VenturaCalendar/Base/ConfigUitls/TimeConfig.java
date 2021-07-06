@@ -84,6 +84,8 @@ public class TimeConfig extends Config implements ConfigUtils
 		String defaultPath = "Time-Systems." + timeSystemName + ".";
 		String path;
 		
+		String worldname = getString(defaultPath + "world-name");
+		
 		//Tick
 		path = defaultPath + "tick.";
 		
@@ -161,6 +163,7 @@ public class TimeConfig extends Config implements ConfigUtils
 		eraZero = 1;
 		
 		return new TimeSystem(
+			   worldname,
 			   timeSystemName,
 			   ticksPerSecond,
 			   secondsPerMinute,

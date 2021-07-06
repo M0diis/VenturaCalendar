@@ -10,7 +10,7 @@ import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
-import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CommandCaller;
+import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
 import me.M0dii.VenturaCalendar.Game.Listeners.Inventory.InventoryCaller;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -66,7 +66,7 @@ public class VenturaCalendar extends JavaPlugin {
 
     private void registerCommands()
     {
-        CommandCaller commandCaller = new CommandCaller();
+        CmdExecutor commandCaller = new CmdExecutor();
     
         for(String cmd : Arrays.asList("calendar", "date", "venturacalendar"))
         {
