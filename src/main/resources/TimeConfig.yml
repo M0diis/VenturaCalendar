@@ -1,0 +1,163 @@
+Time-Systems:
+  default:
+    second:
+      ticksPerSecond: 20
+    minute:
+      secondsPerMinute: 5
+    hour:
+      minutesPerHour: 10
+    day:
+      hoursPerDay: 24
+      dayNames:
+        '1':
+          name: Monday
+        '2':
+          name: Tuesday
+        '3':
+          name: Wednesday
+        '4':
+          name: Thursday
+        '5':
+          name: Friday
+        '6':
+          name: Saturday
+        '7':
+          name: Sunday
+    week:
+      daysPerWeek: 7
+    month:
+      daysPerMonth:
+        '1':
+          name: January
+          days: 31
+        '2':
+          name: February
+          days: 28
+        '3':
+          name: March
+          days: 31
+        '4':
+          name: April
+          days: 30
+        '5':
+          name: May
+          days: 31
+        '6':
+          name: June
+          days: 30
+        '7':
+          name: July
+          days: 31
+        '8':
+          name: August
+          days: 31
+        '9':
+          name: September
+          days: 30
+        '10':
+          name: October
+          days: 31
+        '11':
+          name: November
+          days: 30
+        '12':
+          name: December
+          days: 31
+    year:
+      zero: 0
+      monthsPerYear: 12
+    era:
+      eras:
+        '1':
+          name: 'Bronze Age'
+          startYear: -3000
+          endYear: -1050
+        '2':
+          name: 'Iron Age'
+          startYear: -1049
+          endYear: -500
+  rome:
+    second:
+      ticksPerSecond: 20
+    minute:
+      secondsPerMinute: 60
+    hour:
+      minutesPerHour: 60
+    day:
+      hoursPerDay: 24
+      dayNames:
+        '1':
+          name: Dies solis
+        '2':
+          name: Dies lunae
+        '3':
+          name: Dies martis
+        '4':
+          name: Dies mercurii
+        '5':
+          name: Dies lovis
+        '6':
+          name: Dies veneris
+        '7':
+          name: Dies saturni
+    week:
+      daysPerWeek: 7
+    month:
+      daysPerMonth:
+        '1':
+          name: MARTIUS
+          days: 31
+        '2':
+          name: APRILIS
+          days: 30
+        '3':
+          name: MAIUS
+          days: 31
+        '4':
+          name: IUNIUS
+          days: 30
+        '5':
+          name: QUINTILIS
+          days: 31
+        '6':
+          name: SEXTILIS
+          days: 31
+        '7':
+          name: SEPTEMBER
+          days: 31
+        '8':
+          name: OCTOBER
+          days: 31
+        '9':
+          name: NOVEMBER
+          days: 30
+        '10':
+          name: DECEMBER
+          days: 31
+        '11':
+          name: IANUARIUS
+          days: 31
+        '12':
+          name: FEBRUARIUS
+          days: 28
+    year:
+      zero: -753
+      monthsPerYear: 12
+    era:
+      eras:
+        '1':
+          name: Rome is founded
+          startYear: -753
+          endYear: -510
+        '2':
+          name: Rome becomes a Republic
+          startYear: -509
+          endYear: -219
+        '3':
+          name: Hannibal invades Italy
+          startYear: -218
+          endYear: -46
+        '4':
+          name: Julius Caesar the first dictator
+          startYear: -45
+          endYear: -45

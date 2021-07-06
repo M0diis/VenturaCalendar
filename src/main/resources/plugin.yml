@@ -9,8 +9,19 @@ commands:
     description: Base command
     permission: venturacalendar.command.vc
     usage: /<command>
-    aliases: [vc]
+    aliases: [venturacal, vc]
+  calendar:
+    description: Calendar command
+    permission: venturacalendar.command.calendar
+    usage: /<command>
 permissions:
   venturacalendar.command.vc:
     description: Permission to use base command
     default: op
+  venturacalendar.command.calendar:
+    description: Command to open calendar
+  TheTime.calendar:
+    description: Gives access to all TheTime calendar commands.
+    children:
+      TheTime.calendar.default: true
+      TheTime.calendar.TimeSystem: true

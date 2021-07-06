@@ -1,0 +1,51 @@
+#       TheTime
+#  Author: Joshua Wirtz
+# 
+#     IDs for block color/type ids you can find here: http://minecraft.gamepedia.com/Data_values
+#     Formatting codes can be used with &[ForamttingCode], here you will find a list with all formatting codes: http://minecraft.gamepedia.com/Formatting_codes
+#     
+#     Placeholders:
+#       - %tick%      - displays the current tick.
+#       - %second%    - displays the current second.
+#       - %minute%    - displays the current minute.
+#       - %hour%      - displays the current hour.
+#       - %day%       - displays the day of the item.
+#       - %week%      - displays the week of the item.
+#       - %month%     - displays the current month.
+#       - %year%      - displays the current year.
+#       - %era%       - displays the current era.
+#     
+#       - %dayName%   - displays the name of the day.
+#       - %monthName% - displays the current month name.
+#       - %eraName%   - displays the current era name.
+# 
+#    A list of all avilable block materials can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html 
+#  
+# Info:
+#   'size:' will be the minimum size of the inventory.
+#   'toggle:' if you set this to false the item will not be displayed.
+#   'amount:' The amount can also be a placeholder.
+#   'lore:' if you remove this parameter there will be no lore displayed. You can also add it again.(Don't leave it there with no value it will cause errors)
+# 
+title: '%dayName%, %day%. %monthName% - %year%'
+size: 9
+items:
+  today:
+    toggle: true
+    name: '&2%day%'
+    material: LIME_STAINED_GLASS_PANE
+    amount: '%day%'
+    lore:
+      - '&r%dayName%'
+  day:
+    toggle: true
+    name: '&2%day%'
+    material: WHITE_STAINED_GLASS_PANE
+    amount: '%day%'
+    lore:
+      - '&r%dayName%'
+  week:
+    toggle: true
+    name: '&3Week %week%'
+    material: BLACK_STAINED_GLASS_PANE
+    amount: '%week%'

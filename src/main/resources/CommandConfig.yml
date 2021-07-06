@@ -1,0 +1,18 @@
+## VenturaCalendar
+## Author: M0dii
+# 
+# Formatting codes can be used with &<code>,
+# http://minecraft.gamepedia.com/Formatting_codes
+# 
+# Permissions:
+#   venturacalendar.command.venturacalendar - Permission to the base command
+#   venturacalendar.command.reload - Permission to the reload the config
+#   venturacalendar.command.calendar - Permission to the calendar command
+#
+messages:
+  prefix: "&a&lVenturaCalendar &2» &a"
+  unknown-command: '&4Unknown command! Try /calendar &c<timesystem>'
+  player-only: 'Calendar cannot be opened in the console.'
+  no-permission: '&4You do not have permission to do that!'
+  unknown-timesystem: '&4Unknown timesystem!'
+  config-reloaded: '&aConfig reloaded.'
