@@ -1,10 +1,9 @@
 package me.M0dii.VenturaCalendar;
 
-import java.util.Arrays;
-import java.util.HashMap;
-
+import me.M0dii.VenturaCalendar.Base.ConfigUitls.TimeConfig;
 import me.M0dii.VenturaCalendar.Base.DateUtils.DateCalculator;
 import me.M0dii.VenturaCalendar.Base.DateUtils.DateUtils;
+import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
 import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystemUtils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
@@ -12,13 +11,16 @@ import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
 import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
 import me.M0dii.VenturaCalendar.Game.Listeners.Inventory.InventoryCaller;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.M0dii.VenturaCalendar.Base.ConfigUitls.TimeConfig;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class VenturaCalendar extends JavaPlugin {
     
@@ -49,6 +51,36 @@ public class VenturaCalendar extends JavaPlugin {
         PREFIX = commandConfig.getString("messages.prefix");
         
         this.getLogger().info("VenturaCalendar has been enabled.");
+    
+        checkNewDay();
+    }
+    
+    boolean newDay = false;
+    
+    private void checkNewDay()
+    {
+        TimeSystem ts = getTimeConfig().getTimeSystems().get("default");
+        
+        World w = Bukkit.getWorld(ts.getWorldName());
+        
+        if(w != null)
+        {
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
+            {
+                long time = w.getTime();
+        
+                if(time >= 0 && time <= 200 && !newDay)
+                {
+                    w.sendMessage(Component.text("Good morning, new day."));
+                    
+                    newDay = true;
+                }
+                
+                if(time > 200)
+                    newDay = false;
+                
+            }, 0L, 100L);
+        }
     }
     
     private void registerObjects()
