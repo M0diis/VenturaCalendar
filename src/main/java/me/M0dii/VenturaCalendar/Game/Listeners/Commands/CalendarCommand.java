@@ -2,6 +2,7 @@ package me.M0dii.VenturaCalendar.Game.Listeners.Commands;
 
 import java.util.HashMap;
 
+import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.DateUtils.Date;
 import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
@@ -18,9 +19,8 @@ public class CalendarCommand
 {
 	StorageUtils storageUtils = VenturaCalendar.getStorageUtils();
 	
-	HashMap<Messages, String> errors = VenturaCalendar.getCommandConfig().getMessages();
-	
-	public CalendarCommand(CommandSender sender, Command command, String label, String[] args)
+	public CalendarCommand(CommandSender sender, Command command,
+						   String label, String[] args)
 	{
 		if(sender instanceof Player)
 		{
@@ -31,7 +31,7 @@ public class CalendarCommand
 			{
 				if(!pl.hasPermission("venturacalendar.calendar.default"))
 				{
-					pl.sendMessage(errors.get(Messages.NO_PERMISSION));
+					MsgUtils.sendMsg(pl, Messages.NO_PERMISSION);
 					
 					return;
 				}
@@ -44,17 +44,17 @@ public class CalendarCommand
 					
 					if(world != null)
 					{
-						Date date = VenturaCalendar.getDateCalculator().dateFromTicks(world.getFullTime(), timeSystem);
-						Date creationDate = VenturaCalendar.getDateCalculator().dateFromTicks(world.getFullTime(), timeSystem);
+						Date date = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+						Date creationDate = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
 						
 						Calendar calendar = new Calendar(date, creationDate);
-						storageUtils.storageCalendar(pl, calendar);
+						storageUtils.storeCalendar(pl, calendar);
 						
 						pl.openInventory(calendar.getInventory());
 					}
 					else VenturaCalendar.instance.getLogger().warning("World " + timeSystem.getWorldName() + " was not " +
 							"found.");
-				} else pl.sendMessage(errors.get(Messages.UNKNOWN_TIMESYSTEM));
+				} else MsgUtils.sendMsg(pl, Messages.UNKNOWN_TIMESYSTEM);
 				
 				return;
 			}
@@ -63,31 +63,31 @@ public class CalendarCommand
 			{
 				if(pl.hasPermission("venturacalendar.calendar.timesystem"))
 				{
-					pl.sendMessage(errors.get(Messages.NO_PERMISSION));
+					MsgUtils.sendMsg(pl, Messages.NO_PERMISSION);
 					
 					return;
 				}
 				
-				String timeSystemName = args[0];
+				String tsName = args[0];
 				
-				if(timeSystems.containsKey(timeSystemName))
+				if(timeSystems.containsKey(tsName))
 				{
-					TimeSystem timeSystem = timeSystems.get(timeSystemName);
+					TimeSystem timeSystem = timeSystems.get(tsName);
 					
 					World world = Bukkit.getWorld(timeSystem.getWorldName());
 					
 					if(world != null)
 					{
-						Date date = VenturaCalendar.getDateCalculator().dateFromTicks(world.getFullTime(), timeSystem);
-						Date creationDate = VenturaCalendar.getDateCalculator().dateFromTicks(world.getFullTime(), timeSystem);
+						Date date = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+						Date creationDate = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
 						
 						Calendar calendar = new Calendar(date, creationDate);
-						storageUtils.storageCalendar(pl, calendar);
+						storageUtils.storeCalendar(pl, calendar);
 						
 						pl.openInventory(calendar.getInventory());
 					}
-				} else pl.sendMessage(errors.get(Messages.UNKNOWN_TIMESYSTEM));
-			} else pl.sendMessage(errors.get(Messages.UNKNOWN_COMMAND));
-		} else sender.sendMessage(errors.get(Messages.NOT_PLAYER));
+				} else MsgUtils.sendMsg(pl, Messages.UNKNOWN_TIMESYSTEM);
+			} else MsgUtils.sendMsg(pl, Messages.UNKNOWN_COMMAND);
+		} else MsgUtils.sendMsg(sender, Messages.NOT_PLAYER);
 	}
 }

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class StorageUtils
 {
-	public void storageCalendar(Player player, Calendar calendar)
+	public void storeCalendar(Player player, Calendar calendar)
 	{
 		HashMap<Player, Storage> storages = VenturaCalendar.storages;
 		

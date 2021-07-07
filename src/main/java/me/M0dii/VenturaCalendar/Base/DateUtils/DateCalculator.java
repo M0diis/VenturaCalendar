@@ -8,7 +8,7 @@ public class DateCalculator
 {
 	TimeSystemUtils timeSystemUtils = VenturaCalendar.getTimeSystemUtils();
 	
-	public Date dateFromTicks(long ticks, TimeSystem timeSystem)
+	public Date fromTicks(long ticks, TimeSystem timeSystem)
 	{
 		long tick	 = 0;
 		long second  = 0;

@@ -29,9 +29,4 @@ public interface ConfigUtils
 	 * Gets a list from the path out of the config. Formatted with chat color.
 	 */
 	List<String> getListString(String path);
-	
-	/*
-	 * Calls getListString() and formats it into an ArrayList<String>.
-	 */
-	ArrayList<String> getArrayListString(String path);
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.Config;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.ConfigUtils;
@@ -17,9 +18,25 @@ public class CommandConfig extends Config implements ConfigUtils
 	
 	public CommandConfig()
 	{
-		super(VenturaCalendar.instance.getDataFolder(), "CommandConfig.yml");
+		super(VenturaCalendar.instance.getDataFolder(), "Config.yml");
 		
 		config = super.loadConfig();
+	}
+	
+	public HashMap<Messages, String> getNewDayMessages()
+	{
+		HashMap<Messages, String> messages = new HashMap<>();
+		
+		String path = "new-day.";
+		
+		StringBuilder msg = new StringBuilder();
+		
+		for(String m : getListString(path + "message"))
+			msg.append(MsgUtils.format(m)).append(" ");
+		
+		messages.put(Messages.NEW_DAY, msg.toString());
+		
+		return messages;
 	}
 	
 	public HashMap<Messages, String> getMessages()
@@ -76,25 +93,14 @@ public class CommandConfig extends Config implements ConfigUtils
 	{
 		if (config.getList(path) != null)
 		{
-			@SuppressWarnings("unchecked")
-			List<String> list = (List<String>) config.getList(path);
-		
-			if(list != null)
-				for(int index = 0; index < list.size(); index++)
-					list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));
+			List<String> list = config.getStringList(path);
+			
+			for(int i = 0; i < list.size(); i++)
+				list.set(i, ChatColor.translateAlternateColorCodes('&', list.get(i)));
 			
 			return list;
 		}
 		
 		return null;
 	}
-	
-	@Override
-	public ArrayList<String> getArrayListString(String path)
-	{
-		List<String> list = getListString(path);
-		
-		return new ArrayList<>(list);
-	}
-
 }

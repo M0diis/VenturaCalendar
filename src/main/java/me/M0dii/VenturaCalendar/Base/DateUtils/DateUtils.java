@@ -111,28 +111,28 @@ public class DateUtils {
 		switch(unit)
 		{
 			case tick:
-				return dateCalculator.dateFromTicks(ticks + count, timeSystem);
+				return dateCalculator.fromTicks(ticks + count, timeSystem);
 			
 			case second:
-				return dateCalculator.dateFromTicks(ticks + (ticksPerSecond * count),  timeSystem);
+				return dateCalculator.fromTicks(ticks + (ticksPerSecond * count),  timeSystem);
 			
 			case minute:
-				return dateCalculator.dateFromTicks(ticks + (ticksPerMinute * count), timeSystem);
+				return dateCalculator.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
 			
 			case hour:
-				return dateCalculator.dateFromTicks(ticks + (ticksPerHour * count), timeSystem);
+				return dateCalculator.fromTicks(ticks + (ticksPerHour * count), timeSystem);
 			
 			case day:
-				return dateCalculator.dateFromTicks(ticks + (ticksPerDay * count), timeSystem);
+				return dateCalculator.fromTicks(ticks + (ticksPerDay * count), timeSystem);
 			
 			case week:
-				return dateCalculator.dateFromTicks(ticks + (ticksPerWeek * count), timeSystem);
+				return dateCalculator.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
 			
 			case month:
-				return dateCalculator.dateFromTicks(ticks + ticksPerMonth.get((int) date.getMonth() + 1), timeSystem);
+				return dateCalculator.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() + 1), timeSystem);
 			
 			case year:
-				return dateCalculator.dateFromTicks(ticks + (ticksPerYear * count), timeSystem);
+				return dateCalculator.fromTicks(ticks + (ticksPerYear * count), timeSystem);
 			
 			default:
 				return date;
@@ -166,28 +166,28 @@ public class DateUtils {
 		switch(unit)
 		{
 			case tick:
-				return dateCalculator.dateFromTicks(ticks - count, timeSystem);
+				return dateCalculator.fromTicks(ticks - count, timeSystem);
 			
 			case second:
-				return dateCalculator.dateFromTicks(ticks - (ticksPerSecond * count),  timeSystem);
+				return dateCalculator.fromTicks(ticks - (ticksPerSecond * count),  timeSystem);
 			
 			case minute:
-				return dateCalculator.dateFromTicks(ticks - (ticksPerMinute * count), timeSystem);
+				return dateCalculator.fromTicks(ticks - (ticksPerMinute * count), timeSystem);
 			
 			case hour:
-				return dateCalculator.dateFromTicks(ticks - (ticksPerHour * count), timeSystem);
+				return dateCalculator.fromTicks(ticks - (ticksPerHour * count), timeSystem);
 			
 			case day:
-				return dateCalculator.dateFromTicks(ticks - (ticksPerDay * count), timeSystem);
+				return dateCalculator.fromTicks(ticks - (ticksPerDay * count), timeSystem);
 			
 			case week:
-				return dateCalculator.dateFromTicks(ticks - (ticksPerWeek * count), timeSystem);
+				return dateCalculator.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
 			
 			case month:
-				return dateCalculator.dateFromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
+				return dateCalculator.fromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 			
 			case year:
-				return dateCalculator.dateFromTicks(ticks - (ticksPerYear * count), timeSystem);
+				return dateCalculator.fromTicks(ticks - (ticksPerYear * count), timeSystem);
 			
 			default:
 				return date;

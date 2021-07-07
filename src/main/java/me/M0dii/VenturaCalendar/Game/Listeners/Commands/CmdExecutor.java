@@ -16,6 +16,8 @@ import java.util.Locale;
 
 public class CmdExecutor implements CommandExecutor, TabCompleter
 {
+	HashMap<String, TimeSystem> timeSystems = VenturaCalendar.getTimeConfig().getTimeSystems();
+	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
 							 @NotNull String label, @NotNull String[] args)
@@ -44,8 +46,6 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 		
 		if(name.equals("calendar"))
 		{
-			HashMap<String, TimeSystem> timeSystems = VenturaCalendar.getTimeConfig().getTimeSystems();
-			
 			timeSystems.forEach((key, value) -> completes.add(value.getName()));
 		}
 		

@@ -9,6 +9,11 @@
 #   venturacalendar.command.reload - Permission to the reload the config
 #   venturacalendar.command.calendar - Permission to the calendar command
 #
+new-day:
+  announce: true
+  message:
+    - '&aGood morning everyone.'
+    - '&aToday is a new day.'
 messages:
   prefix: "&a&lVenturaCalendar &2» &a"
   unknown-command: '&4Unknown command! Try /calendar &c<timesystem>'

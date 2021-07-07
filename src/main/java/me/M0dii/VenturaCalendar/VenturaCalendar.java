@@ -5,8 +5,10 @@ import me.M0dii.VenturaCalendar.Base.DateUtils.DateCalculator;
 import me.M0dii.VenturaCalendar.Base.DateUtils.DateUtils;
 import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
 import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystemUtils;
+import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
+import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
 import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
@@ -27,8 +29,7 @@ public class VenturaCalendar extends JavaPlugin {
     public static VenturaCalendar instance;
     public static HashMap<Player, Storage> storages = new HashMap<>();
     
-    public static String PREFIX = ChatColor.translateAlternateColorCodes('&',
-            "&2[&aVenturaCalendar&2] ");
+    public static String PREFIX = MsgUtils.format("&2[&aVenturaCalendar&2] ");
     
     private static DateCalculator dateCalculator;
     private static DateUtils dateUtils;
@@ -71,7 +72,12 @@ public class VenturaCalendar extends JavaPlugin {
         
                 if(time >= 0 && time <= 200 && !newDay)
                 {
-                    w.sendMessage(Component.text("Good morning, new day."));
+                    if(commandConfig.getBoolean("new-day.announce"))
+                    {
+                        w.sendMessage(Component.text(commandConfig.getNewDayMessages().get(Messages.NEW_DAY)));
+                        
+                        
+                    }
                     
                     newDay = true;
                 }
