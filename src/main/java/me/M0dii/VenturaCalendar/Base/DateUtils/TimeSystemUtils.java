@@ -32,7 +32,7 @@ public class TimeSystemUtils
 		timeSystemMap.put(TimeSystemEnum.monthZero, timeSystem.getMonthZero());
 		timeSystemMap.put(TimeSystemEnum.eraZero, timeSystem.getEraZero());
 		
-		return null;
+		return timeSystemMap;
 	}
 	
 	public Object getTicksPerUnit(DateEnum unit, TimeSystem timeSystem)

@@ -28,16 +28,22 @@ public class CommandConfig extends Config implements ConfigUtils
 		
 		String path = "messages.";
 		
-		messages.put(Messages.NO_PERMISSION, VenturaCalendar.PREFIX + getString(path + "no-permission"));
-		messages.put(Messages.NOT_PLAYER, VenturaCalendar.PREFIX + getString(path + "player-only"));
-		messages.put(Messages.UNKNOWN_COMMAND, VenturaCalendar.PREFIX + getString(path + "unknown-command"));
-		messages.put(Messages.UNKNOWN_TIMESYSTEM, VenturaCalendar.PREFIX + getString(path + "unknown-timesystem"));
-		messages.put(Messages.CONFIG_RELOADED, VenturaCalendar.PREFIX + getString(path + "config-reloaded"));
+		messages.put(Messages.NO_PERMISSION, VenturaCalendar.PREFIX +
+				getString(path + "no-permission"));
+		messages.put(Messages.NOT_PLAYER, VenturaCalendar.PREFIX +
+				getString(path + "player-only"));
+		messages.put(Messages.UNKNOWN_COMMAND, VenturaCalendar.PREFIX +
+				getString(path + "unknown-command"));
+		messages.put(Messages.UNKNOWN_TIMESYSTEM, VenturaCalendar.PREFIX +
+				getString(path + "unknown-timesystem"));
+		messages.put(Messages.CONFIG_RELOADED, VenturaCalendar.PREFIX +
+				getString(path + "config-reloaded"));
 		
 		return messages;
 	}
 	
-	public FileConfiguration reloadConfig() {
+	public FileConfiguration reloadConfig()
+	{
 		return config = super.reloadConfig();
 	}
 	

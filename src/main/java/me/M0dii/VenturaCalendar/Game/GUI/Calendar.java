@@ -32,7 +32,6 @@ public class Calendar
 	
 	public Calendar(Date date, Date creationDate)
 	{
-		
 		date = new Date(date);
 		creationDate = new Date(creationDate);
 		
@@ -91,7 +90,6 @@ public class Calendar
 		long dayOfMonth  = 0;
 		long weekOfMonth = 0;
 		
-
 		HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =
 				(HashMap<Items, HashMap<ItemProperties, Object>>)
 				calendarProperties.get(InventoryProperties.ITEMS);

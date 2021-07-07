@@ -2,7 +2,8 @@
 ## by M0dii
 # 
 #     IDs for block color/type ids you can find here: http://minecraft.gamepedia.com/Data_values
-#     Formatting codes can be used with &[ForamttingCode], here you will find a list with all formatting codes: http://minecraft.gamepedia.com/Formatting_codes
+#     Formatting codes can be used with &<code>, here you will find a list with all formatting codes:
+#     http://minecraft.gamepedia.com/Formatting_codes
 #     
 #     Placeholders:
 #       - %tick%      - displays the current tick.

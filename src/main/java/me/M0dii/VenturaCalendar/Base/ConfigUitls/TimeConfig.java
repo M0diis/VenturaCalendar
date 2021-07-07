@@ -86,26 +86,26 @@ public class TimeConfig extends Config implements ConfigUtils
 		
 		String worldname = getString(defaultPath + "world-name");
 		
-		//Tick
+		// Tick
 		path = defaultPath + "tick.";
 		
-		//Second
+		// Second
 		path = defaultPath + "second.";
 		
 		ticksPerSecond = getLong(path + "ticksPerSecond");
 		
-		//Minute
+		// Minute
 		path = defaultPath + "minute.";
 		
 		secondsPerMinute = getLong(path + "secondsPerMinute");
 		
-		//Hour
+		// Hour
 		path = defaultPath + "hour.";
 		
 		minutesPerHour = getLong(path + "minutesPerHour");
 		hourZero = 1;
 		
-		//Day
+		// Day
 		path = defaultPath + "day.";
 		
 		hoursPerDay = getLong(path + "hoursPerDay");
@@ -116,13 +116,13 @@ public class TimeConfig extends Config implements ConfigUtils
 		for(Object dayNameObject : dayNamesObject)
 			dayNames.add((String) dayNameObject);
 		
-		//Week
+		// Week
 		path = defaultPath + "week.";
 		
 		daysPerWeek = getLong(path + "daysPerWeek");
 		weekZero = 1;
 		
-		//Month
+		// Month
 		path = defaultPath + "month.";
 		
 		ArrayList<Object> daysPerMonthObject = getSection(path + "daysPerMonth", "days");
@@ -137,13 +137,13 @@ public class TimeConfig extends Config implements ConfigUtils
 		for(Object monthNameObject : monthNamesObject)
 			monthNames.add((String) monthNameObject);
 		
-		//Year
+		// Year
 		path = defaultPath + "year.";
 		
 		monthsPerYear = getLong(path + "monthsPerYear");
 		yearZero = getZero(path);
 		
-		//Era
+		// Era
 		path = defaultPath + "era.";
 		
 		ArrayList<Object> erasBeginObjects = getSection(path + "eras", "startYear");
@@ -152,6 +152,7 @@ public class TimeConfig extends Config implements ConfigUtils
 			erasBegin.add(Long.valueOf((String) erasBeginObject));
 			
 		ArrayList<Object> erasEndObjects = getSection(path + "eras", "endYear");
+		
 		for(Object erasEndObject : erasEndObjects)
 			erasEnd.add(Long.valueOf((String) erasEndObject));
 		

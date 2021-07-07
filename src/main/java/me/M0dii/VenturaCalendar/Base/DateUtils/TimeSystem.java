@@ -34,10 +34,6 @@ public class TimeSystem
 	private final ArrayList<String> monthNames;
 	private final ArrayList<String> eraNames;
 	
-	/*
-	 * Is called when an instance of this class is created.
-	 * Declares all class variables with the given parameters (sets the time-system).
-	 */
 	public TimeSystem(String worldname,
 			          String name,
 					  long ticksPerSecond,
@@ -62,8 +58,8 @@ public class TimeSystem
 					  
 					  ArrayList<String> dayNames,
 					  ArrayList<String> monthNames,
-					  ArrayList<String> eraNames) {
-		
+					  ArrayList<String> eraNames)
+	{
 		this.worldName          = worldname;
 		this.name 				= name;
 		
@@ -92,10 +88,6 @@ public class TimeSystem
 		this.eraNames = eraNames;
 	}
 	
-	/*
-	 * Is called when an instance of this class is created.
-	 * Declares all variables with a TimeSystem Object.
-	 */
 	public TimeSystem(TimeSystem timeSystem)
 	{
 		this.worldName = timeSystem.getWorldName();
@@ -124,7 +116,6 @@ public class TimeSystem
 		this.dayNames 			= timeSystem.getDayNames();
 		this.monthNames			= timeSystem.getMonthNames();
 		this.eraNames			= timeSystem.getEraNames();
-		
 	}
 	
 	public String getName() {

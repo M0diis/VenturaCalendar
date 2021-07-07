@@ -1,7 +1,7 @@
 package me.M0dii.VenturaCalendar.Base.DateUtils;
 
-public enum DateEnum {
-	
+public enum DateEnum
+{
 	timeSystem,
 	
 	tick,
@@ -12,6 +12,5 @@ public enum DateEnum {
 	week,
 	month,
 	year,
-	era,
-
+	era
 }

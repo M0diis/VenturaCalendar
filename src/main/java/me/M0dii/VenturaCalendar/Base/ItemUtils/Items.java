@@ -1,7 +1,7 @@
 package me.M0dii.VenturaCalendar.Base.ItemUtils;
 
-public enum Items {
-	
+public enum Items
+{
 	TODAY,
 	DAY,
 	WEEK

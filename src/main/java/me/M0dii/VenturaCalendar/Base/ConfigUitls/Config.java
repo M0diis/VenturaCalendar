@@ -36,15 +36,14 @@ public class Config
 		{
 			config.save(file);
 		}
-		catch (IOException exeption)
+		catch (IOException ex)
 		{
-			exeption.printStackTrace();
+			ex.printStackTrace();
 		}
 	}
 
 	protected FileConfiguration reloadConfig()
 	{
-
 		config = loadConfig();
 		
 		return config;
@@ -61,22 +60,23 @@ public class Config
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();
+			
 			VenturaCalendar.instance.saveResource(file.getName(), false);
 		}
 
 		FileConfiguration config = new YamlConfiguration();
 		
-		try {
-			
+		try
+		{
 			config.load(file);
 			
 			VenturaCalendar.instance.getLogger().info("Succsessfully loaded " + file.getName() + "!");
 		}
-		catch (IOException | InvalidConfigurationException e)
+		catch (IOException | InvalidConfigurationException ex)
 		{
 			VenturaCalendar.instance.getLogger().warning("Error while loading " + file.getName() + "!");
 			
-			e.printStackTrace();
+			ex.printStackTrace();
 		}
 
 		return config;
