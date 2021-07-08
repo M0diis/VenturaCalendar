@@ -143,7 +143,8 @@ public class TimeSystem
 		return hoursPerDay;
 	}
 
-	public long getDaysPerWeek() {
+	public long getDaysPerWeek()
+	{
 		return daysPerWeek;
 	}
 

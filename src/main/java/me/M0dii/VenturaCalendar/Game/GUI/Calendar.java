@@ -38,16 +38,6 @@ public class Calendar
 		
 		inventory = createInventory(date, creationDate);
 	}
-
-	public Date getDate()
-	{
-		return date;
-	}
-	
-	public Date getCreationDate()
-	{
-		return creationDate;
-	}
 	
 	public Inventory getInventory()
 	{
@@ -170,8 +160,11 @@ public class Calendar
 		if(daysPerWeek > 8)
 			daysPerWeek = 8;
 		
+		if(daysPerWeek <= 0)
+			daysPerWeek = 1;
+		
 		if(date.getWeek() == 0)
-			return daySlot == (timeSystem.getDaysPerWeek() - timeSystem.getDayZero());
+			return daySlot == (daysPerWeek - timeSystem.getDayZero());
 			
 		return false;
 	}

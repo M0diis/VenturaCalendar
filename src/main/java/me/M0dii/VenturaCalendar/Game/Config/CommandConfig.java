@@ -27,7 +27,7 @@ public class CommandConfig extends Config implements ConfigUtils
 		StringBuilder msg = new StringBuilder();
 		
 		for(String m : getListString("new-day.message.text"))
-			msg.append(Utils.format(m)).append(" ");
+			msg.append(Utils.format(m)).append("\n");
 		
 		return msg.toString();
 	}
