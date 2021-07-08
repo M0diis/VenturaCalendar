@@ -1,26 +1,27 @@
 ## VenturaCalendar
 ## by M0dii
 # 
-#     IDs for block color/type ids you can find here: http://minecraft.gamepedia.com/Data_values
-#     Formatting codes can be used with &<code>, here you will find a list with all formatting codes:
-#     http://minecraft.gamepedia.com/Formatting_codes
+#   IDs for block color/type ids you can find here: http://minecraft.gamepedia.com/Data_values
+#   Formatting codes can be used with &<code>, here you will find a list with all formatting codes:
+#   http://minecraft.gamepedia.com/Formatting_codes
 #     
-#     Placeholders:
-#       - %tick%      - displays the current tick.
-#       - %second%    - displays the current second.
-#       - %minute%    - displays the current minute.
-#       - %hour%      - displays the current hour.
-#       - %day%       - displays the day of the item.
-#       - %week%      - displays the week of the item.
-#       - %month%     - displays the current month.
-#       - %year%      - displays the current year.
-#       - %era%       - displays the current era.
-#     
-#       - %dayName%   - displays the name of the day.
-#       - %monthName% - displays the current month name.
-#       - %eraName%   - displays the current era name.
+#  Placeholders:
+#    - %tick%      - displays the current tick.
+#    - %second%    - displays the current second.
+#    - %minute%    - displays the current minute.
+#    - %hour%      - displays the current hour.
+#    - %day%       - displays the day of the item.
+#    - %week%      - displays the week of the item.
+#    - %month%     - displays the current month.
+#    - %year%      - displays the current year.
+#    - %era%       - displays the current era.
+#
+#    - %dayName%   - displays the name of the day.
+#    - %monthName% - displays the current month name.
+#    - %eraName%   - displays the current era name.
 # 
-#    A list of all avilable block materials can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html 
+#  A list of all available block materials can be found here:
+#  https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 #  
 # Info:
 #   'size' will be the minimum size of the inventory.
