@@ -10,10 +10,18 @@
 #   venturacalendar.command.calendar - Permission to the calendar command
 #
 new-day:
-  announce: true
   message:
-    - '&aGood morning everyone.'
-    - '&aToday is a new day.'
+    enabled: true
+    text:
+      - '&aGood morning everyone.'
+      - '&aToday is a new day.'
+  title:
+    enabled: true
+    text: 'A new day arises'
+    subtitle: '%day% %month% %year%'
+    fade-in: 1
+    stay: 3
+    fade-out: 1
 messages:
   prefix: "&a&lVenturaCalendar &2» &a"
   unknown-command: '&4Unknown command! Try /calendar &c<timesystem>'

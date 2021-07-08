@@ -247,25 +247,14 @@ public class TimeConfig extends Config implements ConfigUtils
 	{
 		if(config.getList(path) != null)
 		{
-			@SuppressWarnings("unchecked")
-			List<String> list = (List<String>) config.getList(path);
-		
-			if(list != null)
-				for(int index = 0; index < list.size(); index++)
-					list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));
+			List<String> list = config.getStringList(path);
+			
+			for(int index = 0; index < list.size(); index++)
+				list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));
 				
 			return list;
 		}
 		
 		return null;
 	}
-
-	@Override
-	public ArrayList<String> getArrayListString(String path)
-	{
-		List<String> list = getListString(path);
-		
-		return new ArrayList<>(list);
-	}
-	
 }

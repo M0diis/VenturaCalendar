@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class MsgUtils
 {
     private static final HashMap<Messages, String> messages =
-            VenturaCalendar.getCommandConfig().getMessages();
+            VenturaCalendar.getCConfig().getMessages();
     
     public static String format(String text)
     {

@@ -8,14 +8,12 @@ import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystemUtils;
 import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
-import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
 import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
 import me.M0dii.VenturaCalendar.Game.Listeners.Inventory.InventoryCaller;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -27,9 +25,8 @@ import java.util.HashMap;
 public class VenturaCalendar extends JavaPlugin {
     
     public static VenturaCalendar instance;
-    public static HashMap<Player, Storage> storages = new HashMap<>();
     
-    public static String PREFIX = MsgUtils.format("&2[&aVenturaCalendar&2] ");
+    public static HashMap<Player, Storage> storages = new HashMap<>();
     
     private static DateCalculator dateCalculator;
     private static DateUtils dateUtils;
@@ -40,6 +37,8 @@ public class VenturaCalendar extends JavaPlugin {
     private static TimeConfig timeConfig;
     private static CalendarConfig calendarConfig;
     private static CommandConfig commandConfig;
+    
+    public static String PREFIX;
     
     public void onEnable()
     {
@@ -72,11 +71,20 @@ public class VenturaCalendar extends JavaPlugin {
         
                 if(time >= 0 && time <= 200 && !newDay)
                 {
-                    if(commandConfig.getBoolean("new-day.announce"))
+                    if(commandConfig.getBoolean("new-day.message.enabled"))
+                        w.sendMessage(Component.text(commandConfig.getNewDayMessage()));
+                    
+                    if(commandConfig.getBoolean("new-day.title.enabled"))
                     {
-                        w.sendMessage(Component.text(commandConfig.getNewDayMessages().get(Messages.NEW_DAY)));
+                        String title = commandConfig.getString("new-day.title.text");
+                        String subtitle = commandConfig.getString("new-day.title.subtitle");
                         
+                        int fadein = commandConfig.getInteger("new-day.title.fade-in");
+                        int stay = commandConfig.getInteger("new-day.title.stay");
+                        int fadeout = commandConfig.getInteger("new-day.title.fade-out");
                         
+                        for(Player p : Bukkit.getOnlinePlayers())
+                            p.sendTitle(title, subtitle, fadein, stay, fadeout);
                     }
                     
                     newDay = true;
@@ -99,7 +107,7 @@ public class VenturaCalendar extends JavaPlugin {
         
         timeConfig = new TimeConfig();
         calendarConfig = new CalendarConfig();
-        commandConfig = new CommandConfig();
+        commandConfig = new CommandConfig(this);
     }
 
     private void registerCommands()
@@ -156,8 +164,11 @@ public class VenturaCalendar extends JavaPlugin {
         return calendarConfig;
     }
     
-    public static CommandConfig getCommandConfig()
+    public static CommandConfig getCConfig()
     {
+        if(commandConfig == null)
+            commandConfig = new CommandConfig(instance);
+        
         return commandConfig;
     }
     

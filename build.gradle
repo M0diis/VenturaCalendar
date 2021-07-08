@@ -6,6 +6,8 @@ group 'me.M0dii'
 version '1.0'
 sourceCompatibility = '8'
 
+archivesBaseName = 'VenturaCalendar'
+
 repositories {
     mavenLocal()
     mavenCentral()

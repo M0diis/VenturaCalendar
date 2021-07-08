@@ -1,6 +1,5 @@
 package me.M0dii.VenturaCalendar.Game.Config;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,27 +15,21 @@ public class CommandConfig extends Config implements ConfigUtils
 {
 	FileConfiguration config;
 	
-	public CommandConfig()
+	public CommandConfig(VenturaCalendar plugin)
 	{
-		super(VenturaCalendar.instance.getDataFolder(), "Config.yml");
+		super(plugin.getDataFolder(), "BaseConfig.yml");
 		
 		config = super.loadConfig();
 	}
 	
-	public HashMap<Messages, String> getNewDayMessages()
+	public String getNewDayMessage()
 	{
-		HashMap<Messages, String> messages = new HashMap<>();
-		
-		String path = "new-day.";
-		
 		StringBuilder msg = new StringBuilder();
 		
-		for(String m : getListString(path + "message"))
+		for(String m : getListString("new-day.message.text"))
 			msg.append(MsgUtils.format(m)).append(" ");
 		
-		messages.put(Messages.NEW_DAY, msg.toString());
-		
-		return messages;
+		return msg.toString();
 	}
 	
 	public HashMap<Messages, String> getMessages()

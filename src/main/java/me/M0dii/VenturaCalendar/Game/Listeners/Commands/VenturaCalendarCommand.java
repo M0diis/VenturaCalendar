@@ -1,5 +1,6 @@
 package me.M0dii.VenturaCalendar.Game.Listeners.Commands;
 
+import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
 import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import org.bukkit.command.Command;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 
 public class VenturaCalendarCommand
 {
-	HashMap<Messages, String> msgs = VenturaCalendar.getCommandConfig().getMessages();
+	HashMap<Messages, String> msgs = VenturaCalendar.getCConfig().getMessages();
 	
 	public VenturaCalendarCommand(CommandSender sender, Command command,
 								  String label, String[] args)
@@ -22,15 +23,15 @@ public class VenturaCalendarCommand
 				{
 					VenturaCalendar.getTimeConfig().reloadConfig();
 					VenturaCalendar.getCalendarConfig().reloadConfig();
-					VenturaCalendar.getCommandConfig().reloadConfig();
+					VenturaCalendar.getCConfig().reloadConfig();
 					
-					sender.sendMessage(msgs.get(Messages.CONFIG_RELOADED));
+					MsgUtils.sendMsg(sender, Messages.CONFIG_RELOADED);
 				}
-				else sender.sendMessage(msgs.get(Messages.NO_PERMISSION));
+				else MsgUtils.sendMsg(sender, Messages.NO_PERMISSION);
 			}
-			else sender.sendMessage(msgs.get(Messages.UNKNOWN_COMMAND));
+			else MsgUtils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
 		}
-		else sender.sendMessage(msgs.get(Messages.UNKNOWN_COMMAND));
+		else MsgUtils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
 	}
 
 }
