@@ -3,7 +3,7 @@ package me.M0dii.VenturaCalendar.Game.Config;
 import java.util.HashMap;
 import java.util.List;
 
-import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
+import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.Config;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.ConfigUtils;
@@ -27,7 +27,7 @@ public class CommandConfig extends Config implements ConfigUtils
 		StringBuilder msg = new StringBuilder();
 		
 		for(String m : getListString("new-day.message.text"))
-			msg.append(MsgUtils.format(m)).append(" ");
+			msg.append(Utils.format(m)).append(" ");
 		
 		return msg.toString();
 	}

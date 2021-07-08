@@ -1,6 +1,6 @@
 package me.M0dii.VenturaCalendar.Game.Listeners.Commands;
 
-import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
+import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import org.bukkit.command.Command;
@@ -25,13 +25,13 @@ public class VenturaCalendarCommand
 					VenturaCalendar.getCalendarConfig().reloadConfig();
 					VenturaCalendar.getCConfig().reloadConfig();
 					
-					MsgUtils.sendMsg(sender, Messages.CONFIG_RELOADED);
+					Utils.sendMsg(sender, Messages.CONFIG_RELOADED);
 				}
-				else MsgUtils.sendMsg(sender, Messages.NO_PERMISSION);
+				else Utils.sendMsg(sender, Messages.NO_PERMISSION);
 			}
-			else MsgUtils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
+			else Utils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
 		}
-		else MsgUtils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
+		else Utils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
 	}
 
 }

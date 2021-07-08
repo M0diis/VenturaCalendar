@@ -1,11 +1,8 @@
 package me.M0dii.VenturaCalendar;
 
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.TimeConfig;
-import me.M0dii.VenturaCalendar.Base.DateUtils.DateCalculator;
-import me.M0dii.VenturaCalendar.Base.DateUtils.DateUtils;
-import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
-import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystemUtils;
-import me.M0dii.VenturaCalendar.Base.Utils.MsgUtils;
+import me.M0dii.VenturaCalendar.Base.DateUtils.*;
+import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
@@ -68,11 +65,18 @@ public class VenturaCalendar extends JavaPlugin {
             Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
             {
                 long time = w.getTime();
+    
+                TimeSystem timeSystem = getTimeConfig().getTimeSystems().get("default");
+                Date date = getDateCalculator().fromTicks(w.getFullTime(), timeSystem);
         
                 if(time >= 0 && time <= 200 && !newDay)
                 {
                     if(commandConfig.getBoolean("new-day.message.enabled"))
-                        w.sendMessage(Component.text(commandConfig.getNewDayMessage()));
+                    {
+                        String msg = Utils.replacePlaceholder(commandConfig.getNewDayMessage(), date);
+                        
+                        w.sendMessage(Component.text(msg));
+                    }
                     
                     if(commandConfig.getBoolean("new-day.title.enabled"))
                     {
@@ -82,6 +86,10 @@ public class VenturaCalendar extends JavaPlugin {
                         int fadein = commandConfig.getInteger("new-day.title.fade-in");
                         int stay = commandConfig.getInteger("new-day.title.stay");
                         int fadeout = commandConfig.getInteger("new-day.title.fade-out");
+                        
+                        title = Utils.replacePlaceholder(title, date);
+                        
+                        subtitle = Utils.replacePlaceholder(subtitle, date);
                         
                         for(Player p : Bukkit.getOnlinePlayers())
                             p.sendTitle(title, subtitle, fadein, stay, fadeout);

@@ -1,5 +1,6 @@
 package me.M0dii.VenturaCalendar.Game.GUI;
 
+import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.DateUtils.Date;
 import me.M0dii.VenturaCalendar.Base.DateUtils.DateEnum;
@@ -72,7 +73,7 @@ public class Calendar
 		ArrayList<ItemStack> weekItems = new ArrayList<>();
 
 		Inventory inventory = Bukkit.createInventory(null, getInventorySize(date, timeSystem, 9),
-				replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date));
+				Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date));
 		
 		double daysPerMonth = timeSystem.getDaysPerMonth().get((int) date.getMonth());
 		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.day, (int) date.getDay(), date));
@@ -186,9 +187,9 @@ public class Calendar
 	
 	public ItemStack createItem(HashMap<ItemProperties, Object> itemProperties, Date date)
 	{
-		String name = this.replacePlaceholder((String) itemProperties.get(ItemProperties.NAME), date);
+		String name = Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.NAME), date);
 		Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
-		int amount = Integer.parseInt(this.replacePlaceholder((String) itemProperties.get(ItemProperties.AMOUNT), date));
+		int amount = Integer.parseInt(Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.AMOUNT), date));
 		
 		List<String> lore = null;
 		
@@ -198,7 +199,7 @@ public class Calendar
 			
 			if(lore != null)
 				for(String line : lore)
-					lore.set(lore.indexOf(line), this.replacePlaceholder(line, date));
+					lore.set(lore.indexOf(line), Utils.replacePlaceholder(line, date));
 		}
 		
 		if((boolean) itemProperties.get(ItemProperties.TOGGLE))
@@ -236,33 +237,5 @@ public class Calendar
 			slots = slots + 9;
 		
 		return Math.max(slots, minSize);
-	}
-	
-	private String replacePlaceholder(String message, Date date)
-	{
-		date = new Date(date);
-		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
-		date = dateUtils.addZero(date);
-
-		message = message
-			.replaceAll("%tick%", String.valueOf(date.getTick()))
-			.replaceAll("%second%", String.valueOf(date.getSecond()))
-			.replaceAll("%minute%", String.valueOf(date.getMinute()))
-			.replaceAll("%hour%", String.valueOf(date.getHour()))
-			.replaceAll("%day%", String.valueOf(date.getDay()))
-			.replaceAll("%week%", String.valueOf(date.getWeek()))
-			.replaceAll("%month%", String.valueOf(date.getMonth()))
-			.replaceAll("%year%", String.valueOf(date.getYear()))
-			.replaceAll("%era%", String.valueOf(date.getEra()));
-		
-		date = dateUtils.removeZero(date);
-		long dayOfWeek = dateUtils.getDayOfWeek(date);
-		
-		message = message
-			.replaceAll("%dayName%", timeSystem.getDayNames().get((int) dayOfWeek))
-			.replaceAll("%monthName%", timeSystem.getMonthNames().get((int) date.getMonth()))
-			.replaceAll("%eraName%", timeSystem.getEraNames().get((int) date.getEra()));
-		
-		return message;
 	}
 }
