@@ -48,6 +48,8 @@ public class CommandConfig extends Config implements ConfigUtils
 				getString(path + "unknown-timesystem"));
 		messages.put(Messages.CONFIG_RELOADED, VenturaCalendar.PREFIX +
 				getString(path + "config-reloaded"));
+		messages.put(Messages.REDEEMED, VenturaCalendar.PREFIX +
+				getString(path + "redeemed"));
 		
 		return messages;
 	}

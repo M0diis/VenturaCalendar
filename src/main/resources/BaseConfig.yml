@@ -28,6 +28,12 @@
 # fade-in, stay and fade-out are defined in ticks
 # 20 ticks = 1 second
 #
+rewards:
+  enabled: true
+
+  commands:
+    - '[CONSOLE] give %player% diamond 1'
+    - '[PLAYER] this will be executed by player'
 new-day:
   message:
     enabled: true
@@ -43,6 +49,7 @@ new-day:
     fade-out: 20
 messages:
   prefix: "&a&lVenturaCalendar &2» &a"
+  redeemed: "&cYou have already redeemed your daily reward."
   unknown-command: '&4Unknown command! Try /calendar &c<timesystem>'
   player-only: 'Calendar cannot be opened in the console.'
   no-permission: '&4You do not have permission to do that!'

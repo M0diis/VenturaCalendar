@@ -2,6 +2,7 @@ package me.M0dii.VenturaCalendar;
 
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.TimeConfig;
 import me.M0dii.VenturaCalendar.Base.DateUtils.*;
+import me.M0dii.VenturaCalendar.Base.DateUtils.Date;
 import me.M0dii.VenturaCalendar.Base.Utils.Placeholders;
 import me.M0dii.VenturaCalendar.Base.Utils.UpdateChecker;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
@@ -22,11 +23,10 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class VenturaCalendar extends JavaPlugin {
+public class VenturaCalendar extends JavaPlugin
+{
     
     public static VenturaCalendar instance;
     
@@ -49,10 +49,24 @@ public class VenturaCalendar extends JavaPlugin {
     private static CalendarConfig calendarConfig;
     private static CommandConfig cconfig;
     
+    private static List<UUID> redeemed;
+    
+    public static boolean redeem(UUID uuid)
+    {
+        if(redeemed.contains(uuid))
+            return false;
+        
+        redeemed.add(uuid);
+        
+        return true;
+    }
+    
+    
     public static String PREFIX;
     
     public void onEnable()
     {
+        redeemed = new ArrayList<>();
         instance = this;
         
         registerObjects();
@@ -122,6 +136,9 @@ public class VenturaCalendar extends JavaPlugin {
         
                 if(time >= 0 && time <= 200 && !newDay)
                 {
+                    if(cconfig.getBoolean("rewards.enabled"))
+                        redeemed.clear();
+                    
                     if(cconfig.getBoolean("new-day.message.enabled"))
                     {
                         String msg = Utils.replacePlaceholder(cconfig.getNewDayMessage(), date);
