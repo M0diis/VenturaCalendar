@@ -11,6 +11,9 @@ import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
 import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
 import me.M0dii.VenturaCalendar.Game.Listeners.Inventory.InventoryCaller;
 import net.kyori.adventure.text.Component;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.CustomChart;
+import org.bstats.charts.MultiLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
@@ -19,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class VenturaCalendar extends JavaPlugin {
     
@@ -48,11 +52,30 @@ public class VenturaCalendar extends JavaPlugin {
         registerCommands();
         registerEvents();
         
+        setupMetrics();
+        
         PREFIX = cconfig.getString("messages.prefix");
         
         this.getLogger().info("VenturaCalendar has been enabled.");
     
         checkNewDay();
+    }
+    
+    private void setupMetrics()
+    {
+        Metrics metrics = new Metrics(this, 11985);
+        
+        CustomChart c = new MultiLineChart("players_and_servers", () ->
+        {
+            Map<String, Integer> valueMap = new HashMap<>();
+            
+            valueMap.put("servers", 1);
+            valueMap.put("players", Bukkit.getOnlinePlayers().size());
+            
+            return valueMap;
+        });
+        
+        metrics.addCustomChart(c);
     }
     
     boolean newDay = false;

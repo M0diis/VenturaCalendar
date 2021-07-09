@@ -10,16 +10,19 @@ import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemCreator;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemProperties;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.Items;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Calendar
+public class Calendar implements InventoryHolder
 {
 	DateUtils dateUtils = VenturaCalendar.getDateUtils();
 	
@@ -39,7 +42,7 @@ public class Calendar
 		inventory = createInventory(date, creationDate);
 	}
 	
-	public Inventory getInventory()
+	public @NotNull Inventory getInventory()
 	{
 		return inventory;
 	}
@@ -61,9 +64,11 @@ public class Calendar
 
 		ArrayList<ItemStack> dayItems = new ArrayList<>();
 		ArrayList<ItemStack> weekItems = new ArrayList<>();
+		
+		String title = Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date);
 
-		Inventory inventory = Bukkit.createInventory(null, getInventorySize(date, timeSystem, 9),
-				Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date));
+		Inventory inventory = Bukkit.createInventory(this,
+				getInventorySize(date, timeSystem), Component.text(title));
 		
 		double daysPerMonth = timeSystem.getDaysPerMonth().get((int) date.getMonth());
 		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.day, (int) date.getDay(), date));
@@ -210,7 +215,7 @@ public class Calendar
 		return false;
 	}
 
-	private int getInventorySize(Date date, TimeSystem timeSystem, int minSize)
+	private int getInventorySize(Date date, TimeSystem timeSystem)
 	{
 		date = new Date(date);
 		timeSystem = new TimeSystem(timeSystem);
@@ -229,6 +234,9 @@ public class Calendar
 		for(int week = 1; week <= weeksPerMonth; week++)
 			slots = slots + 9;
 		
-		return Math.max(slots, minSize);
+		if(slots > 54)
+			return 54;
+		
+		return Math.max(slots, 9);
 	}
 }
