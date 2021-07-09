@@ -1,7 +1,8 @@
 ## VenturaCalendar
 ## by M0dii
 #
-#   Formatting codes can be used with &<code>, here you will find a list with all formatting codes:
+#   Formatting codes can be used with &<code>.
+#   Here you will find a list with all formatting codes:
 #   http://minecraft.gamepedia.com/Formatting_codes
 # 
 #  Permissions:
@@ -23,6 +24,9 @@
 #    - %dayName%   - displays the name of the day.
 #    - %monthName% - displays the current month name.
 #    - %eraName%   - displays the current era name.
+#
+# fade-in, stay and fade-out are defined in ticks
+# 20 ticks = 1 second
 #
 new-day:
   message:

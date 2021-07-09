@@ -23,11 +23,6 @@ public class Utils
         return ChatColor.translateAlternateColorCodes('&', text);
     }
     
-    public static void sendFormat(CommandSender sender, String msg)
-    {
-        sender.sendMessage(format(msg));
-    }
-    
     public static void sendMsg(CommandSender sender, Messages msg)
     {
         sender.sendMessage(messages.get(msg));
@@ -42,23 +37,23 @@ public class Utils
         date = du.addZero(date);
         
         message = message
-                .replaceAll("%tick%", String.valueOf(date.getTick()))
-                .replaceAll("%second%", String.valueOf(date.getSecond()))
-                .replaceAll("%minute%", String.valueOf(date.getMinute()))
-                .replaceAll("%hour%", String.valueOf(date.getHour()))
-                .replaceAll("%day%", String.valueOf(date.getDay()))
-                .replaceAll("%week%", String.valueOf(date.getWeek()))
-                .replaceAll("%month%", String.valueOf(date.getMonth()))
-                .replaceAll("%year%", String.valueOf(date.getYear()))
-                .replaceAll("%era%", String.valueOf(date.getEra()));
+            .replaceAll("%tick%", String.valueOf(date.getTick()))
+            .replaceAll("%second%", String.valueOf(date.getSecond()))
+            .replaceAll("%minute%", String.valueOf(date.getMinute()))
+            .replaceAll("%hour%", String.valueOf(date.getHour()))
+            .replaceAll("%day%", String.valueOf(date.getDay()))
+            .replaceAll("%week%", String.valueOf(date.getWeek()))
+            .replaceAll("%month%", String.valueOf(date.getMonth()))
+            .replaceAll("%year%", String.valueOf(date.getYear()))
+            .replaceAll("%era%", String.valueOf(date.getEra()));
         
         date = du.removeZero(date);
         long dayOfWeek = du.getDayOfWeek(date);
         
         message = message
-                .replaceAll("%dayName%", timeSystem.getDayNames().get((int) dayOfWeek))
-                .replaceAll("%monthName%", timeSystem.getMonthNames().get((int) date.getMonth()))
-                .replaceAll("%eraName%", timeSystem.getEraNames().get((int) date.getEra()));
+            .replaceAll("%dayName%", timeSystem.getDayNames().get((int) dayOfWeek))
+            .replaceAll("%monthName%", timeSystem.getMonthNames().get((int) date.getMonth()))
+            .replaceAll("%eraName%", timeSystem.getEraNames().get((int) date.getEra()));
         
         return message;
     }

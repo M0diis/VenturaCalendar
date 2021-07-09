@@ -2,7 +2,8 @@
 ## by M0dii
 # 
 #   IDs for block color/type ids you can find here: http://minecraft.gamepedia.com/Data_values
-#   Formatting codes can be used with &<code>, here you will find a list with all formatting codes:
+#   Formatting codes can be used with &<code>.
+#   Here you will find a list with all formatting codes:
 #   http://minecraft.gamepedia.com/Formatting_codes
 #     
 #  Placeholders:
@@ -23,11 +24,11 @@
 #  A list of all available block materials can be found here:
 #  https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 #  
-# Info:
-#   'size' will be the minimum size of the inventory.
-#   'toggle' if you set this to false the item will not be displayed.
-#   'amount' The amount can also be a placeholder.
-#   'lore' if you remove this parameter there will be no lore displayed.
+#  Information:
+#    'size' will be the minimum size of the inventory.
+#    'toggle' if you set this to false the item will not be displayed.
+#    'amount' The amount can also be a placeholder.
+#    'lore' if you remove this parameter there will be no lore displayed.
 #   You can also add it again. (Don't leave it there with no value it will cause errors)
 #
 title: '%dayName%, %day%. %monthName% - %year%'

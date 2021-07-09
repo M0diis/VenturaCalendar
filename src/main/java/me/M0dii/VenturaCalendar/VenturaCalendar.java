@@ -2,6 +2,7 @@ package me.M0dii.VenturaCalendar;
 
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.TimeConfig;
 import me.M0dii.VenturaCalendar.Base.DateUtils.*;
+import me.M0dii.VenturaCalendar.Base.Utils.Placeholders;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
@@ -25,6 +26,8 @@ public class VenturaCalendar extends JavaPlugin {
     
     public static HashMap<Player, Storage> storages = new HashMap<>();
     
+    private static Placeholders placeholders;
+    
     private static DateCalculator dateCalculator;
     private static DateUtils dateUtils;
     private static TimeSystemUtils timeSystemUtils;
@@ -33,7 +36,7 @@ public class VenturaCalendar extends JavaPlugin {
     
     private static TimeConfig timeConfig;
     private static CalendarConfig calendarConfig;
-    private static CommandConfig commandConfig;
+    private static CommandConfig cconfig;
     
     public static String PREFIX;
     
@@ -45,7 +48,7 @@ public class VenturaCalendar extends JavaPlugin {
         registerCommands();
         registerEvents();
         
-        PREFIX = commandConfig.getString("messages.prefix");
+        PREFIX = cconfig.getString("messages.prefix");
         
         this.getLogger().info("VenturaCalendar has been enabled.");
     
@@ -65,27 +68,26 @@ public class VenturaCalendar extends JavaPlugin {
             Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
             {
                 long time = w.getTime();
-    
-                TimeSystem timeSystem = getTimeConfig().getTimeSystems().get("default");
-                Date date = getDateCalculator().fromTicks(w.getFullTime(), timeSystem);
+                
+                Date date = getDateCalculator().fromTicks(w.getFullTime(), ts);
         
                 if(time >= 0 && time <= 200 && !newDay)
                 {
-                    if(commandConfig.getBoolean("new-day.message.enabled"))
+                    if(cconfig.getBoolean("new-day.message.enabled"))
                     {
-                        String msg = Utils.replacePlaceholder(commandConfig.getNewDayMessage(), date);
+                        String msg = Utils.replacePlaceholder(cconfig.getNewDayMessage(), date);
                         
                         w.sendMessage(Component.text(msg));
                     }
                     
-                    if(commandConfig.getBoolean("new-day.title.enabled"))
+                    if(cconfig.getBoolean("new-day.title.enabled"))
                     {
-                        String title = commandConfig.getString("new-day.title.text");
-                        String subtitle = commandConfig.getString("new-day.title.subtitle");
+                        String title = cconfig.getString("new-day.title.text");
+                        String subtitle = cconfig.getString("new-day.title.subtitle");
                         
-                        int fadein = commandConfig.getInteger("new-day.title.fade-in");
-                        int stay = commandConfig.getInteger("new-day.title.stay");
-                        int fadeout = commandConfig.getInteger("new-day.title.fade-out");
+                        int fadein = cconfig.getInteger("new-day.title.fade-in");
+                        int stay = cconfig.getInteger("new-day.title.stay");
+                        int fadeout = cconfig.getInteger("new-day.title.fade-out");
                         
                         title = Utils.replacePlaceholder(title, date);
                         
@@ -107,6 +109,9 @@ public class VenturaCalendar extends JavaPlugin {
     
     private void registerObjects()
     {
+        placeholders = new Placeholders();
+        placeholders.register();
+        
         dateUtils = new DateUtils();
         timeSystemUtils = new TimeSystemUtils();
         storageUtils = new StorageUtils();
@@ -115,7 +120,7 @@ public class VenturaCalendar extends JavaPlugin {
         
         timeConfig = new TimeConfig();
         calendarConfig = new CalendarConfig();
-        commandConfig = new CommandConfig(this);
+        cconfig = new CommandConfig(this);
     }
 
     private void registerCommands()
@@ -174,10 +179,10 @@ public class VenturaCalendar extends JavaPlugin {
     
     public static CommandConfig getCConfig()
     {
-        if(commandConfig == null)
-            commandConfig = new CommandConfig(instance);
+        if(cconfig == null)
+            cconfig = new CommandConfig(instance);
         
-        return commandConfig;
+        return cconfig;
     }
     
 }
