@@ -3,6 +3,7 @@ package me.M0dii.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.TimeConfig;
 import me.M0dii.VenturaCalendar.Base.DateUtils.*;
 import me.M0dii.VenturaCalendar.Base.Utils.Placeholders;
+import me.M0dii.VenturaCalendar.Base.Utils.UpdateChecker;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
@@ -27,6 +28,11 @@ import java.util.Map;
 public class VenturaCalendar extends JavaPlugin {
     
     public static VenturaCalendar instance;
+    
+    public String getSpigotLink()
+    {
+        return "https://www.spigotmc.org/resources/venturacalendar-your-own-custom-calendar.94096/";
+    }
     
     public static HashMap<Player, Storage> storages = new HashMap<>();
     
@@ -53,12 +59,31 @@ public class VenturaCalendar extends JavaPlugin {
         registerEvents();
         
         setupMetrics();
+    
+        checkForUpdates();
         
         PREFIX = cconfig.getString("messages.prefix");
         
         this.getLogger().info("VenturaCalendar has been enabled.");
     
         checkNewDay();
+    }
+    
+    private void checkForUpdates()
+    {
+        new UpdateChecker(this, 94096).getVersion(ver ->
+        {
+            String curr = this.getDescription().getVersion();
+            
+            if (!curr.equalsIgnoreCase(
+                    ver.replace("v", "")))
+            {
+                getLogger().info("You are running an outdated version of M0-CoreCord.");
+                getLogger().info("Latest version: " + ver + ", you are using: " + curr);
+                getLogger().info("You can download the latest version on Spigot:");
+                getLogger().info(getSpigotLink());
+            }
+        });
     }
     
     private void setupMetrics()

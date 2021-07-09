@@ -36,14 +36,14 @@ public class Placeholders extends PlaceholderExpansion {
         return "1.0.0";
     }
     
+    DateUtils du = VenturaCalendar.getDateUtils();
+    
     @Override
     public String onRequest(OfflinePlayer player, String id)
     {
-        DateUtils du = VenturaCalendar.getDateUtils();
         TimeSystem ts = VenturaCalendar.getTimeConfig().getTimeSystems().get("default");
         World w = Bukkit.getWorld(ts.getWorldName());
-
-    
+        
         if(w == null)
             return null;
     
