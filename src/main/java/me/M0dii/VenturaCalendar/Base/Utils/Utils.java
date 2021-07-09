@@ -12,9 +12,6 @@ import java.util.HashMap;
 
 public class Utils
 {
-    private static final HashMap<Messages, String> messages =
-            VenturaCalendar.getCConfig().getMessages();
-    
     public static String format(String text)
     {
         if(text == null || text.isEmpty())
@@ -25,7 +22,7 @@ public class Utils
     
     public static void sendMsg(CommandSender sender, Messages msg)
     {
-        sender.sendMessage(messages.get(msg));
+        sender.sendMessage(VenturaCalendar.getCConfig().getMessage(msg));
     }
     
     public static String replacePlaceholder(String message, Date date)

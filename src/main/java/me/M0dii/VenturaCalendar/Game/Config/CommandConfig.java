@@ -15,6 +15,32 @@ public class CommandConfig extends Config implements ConfigUtils
 {
 	FileConfiguration config;
 	
+	private boolean newDayMessageEnabled; 
+	private boolean rewardsEnabled; 
+	private boolean titleEnabled; 
+	
+	public boolean newDayMessageEnabled()
+	{
+		return newDayMessageEnabled;
+	}
+	
+	public boolean rewardsEnabled()
+	{
+		return rewardsEnabled;
+	}
+	
+	public boolean titleEnabled()
+	{
+		return titleEnabled;
+	}
+	
+	private void load()
+	{
+		this.newDayMessageEnabled = getBoolean("new-day.message.enabled");
+		this.rewardsEnabled = getBoolean("rewards.enabled");
+		this.rewardsEnabled = getBoolean("new-day.title.enabled");
+	}
+	
 	public CommandConfig(VenturaCalendar plugin)
 	{
 		super(plugin.getDataFolder(), "BaseConfig.yml");
@@ -22,7 +48,7 @@ public class CommandConfig extends Config implements ConfigUtils
 		config = super.loadConfig();
 	}
 	
-	public String getNewDayMessage()
+	private String getNewDayMessage()
 	{
 		StringBuilder msg = new StringBuilder();
 		
@@ -32,7 +58,12 @@ public class CommandConfig extends Config implements ConfigUtils
 		return msg.toString();
 	}
 	
-	public HashMap<Messages, String> getMessages()
+	public String getMessage(Messages msg)
+	{
+		return this.getMessages().get(msg);
+	}
+	
+	private HashMap<Messages, String> getMessages()
 	{
 		HashMap<Messages, String> messages = new HashMap<>();
 		
@@ -51,12 +82,20 @@ public class CommandConfig extends Config implements ConfigUtils
 		messages.put(Messages.REDEEMED, VenturaCalendar.PREFIX +
 				getString(path + "redeemed"));
 		
+		messages.put(Messages.TITLE_TEXT, getString("new-day.title.text"));
+		messages.put(Messages.SUBTITLE_TEXT, getString("new-day.title.subtitle"));
+		messages.put(Messages.NEW_DAY_TEXT, getNewDayMessage());
+		
 		return messages;
 	}
 	
 	public FileConfiguration reloadConfig()
 	{
-		return config = super.reloadConfig();
+		config = super.reloadConfig();
+		
+		load();
+		
+		return config;
 	}
 	
 	@Override

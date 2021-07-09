@@ -30,7 +30,6 @@
 #
 rewards:
   enabled: true
-
   commands:
     - '[CONSOLE] give %player% diamond 1'
     - '[PLAYER] this will be executed by player'

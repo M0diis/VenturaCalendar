@@ -8,6 +8,7 @@ import me.M0dii.VenturaCalendar.Base.Utils.UpdateChecker;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
+import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
 import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
@@ -136,12 +137,13 @@ public class VenturaCalendar extends JavaPlugin
         
                 if(time >= 0 && time <= 200 && !newDay)
                 {
-                    if(cconfig.getBoolean("rewards.enabled"))
+                    if(cconfig.rewardsEnabled())
                         redeemed.clear();
                     
-                    if(cconfig.getBoolean("new-day.message.enabled"))
+                    if(cconfig.newDayMessageEnabled())
                     {
-                        String msg = Utils.replacePlaceholder(cconfig.getNewDayMessage(), date);
+                        String msg = Utils.replacePlaceholder(
+                                cconfig.getMessage(Messages.NEW_DAY_TEXT), date);
     
                         for(Player p : Bukkit.getOnlinePlayers())
                         {
@@ -151,10 +153,10 @@ public class VenturaCalendar extends JavaPlugin
                         }
                     }
                     
-                    if(cconfig.getBoolean("new-day.title.enabled"))
+                    if(cconfig.titleEnabled())
                     {
-                        String title = cconfig.getString("new-day.title.text");
-                        String subtitle = cconfig.getString("new-day.title.subtitle");
+                        String title = cconfig.getMessage(Messages.TITLE_TEXT);
+                        String subtitle = cconfig.getMessage(Messages.SUBTITLE_TEXT);
                         
                         int fadein = cconfig.getInteger("new-day.title.fade-in");
                         int stay = cconfig.getInteger("new-day.title.stay");

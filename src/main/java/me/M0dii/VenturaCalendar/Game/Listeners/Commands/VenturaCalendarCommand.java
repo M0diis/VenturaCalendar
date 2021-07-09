@@ -6,12 +6,8 @@ import me.M0dii.VenturaCalendar.VenturaCalendar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.HashMap;
-
 public class VenturaCalendarCommand
 {
-	HashMap<Messages, String> msgs = VenturaCalendar.getCConfig().getMessages();
-	
 	public VenturaCalendarCommand(CommandSender sender, Command command,
 								  String label, String[] args)
 	{
