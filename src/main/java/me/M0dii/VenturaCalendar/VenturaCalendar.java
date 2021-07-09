@@ -11,6 +11,7 @@ import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
 import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
 import me.M0dii.VenturaCalendar.Game.Listeners.Inventory.InventoryCaller;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
@@ -124,8 +125,13 @@ public class VenturaCalendar extends JavaPlugin {
                     if(cconfig.getBoolean("new-day.message.enabled"))
                     {
                         String msg = Utils.replacePlaceholder(cconfig.getNewDayMessage(), date);
-                        
-                        w.sendMessage(Component.text(msg));
+    
+                        for(Player p : Bukkit.getOnlinePlayers())
+                        {
+                            msg = PlaceholderAPI.setPlaceholders(p, msg);
+                            
+                            w.sendMessage(Component.text(msg));
+                        }
                     }
                     
                     if(cconfig.getBoolean("new-day.title.enabled"))
@@ -138,11 +144,15 @@ public class VenturaCalendar extends JavaPlugin {
                         int fadeout = cconfig.getInteger("new-day.title.fade-out");
                         
                         title = Utils.replacePlaceholder(title, date);
-                        
                         subtitle = Utils.replacePlaceholder(subtitle, date);
                         
                         for(Player p : Bukkit.getOnlinePlayers())
+                        {
+                            title = PlaceholderAPI.setPlaceholders(p, title);
+                            subtitle = PlaceholderAPI.setPlaceholders(p, subtitle);
+                            
                             p.sendTitle(title, subtitle, fadein, stay, fadeout);
+                        }
                     }
                     
                     newDay = true;
