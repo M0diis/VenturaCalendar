@@ -40,7 +40,11 @@ public class CalendarCommand
 				{
 					TimeSystem timeSystem = timeSystems.get("default");
 					
-					World world = Bukkit.getWorld(timeSystem.getWorldName());
+					String wname = timeSystem.getWorldName();
+					World world = Bukkit.getWorld(wname);
+					
+					if(wname.equalsIgnoreCase("current"))
+						world = pl.getWorld();
 					
 					if(world != null)
 					{
@@ -61,7 +65,7 @@ public class CalendarCommand
 
 			if(args.length == 1)
 			{
-				if(pl.hasPermission("venturacalendar.calendar.timesystem"))
+				if(!pl.hasPermission("venturacalendar.calendar.timesystem"))
 				{
 					Utils.sendMsg(pl, Messages.NO_PERMISSION);
 					
@@ -74,7 +78,11 @@ public class CalendarCommand
 				{
 					TimeSystem timeSystem = timeSystems.get(tsName);
 					
-					World world = Bukkit.getWorld(timeSystem.getWorldName());
+					String wname = timeSystem.getWorldName();
+					World world = Bukkit.getWorld(wname);
+					
+					if(wname.equalsIgnoreCase("current"))
+						world = pl.getWorld();
 					
 					if(world != null)
 					{

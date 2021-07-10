@@ -7,8 +7,8 @@ import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
 import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.Game.GUI.Calendar;
 import me.M0dii.VenturaCalendar.Game.GUI.InventoryProperties;
-import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
+import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,7 +18,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Click
 {
@@ -33,6 +32,18 @@ public class Click
 		{
 			e.setCancelled(true);
 			
+			CommandConfig cc = VenturaCalendar.getCConfig();
+			
+			Calendar cal = (Calendar)inv.getHolder();
+			
+			if(cal.getDate() != null && !cal.getDate().getTimeSystem().getName()
+					.equalsIgnoreCase(cc.getString("rewards.timesystem")))
+				return;
+			
+			VenturaCalendar.instance.getLogger().info(String.valueOf(VenturaCalendar.getCalendarConfig() == null));
+			VenturaCalendar.instance.getLogger().info(String.valueOf(VenturaCalendar.getCalendarConfig().
+					getCalendarProperties() == null));
+			
 			HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =
 					(HashMap<Items, HashMap<ItemProperties, Object>>)
 					VenturaCalendar.getCalendarConfig().getCalendarProperties()
@@ -44,10 +55,6 @@ public class Click
 			
 			if(item != null && m.equals(item.getType()))
 			{
-				VenturaCalendar.instance.getLogger().info("Today Button");
-				
-				CommandConfig cc = VenturaCalendar.getCConfig();
-				
 				if(cc.getBoolean("rewards.enabled"))
 				{
 					if(VenturaCalendar.redeem(player.getUniqueId()))

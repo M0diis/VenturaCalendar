@@ -30,6 +30,7 @@
 #
 rewards:
   enabled: true
+  timesystem: "default"
   commands:
     - '[CONSOLE] give %player% diamond 1'
     - '[PLAYER] this will be executed by player'
@@ -42,7 +43,7 @@ new-day:
   title:
     enabled: true
     text: 'A new day arises'
-    subtitle: '%day% %month% %year%'
+    subtitle: '%year%-%month%-%day%'
     fade-in: 20
     stay: 60
     fade-out: 20

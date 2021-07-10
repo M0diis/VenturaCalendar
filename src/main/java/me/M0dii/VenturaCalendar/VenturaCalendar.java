@@ -251,6 +251,9 @@ public class VenturaCalendar extends JavaPlugin
     
     public static CalendarConfig getCalendarConfig()
     {
+        if(calendarConfig == null)
+            calendarConfig = new CalendarConfig();
+        
         return calendarConfig;
     }
     

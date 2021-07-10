@@ -17,7 +17,7 @@ public class CommandConfig extends Config implements ConfigUtils
 	
 	private boolean newDayMessageEnabled; 
 	private boolean rewardsEnabled; 
-	private boolean titleEnabled; 
+	private boolean titleEnabled;
 	
 	public boolean newDayMessageEnabled()
 	{
@@ -38,7 +38,7 @@ public class CommandConfig extends Config implements ConfigUtils
 	{
 		this.newDayMessageEnabled = getBoolean("new-day.message.enabled");
 		this.rewardsEnabled = getBoolean("rewards.enabled");
-		this.rewardsEnabled = getBoolean("new-day.title.enabled");
+		this.titleEnabled = getBoolean("new-day.title.enabled");
 	}
 	
 	public CommandConfig(VenturaCalendar plugin)

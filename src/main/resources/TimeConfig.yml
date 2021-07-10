@@ -1,3 +1,9 @@
+## VenturaCalendar
+## by M0dii
+#
+# Here you can set-up different time-systems, though "default"
+# timesystem is used for most features, such as rewards, etc.
+
 Time-Systems:
   default:
     world-name: 'world'
@@ -78,6 +84,7 @@ Time-Systems:
           startYear: -1049
           endYear: -500
   rome:
+    world-name: 'world_nether'
     second:
       ticksPerSecond: 20
     minute:

@@ -39,8 +39,17 @@ public class Calendar implements InventoryHolder
 		date = new Date(date);
 		creationDate = new Date(creationDate);
 		
+		this.date = date;
+		this.creationDate = creationDate;
+		
 		inventory = createInventory(date, creationDate);
 	}
+	
+	public Date getDate()
+	{
+		return this.date;
+	}
+	
 	
 	public @NotNull Inventory getInventory()
 	{
