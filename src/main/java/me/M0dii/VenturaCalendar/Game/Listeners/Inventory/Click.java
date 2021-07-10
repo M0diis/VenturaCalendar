@@ -40,10 +40,6 @@ public class Click
 					.equalsIgnoreCase(cc.getString("rewards.timesystem")))
 				return;
 			
-			VenturaCalendar.instance.getLogger().info(String.valueOf(VenturaCalendar.getCalendarConfig() == null));
-			VenturaCalendar.instance.getLogger().info(String.valueOf(VenturaCalendar.getCalendarConfig().
-					getCalendarProperties() == null));
-			
 			HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =
 					(HashMap<Items, HashMap<ItemProperties, Object>>)
 					VenturaCalendar.getCalendarConfig().getCalendarProperties()
