@@ -5,6 +5,7 @@ import me.M0dii.VenturaCalendar.Base.DateUtils.DateUtils;
 import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
 import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -25,7 +26,7 @@ public class Utils
         sender.sendMessage(VenturaCalendar.getCConfig().getMessage(msg));
     }
     
-    public static String replacePlaceholder(String message, Date date)
+    public static String replacePlaceholder(String message, Date date, boolean papi)
     {
         DateUtils du = VenturaCalendar.getDateUtils();
         
@@ -51,6 +52,8 @@ public class Utils
             .replaceAll("%dayName%", timeSystem.getDayNames().get((int) dayOfWeek))
             .replaceAll("%monthName%", timeSystem.getMonthNames().get((int) date.getMonth()))
             .replaceAll("%eraName%", timeSystem.getEraNames().get((int) date.getEra()));
+        
+        if(papi) PlaceholderAPI.setPlaceholders(null, message);
         
         return message;
     }

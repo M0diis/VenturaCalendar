@@ -143,7 +143,7 @@ public class VenturaCalendar extends JavaPlugin
                     if(cconfig.newDayMessageEnabled())
                     {
                         String msg = Utils.replacePlaceholder(
-                                cconfig.getMessage(Messages.NEW_DAY_TEXT), date);
+                                cconfig.getMessage(Messages.NEW_DAY_TEXT), date, false);
     
                         for(Player p : Bukkit.getOnlinePlayers())
                         {
@@ -162,8 +162,8 @@ public class VenturaCalendar extends JavaPlugin
                         int stay = cconfig.getInteger("new-day.title.stay");
                         int fadeout = cconfig.getInteger("new-day.title.fade-out");
                         
-                        title = Utils.replacePlaceholder(title, date);
-                        subtitle = Utils.replacePlaceholder(subtitle, date);
+                        title = Utils.replacePlaceholder(title, date, false);
+                        subtitle = Utils.replacePlaceholder(subtitle, date, false);
                         
                         for(Player p : Bukkit.getOnlinePlayers())
                         {

@@ -1,11 +1,13 @@
 package me.M0dii.VenturaCalendar.Game.Config;
 
+import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.Config;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.ConfigUtils;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemProperties;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.Items;
 import me.M0dii.VenturaCalendar.Game.GUI.InventoryProperties;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -112,7 +114,7 @@ public class CalendarConfig extends Config implements ConfigUtils
 			List<String> list = config.getStringList(path);
 			
 			for(int index = 0; index < list.size(); index++)
-				list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));
+				list.set(index, Utils.format(PlaceholderAPI.setPlaceholders(null, list.get(index))));
 			
 			return list;
 		}

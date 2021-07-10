@@ -1,7 +1,5 @@
 package me.M0dii.VenturaCalendar.Game.GUI;
 
-import me.M0dii.VenturaCalendar.Base.Utils.Utils;
-import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.DateUtils.Date;
 import me.M0dii.VenturaCalendar.Base.DateUtils.DateEnum;
 import me.M0dii.VenturaCalendar.Base.DateUtils.DateUtils;
@@ -9,7 +7,9 @@ import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemCreator;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemProperties;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.Items;
+import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
+import me.M0dii.VenturaCalendar.VenturaCalendar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -74,8 +74,8 @@ public class Calendar implements InventoryHolder
 		ArrayList<ItemStack> dayItems = new ArrayList<>();
 		ArrayList<ItemStack> weekItems = new ArrayList<>();
 		
-		String title = Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date);
-
+		String title = Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date, true);
+		
 		Inventory inventory = Bukkit.createInventory(this,
 				getInventorySize(date, timeSystem), Component.text(title));
 		
@@ -194,9 +194,9 @@ public class Calendar implements InventoryHolder
 	
 	public ItemStack createItem(HashMap<ItemProperties, Object> itemProperties, Date date)
 	{
-		String name = Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.NAME), date);
+		String name = Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.NAME), date, true);
 		Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
-		int amount = Integer.parseInt(Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.AMOUNT), date));
+		int amount = Integer.parseInt(Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.AMOUNT), date, true));
 		
 		List<String> lore = null;
 		
@@ -204,9 +204,8 @@ public class Calendar implements InventoryHolder
 		{
 			lore = new ArrayList<>((List<String>) itemProperties.get(ItemProperties.LORE));
 			
-			if(lore != null)
-				for(String line : lore)
-					lore.set(lore.indexOf(line), Utils.replacePlaceholder(line, date));
+			for(String line : lore)
+				lore.set(lore.indexOf(line), Utils.replacePlaceholder(line, date, true));
 		}
 		
 		if((boolean) itemProperties.get(ItemProperties.TOGGLE))
