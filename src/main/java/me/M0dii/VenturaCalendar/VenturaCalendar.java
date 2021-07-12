@@ -246,6 +246,9 @@ public class VenturaCalendar extends JavaPlugin
     
     public static TimeConfig getTimeConfig()
     {
+        if(timeConfig == null)
+            timeConfig = new TimeConfig();
+        
         return timeConfig;
     }
     

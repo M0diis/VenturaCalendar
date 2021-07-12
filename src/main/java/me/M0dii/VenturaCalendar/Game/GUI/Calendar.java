@@ -65,7 +65,7 @@ public class Calendar implements InventoryHolder
 	{
 		date = new Date(date);
 		
-		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
+		TimeSystem ts = new TimeSystem(date.getTimeSystem());
 		
 		creationDate = new Date(creationDate);
 		
@@ -77,11 +77,11 @@ public class Calendar implements InventoryHolder
 		String title = Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date, true);
 		
 		Inventory inventory = Bukkit.createInventory(this,
-				getInventorySize(date, timeSystem), Component.text(title));
+				getInventorySize(date, ts), Component.text(title));
 		
-		double daysPerMonth = timeSystem.getDaysPerMonth().get((int) date.getMonth());
+		double daysPerMonth = ts.getDaysPerMonth().get((int) date.getMonth());
 		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.day, (int) date.getDay(), date));
-		double daysPerWeek = timeSystem.getDaysPerWeek();
+		double daysPerWeek = ts.getDaysPerWeek();
 		
 		 if(daysPerWeek > 8)
 			 daysPerWeek = 8;
@@ -103,11 +103,11 @@ public class Calendar implements InventoryHolder
 		HashMap<ItemProperties, Object> dayItemProperties = itemProperties.get(Items.DAY);
 		HashMap<ItemProperties, Object> weekItemProperties = itemProperties.get(Items.WEEK);
 
-		for(long week = timeSystem.getWeekZero(); week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9)
+		for(long week = ts.getWeekZero(); week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9)
 		{
 			date.setWeek(weekOfMonth);
 			
-			for(long day = timeSystem.getDayZero(); day <= daysPerWeek; day++, dayOfMonth++, daySlot++)
+			for(long day = ts.getDayZero(); day <= daysPerWeek; day++, dayOfMonth++, daySlot++)
 			{
 				date.setDay(dayOfMonth);
 				
@@ -115,7 +115,7 @@ public class Calendar implements InventoryHolder
 				{
 					ItemStack todayItem =  createItem(todayItemProperties, date);
 					
-					if(todayItem != null)
+					if(todayItem != null && daySlot < 54)
 					{
 						inventory.setItem(daySlot, todayItem);
 						items.put(Items.TODAY, todayItem);
@@ -126,7 +126,7 @@ public class Calendar implements InventoryHolder
 				{
 					ItemStack dayItem = createItem(dayItemProperties, date);
 					
-					if (dayItem != null)
+					if (dayItem != null && daySlot < 54)
 					{
 						inventory.setItem(daySlot, dayItem);
 						dayItems.add(dayItem);
@@ -150,13 +150,13 @@ public class Calendar implements InventoryHolder
 
 			ItemStack weekItem = createItem(weekItemProperties, date);
 			
-			if(weekItem != null)
+			if(weekItem != null && weekSlot < 54)
 			{
 				inventory.setItem(weekSlot, weekItem);
 				weekItems.add(weekItem);
 			}
 			
-			daySlot = (int) (daySlot + (8 - (daysPerWeek - timeSystem.getDayZero())));
+			daySlot = (int) (daySlot + (8 - (daysPerWeek - ts.getDayZero())));
 		}
 		
 		items.put(Items.DAY, dayItems);
@@ -216,11 +216,9 @@ public class Calendar implements InventoryHolder
 	
 	private boolean isToday(Date date, Date currentDate)
 	{
-		if(date.getYear() == currentDate.getYear())
-			if(date.getMonth() == currentDate.getMonth())
-				return date.getDay() == currentDate.getDay();
-
-		return false;
+		return date.getYear() == currentDate.getYear()
+				&& date.getMonth() == currentDate.getMonth()
+				&& date.getDay() == currentDate.getDay();
 	}
 
 	private int getInventorySize(Date date, TimeSystem timeSystem)
@@ -242,9 +240,6 @@ public class Calendar implements InventoryHolder
 		for(int week = 1; week <= weeksPerMonth; week++)
 			slots = slots + 9;
 		
-		if(slots > 54)
-			return 54;
-		
-		return Math.max(slots, 9);
+		return slots > 54 ? 54 : Math.max(slots, 9);
 	}
 }
