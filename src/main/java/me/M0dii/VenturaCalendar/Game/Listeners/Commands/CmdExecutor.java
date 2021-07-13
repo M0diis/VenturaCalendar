@@ -41,7 +41,22 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 		
 		if(name.equals("venturacalendar"))
 		{
-			completes.add("reload");
+			if(args.length == 1)
+			{
+				completes.add("reload");
+				completes.add("add");
+				completes.add("subtract");
+			}
+			
+			if(args.length == 2)
+			{
+				completes.add("seconds");
+				completes.add("minutes");
+				completes.add("hours");
+				completes.add("days");
+				completes.add("weeks");
+			}
+			
 		}
 		
 		if(name.equals("calendar"))

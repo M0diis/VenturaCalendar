@@ -9,8 +9,6 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.HashMap;
-
 public class Utils
 {
     public static String format(String text)
@@ -19,6 +17,11 @@ public class Utils
             return "";
         
         return ChatColor.translateAlternateColorCodes('&', text);
+    }
+    
+    public static void sendFormat(CommandSender sender, String msg)
+    {
+        sender.sendMessage(format(msg));
     }
     
     public static void sendMsg(CommandSender sender, Messages msg)
