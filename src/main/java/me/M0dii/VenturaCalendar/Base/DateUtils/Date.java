@@ -136,6 +136,21 @@ public class Date
 	public long getMonth() {
 		return month;
 	}
+	
+	public String getMonthName()
+	{
+		return this.getTimeSystem().getMonthNames().get((int)this.month);
+	}
+	
+	public String getDayName()
+	{
+		return this.getTimeSystem().getDayNames().get((int)this.day);
+	}
+	
+	public String getEraName()
+	{
+		return this.getTimeSystem().getEraNames().get((int)this.era);
+	}
 
 	public void setMonth(long month) {
 		this.month = month;

@@ -1,7 +1,7 @@
 package me.M0dii.VenturaCalendar.Base.ConfigUitls;
 
-import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
+import me.M0dii.VenturaCalendar.VenturaCalendar;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -41,7 +41,6 @@ public class TimeConfig extends Config implements ConfigUtils
 	
 	private TimeSystem getTimeSystem(String timeSystemName)
 	{
-		
 		//Tick
 		long tickZero		= 0;
 		//Second

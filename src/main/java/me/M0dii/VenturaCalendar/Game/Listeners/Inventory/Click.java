@@ -1,5 +1,6 @@
 package me.M0dii.VenturaCalendar.Game.Listeners.Inventory;
 
+import me.M0dii.VenturaCalendar.Base.DateUtils.FromTo;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemProperties;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.Items;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
@@ -28,17 +29,42 @@ public class Click
 		Inventory inv = e.getClickedInventory();
 		ItemStack item = e.getCurrentItem();
 		
+		if(VenturaCalendar.storages.containsKey(player))
+		{
+			e.setCancelled(true);
+			
+			Storage storage = VenturaCalendar.storages.get(player);
+		}
+		
 		if(inv != null && inv.getHolder() instanceof Calendar)
 		{
 			e.setCancelled(true);
 			
 			CommandConfig cc = VenturaCalendar.getCConfig();
 			
+			HashMap<String, FromTo> redeemableMonths = cc.getRedeemableMonths();
+			
 			Calendar cal = (Calendar)inv.getHolder();
 			
 			if(cal.getDate() != null && !cal.getDate().getTimeSystem().getName()
 					.equalsIgnoreCase(cc.getString("rewards.timesystem")))
 				return;
+			
+			if(cal.getDate() != null && cc.redeemWhitelistEnabled())
+			{
+				FromTo fromTo = redeemableMonths.get(cal.getDate().getMonthName());
+				
+				if(fromTo != null)
+				{
+					int from = fromTo.getFrom();
+					int to = fromTo.getTo();
+					
+					long day = cal.getDate().getDay();
+					
+					if(!(day >= from && day <= to))
+						return;
+				}
+			}
 			
 			HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =
 					(HashMap<Items, HashMap<ItemProperties, Object>>)
@@ -61,13 +87,6 @@ public class Click
 					else Utils.sendMsg(e.getWhoClicked(), Messages.REDEEMED);
 				}
 			}
-		}
-		
-		if(VenturaCalendar.storages.containsKey(player))
-		{
-			e.setCancelled(true);
-			
-			Storage storage = VenturaCalendar.storages.get(player);
 		}
 	}
 	

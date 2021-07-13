@@ -3,10 +3,12 @@ package me.M0dii.VenturaCalendar.Game.Config;
 import java.util.HashMap;
 import java.util.List;
 
+import me.M0dii.VenturaCalendar.Base.DateUtils.FromTo;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.Config;
 import me.M0dii.VenturaCalendar.Base.ConfigUitls.ConfigUtils;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.md_5.bungee.api.ChatColor;
@@ -56,6 +58,41 @@ public class CommandConfig extends Config implements ConfigUtils
 			msg.append(Utils.format(m)).append("\n");
 		
 		return msg.toString();
+	}
+	
+	public boolean redeemWhitelistEnabled()
+	{
+		return config.getBoolean("rewards.redeemable-months.enabled");
+	}
+	
+	public HashMap<String, FromTo> getRedeemableMonths()
+	{
+		HashMap<String, FromTo> redeemableMonths = new HashMap<>();
+		
+		ConfigurationSection sec = config.
+				getConfigurationSection("rewards.redeemable-months");
+		
+		if(sec != null)
+		{
+			sec.getValues(false).forEach((k, v) -> {
+			
+				if(!k.equalsIgnoreCase("enabled"))
+				{
+					String[] fromToString = String.valueOf(v).split("-");
+					
+					int from = Integer.parseInt(fromToString[0]);
+					int to = Integer.parseInt(fromToString[1]);
+					
+					VenturaCalendar.instance.getLogger().info(k);
+					VenturaCalendar.instance.getLogger().info(fromToString[0]);
+					VenturaCalendar.instance.getLogger().info(fromToString[1]);
+					
+					redeemableMonths.put(k, new FromTo(from, to));
+				}
+			});
+		}
+
+		return redeemableMonths;
 	}
 	
 	public String getMessage(Messages msg)

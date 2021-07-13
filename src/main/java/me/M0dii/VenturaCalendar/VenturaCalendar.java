@@ -94,7 +94,7 @@ public class VenturaCalendar extends JavaPlugin
             if (!curr.equalsIgnoreCase(
                     ver.replace("v", "")))
             {
-                getLogger().info("You are running an outdated version of M0-CoreCord.");
+                getLogger().info("You are running an outdated version of VenturaCalendar.");
                 getLogger().info("Latest version: " + ver + ", you are using: " + curr);
                 getLogger().info("You can download the latest version on Spigot:");
                 getLogger().info(getSpigotLink());

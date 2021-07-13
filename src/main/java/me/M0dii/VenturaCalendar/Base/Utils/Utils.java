@@ -50,8 +50,8 @@ public class Utils
         
         message = message
             .replaceAll("%dayName%", timeSystem.getDayNames().get((int) dayOfWeek))
-            .replaceAll("%monthName%", timeSystem.getMonthNames().get((int) date.getMonth()))
-            .replaceAll("%eraName%", timeSystem.getEraNames().get((int) date.getEra()));
+            .replaceAll("%monthName%", date.getMonthName())
+            .replaceAll("%eraName%", date.getEraName());
         
         if(papi) PlaceholderAPI.setPlaceholders(null, message);
         

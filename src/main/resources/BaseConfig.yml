@@ -28,8 +28,15 @@
 # fade-in, stay and fade-out are defined in ticks
 # 20 ticks = 1 second
 #
+# If redeemable months are disabled, you will be able to redeem
+# on all days and months.
+#
+# The defined days are inclusive.
 rewards:
   enabled: true
+  redeemable-months:
+    enabled: true
+    January: "10-20"
   timesystem: "default"
   commands:
     - '[CONSOLE] give %player% diamond 1'

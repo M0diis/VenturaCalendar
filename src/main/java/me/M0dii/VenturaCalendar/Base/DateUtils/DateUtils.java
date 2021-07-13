@@ -60,7 +60,7 @@ public class DateUtils {
 	}
 	
 	/*
-	 * Method to remove/discount the zero points from the given date object, with the givent imeSystem.
+	 * Method to remove/discount the zero points from the given date object, with the given timeSystem.
 	 * Returns a new Date object.
 	 */
 	public Date removeZero(Date date){
