@@ -44,19 +44,31 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 			if(args.length == 1)
 			{
 				completes.add("reload");
+				completes.add("set");
+				
 				completes.add("add");
 				completes.add("subtract");
 			}
 			
 			if(args.length == 2)
 			{
-				completes.add("seconds");
-				completes.add("minutes");
-				completes.add("hours");
-				completes.add("days");
-				completes.add("weeks");
+				if(args[1].equalsIgnoreCase("set"))
+					completes.add("startyear");
+				else
+				{
+					completes.add("seconds");
+					completes.add("minutes");
+					completes.add("hours");
+					completes.add("days");
+					completes.add("weeks");
+				}
 			}
 			
+			if(args.length == 3)
+			{
+				if(args[1].equalsIgnoreCase("set"))
+					timeSystems.forEach((key, value) -> completes.add(value.getName()));
+			}
 		}
 		
 		if(name.equals("calendar"))

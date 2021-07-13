@@ -21,16 +21,18 @@ public class VenturaCalendarCommand
 				{
 					VenturaCalendar.getTimeConfig().reloadConfig();
 					VenturaCalendar.getCalendarConfig().reloadConfig();
-					VenturaCalendar.getCConfig().reloadConfig();
+					VenturaCalendar.getBaseConfig().reloadConfig();
 					
 					Utils.sendMsg(sender, Messages.CONFIG_RELOADED);
+					
+					return;
 				}
 				else Utils.sendMsg(sender, Messages.NO_PERMISSION);
 			}
 			else Utils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
 		}
 		
-		if(args.length == 3 && sender instanceof Player)
+		if(args.length >= 3 && sender instanceof Player)
 		{
 			Player p = (Player)sender;
 			
@@ -41,7 +43,30 @@ public class VenturaCalendarCommand
 				return;
 			}
 			
-			if(args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("subtract"))
+			if(args[0].equalsIgnoreCase("set"))
+			{
+				if(alias(args[1], "startyear, startingyear") && args.length == 4)
+				{
+					try
+					{
+						int startYear = Integer.parseInt(args[3]);
+						
+						VenturaCalendar.getTimeConfig().set("Time-Systems." + args[2] + ".year.zero", startYear);
+						
+						VenturaCalendar.getTimeConfig().reloadConfig();
+						VenturaCalendar.getCalendarConfig().reloadConfig();
+						VenturaCalendar.getBaseConfig().reloadConfig();
+						
+						Utils.sendFormat(p, "&aSuccessfully set starting year to " + startYear);
+					}
+					catch(NumberFormatException ex)
+					{
+						Utils.sendFormat(p, "&aIllegal number format.");
+					}
+				}
+			}
+			
+			if(alias(args[0], "add, subtract"))
 			{
 				boolean sub = args[0].equalsIgnoreCase("subtract");
 				
@@ -96,4 +121,16 @@ public class VenturaCalendarCommand
 		}
 	}
 	
+	private boolean alias(String cmd, String names)
+	{
+		String[] split = names.split(", ");
+		
+		for(String s : split)
+		{
+			if(cmd.equalsIgnoreCase(s))
+				return true;
+		}
+		
+		return false;
+	}
 }

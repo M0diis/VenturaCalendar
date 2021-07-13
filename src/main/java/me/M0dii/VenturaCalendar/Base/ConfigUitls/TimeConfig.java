@@ -5,6 +5,8 @@ import me.M0dii.VenturaCalendar.VenturaCalendar;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +23,13 @@ public class TimeConfig extends Config implements ConfigUtils
 		config = super.loadConfig();
 		
 		reload();
+	}
+	
+	public void set(@NotNull String path, @Nullable Object obj)
+	{
+		config.set(path, obj);
+		
+		saveConfig();
 	}
 	
 	HashMap<String, TimeSystem> timeSystems = new HashMap<>();

@@ -2,8 +2,9 @@
 ## by M0dii
 #
 # Here you can set-up different time-systems
+#
 # The timesystem time will be used by specified world name
-# If it is set to "current" it will take the current world the player is in
+# If set to "current" it will use the current world the player is in
 #
 Time-Systems:
   default:

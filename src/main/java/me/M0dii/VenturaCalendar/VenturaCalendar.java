@@ -191,7 +191,7 @@ public class VenturaCalendar extends JavaPlugin
         dateCalculator = new DateCalculator();
         
         timeConfig = new TimeConfig();
-        calendarConfig = new CalendarConfig();
+        calendarConfig = new CalendarConfig(this);
     }
 
     private void registerCommands()
@@ -236,11 +236,17 @@ public class VenturaCalendar extends JavaPlugin
     
     public static TimeSystemUtils getTimeSystemUtils()
     {
+        if(timeSystemUtils == null)
+            timeSystemUtils = new TimeSystemUtils();
+        
         return timeSystemUtils;
     }
     
     public static StorageUtils getStorageUtils()
     {
+        if(storageUtils == null)
+            storageUtils = new StorageUtils();
+        
         return storageUtils;
     }
     
@@ -255,12 +261,12 @@ public class VenturaCalendar extends JavaPlugin
     public static CalendarConfig getCalendarConfig()
     {
         if(calendarConfig == null)
-            calendarConfig = new CalendarConfig();
+            calendarConfig = new CalendarConfig(instance);
         
         return calendarConfig;
     }
     
-    public static BaseConfig getCConfig()
+    public static BaseConfig getBaseConfig()
     {
         if(cconfig == null)
             cconfig = new BaseConfig(instance);

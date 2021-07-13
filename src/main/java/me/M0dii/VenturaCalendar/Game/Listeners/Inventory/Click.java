@@ -19,7 +19,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 public class Click
 {
@@ -41,7 +40,7 @@ public class Click
 		{
 			e.setCancelled(true);
 			
-			BaseConfig cc = VenturaCalendar.getCConfig();
+			BaseConfig cc = VenturaCalendar.getBaseConfig();
 			
 			HashMap<String, FromTo> redeemableMonths = cc.getRedeemableMonths();
 			

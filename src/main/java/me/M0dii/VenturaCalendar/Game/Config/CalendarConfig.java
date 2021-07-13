@@ -20,9 +20,9 @@ public class CalendarConfig extends Config implements ConfigUtils
 {
 	FileConfiguration config;
 	
-	public CalendarConfig()
+	public CalendarConfig(VenturaCalendar plugin)
 	{
-		super(VenturaCalendar.instance.getDataFolder(), "CalendarConfig.yml");
+		super(plugin.getDataFolder(), "CalendarConfig.yml");
 		
 		config = super.loadConfig();
 		

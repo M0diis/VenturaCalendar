@@ -26,7 +26,7 @@ public class Utils
     
     public static void sendMsg(CommandSender sender, Messages msg)
     {
-        sender.sendMessage(VenturaCalendar.getCConfig().getMessage(msg));
+        sender.sendMessage(VenturaCalendar.getBaseConfig().getMessage(msg));
     }
     
     public static String replacePlaceholder(String message, Date date, boolean papi)
