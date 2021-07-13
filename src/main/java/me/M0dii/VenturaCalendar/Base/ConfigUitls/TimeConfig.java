@@ -20,12 +20,12 @@ public class TimeConfig extends Config implements ConfigUtils
 		
 		config = super.loadConfig();
 		
-		reader();
+		reload();
 	}
 	
 	HashMap<String, TimeSystem> timeSystems = new HashMap<>();
 	
-	private void reader()
+	private void reload()
 	{
 		ConfigurationSection timeSystemsName = config.getConfigurationSection("Time-Systems");
 		
@@ -194,7 +194,8 @@ public class TimeConfig extends Config implements ConfigUtils
 	public FileConfiguration reloadConfig()
 	{
 		config = super.reloadConfig();
-		reader();
+		
+		reload();
 		
 		return config;
 	}
@@ -244,16 +245,11 @@ public class TimeConfig extends Config implements ConfigUtils
 	@Override
 	public List<String> getListString(String path)
 	{
-		if(config.getList(path) != null)
-		{
-			List<String> list = config.getStringList(path);
-			
-			for(int index = 0; index < list.size(); index++)
-				list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));
-				
-			return list;
-		}
+		List<String> list = config.getStringList(path);
 		
-		return null;
+		for(int index = 0; index < list.size(); index++)
+			list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));
+			
+		return list;
 	}
 }

@@ -26,7 +26,7 @@ public class Calendar implements InventoryHolder
 {
 	DateUtils dateUtils = VenturaCalendar.getDateUtils();
 	
-	CalendarConfig calendarConfig = VenturaCalendar.getCalendarConfig();
+	CalendarConfig calConf = VenturaCalendar.getCalendarConfig();
 	
 	Date date;
 	Date creationDate;
@@ -69,7 +69,7 @@ public class Calendar implements InventoryHolder
 		
 		creationDate = new Date(creationDate);
 		
-		HashMap<InventoryProperties, Object> calendarProperties = calendarConfig.getCalendarProperties();
+		HashMap<InventoryProperties, Object> calendarProperties = calConf.getCalendarProperties(false);
 
 		ArrayList<ItemStack> dayItems = new ArrayList<>();
 		ArrayList<ItemStack> weekItems = new ArrayList<>();

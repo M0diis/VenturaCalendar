@@ -13,41 +13,35 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class CommandConfig extends Config implements ConfigUtils
+public class BaseConfig extends Config implements ConfigUtils
 {
-	FileConfiguration config;
+	FileConfiguration cfg;
 	
-	private boolean newDayMessageEnabled; 
-	private boolean rewardsEnabled; 
-	private boolean titleEnabled;
+	HashMap<String, FromTo> redeemableMonths = new HashMap<>();
+	HashMap<Messages, String> messages = new HashMap<>();
 	
 	public boolean newDayMessageEnabled()
 	{
-		return newDayMessageEnabled;
+		return getBoolean("new-day.message.enabled");
 	}
 	
 	public boolean rewardsEnabled()
 	{
-		return rewardsEnabled;
+		return getBoolean("rewards.enabled");
 	}
 	
 	public boolean titleEnabled()
 	{
-		return titleEnabled;
+		return getBoolean("new-day.title.enabled");
 	}
 	
-	private void load()
-	{
-		this.newDayMessageEnabled = getBoolean("new-day.message.enabled");
-		this.rewardsEnabled = getBoolean("rewards.enabled");
-		this.titleEnabled = getBoolean("new-day.title.enabled");
-	}
-	
-	public CommandConfig(VenturaCalendar plugin)
+	public BaseConfig(VenturaCalendar plugin)
 	{
 		super(plugin.getDataFolder(), "BaseConfig.yml");
 		
-		config = super.loadConfig();
+		cfg = super.loadConfig();
+		
+		VenturaCalendar.PREFIX = getString("messages.prefix");
 	}
 	
 	private String getNewDayMessage()
@@ -62,14 +56,12 @@ public class CommandConfig extends Config implements ConfigUtils
 	
 	public boolean redeemWhitelistEnabled()
 	{
-		return config.getBoolean("rewards.redeemable-months.enabled");
+		return cfg.getBoolean("rewards.redeemable-months.enabled");
 	}
 	
 	public HashMap<String, FromTo> getRedeemableMonths()
 	{
-		HashMap<String, FromTo> redeemableMonths = new HashMap<>();
-		
-		ConfigurationSection sec = config.
+		ConfigurationSection sec = cfg.
 				getConfigurationSection("rewards.redeemable-months");
 		
 		if(sec != null)
@@ -98,8 +90,6 @@ public class CommandConfig extends Config implements ConfigUtils
 	
 	private HashMap<Messages, String> getMessages()
 	{
-		HashMap<Messages, String> messages = new HashMap<>();
-		
 		String path = "messages.";
 		
 		messages.put(Messages.NO_PERMISSION, VenturaCalendar.PREFIX +
@@ -124,43 +114,41 @@ public class CommandConfig extends Config implements ConfigUtils
 	
 	public FileConfiguration reloadConfig()
 	{
-		config = super.reloadConfig();
+		cfg = super.reloadConfig();
 		
-		load();
-		
-		return config;
+		return cfg;
 	}
 	
 	@Override
 	public String getString(String path)
 	{
-		return ChatColor.translateAlternateColorCodes('&', config.getString(path));
+		return ChatColor.translateAlternateColorCodes('&', cfg.getString(path));
 	}
 
 	@Override
 	public Integer getInteger(String path)
 	{
-		return config.getInt(path);
+		return cfg.getInt(path);
 	}
 	
 	@Override
 	public Long getLong(String path)
 	{
-		return Long.valueOf(config.getString(path, "0"));
+		return Long.valueOf(cfg.getString(path, "0"));
 	}
 	
 	@Override
 	public Boolean getBoolean(String path)
 	{
-		return config.getBoolean(path);
+		return cfg.getBoolean(path);
 	}
 	
 	@Override
 	public List<String> getListString(String path)
 	{
-		if (config.getList(path) != null)
+		if (cfg.getList(path) != null)
 		{
-			List<String> list = config.getStringList(path);
+			List<String> list = cfg.getStringList(path);
 			
 			for(int i = 0; i < list.size(); i++)
 				list.set(i, ChatColor.translateAlternateColorCodes('&', list.get(i)));

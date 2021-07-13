@@ -25,12 +25,22 @@ public class CalendarConfig extends Config implements ConfigUtils
 		super(VenturaCalendar.instance.getDataFolder(), "CalendarConfig.yml");
 		
 		config = super.loadConfig();
+		
+		reload();
 	}
 	
-	public HashMap<InventoryProperties, Object> getCalendarProperties()
+	private void reload()
 	{
-		HashMap<InventoryProperties, Object> calendar = new HashMap<>();
-		HashMap<Items, HashMap<ItemProperties, Object>> items = new HashMap<>();
+		getCalendarProperties(true);
+	}
+	
+	HashMap<InventoryProperties, Object> calendar = new HashMap<>();
+	HashMap<Items, HashMap<ItemProperties, Object>> items = new HashMap<>();
+	
+	public HashMap<InventoryProperties, Object> getCalendarProperties(boolean reload)
+	{
+		if(!reload)
+			return calendar;
 		
 		String title;
 		int size;
@@ -67,20 +77,24 @@ public class CalendarConfig extends Config implements ConfigUtils
 	
 	private HashMap<ItemProperties, Object> getItemProperties(String path)
 	{
-		HashMap<ItemProperties, Object> item = new HashMap<>();
+		HashMap<ItemProperties, Object> itemProperties = new HashMap<>();
 		
-		item.put(ItemProperties.TOGGLE, getBoolean(path + "toggle"));
-		item.put(ItemProperties.NAME, getString(path + "name"));
-		item.put(ItemProperties.MATERIAL, Material.getMaterial(config.getString(path + "material", "WHITE_STAINED_GLASS_PANE")));
-		item.put(ItemProperties.AMOUNT, config.getString(path + "amount"));
-		item.put(ItemProperties.LORE, getListString(path + "lore"));
+		itemProperties.put(ItemProperties.TOGGLE, getBoolean(path + "toggle"));
+		itemProperties.put(ItemProperties.NAME, getString(path + "name"));
+		itemProperties.put(ItemProperties.MATERIAL, Material.getMaterial(config.getString(path + "material", "WHITE_STAINED_GLASS_PANE")));
+		itemProperties.put(ItemProperties.AMOUNT, config.getString(path + "amount"));
+		itemProperties.put(ItemProperties.LORE, getListString(path + "lore"));
 		
-		return item;
+		return itemProperties;
 	}
 	
 	public FileConfiguration reloadConfig()
 	{
-		return config = super.reloadConfig();
+		config = super.reloadConfig();
+		
+		this.reload();
+		
+		return config;
 	}
 	
 	@Override

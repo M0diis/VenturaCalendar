@@ -7,7 +7,7 @@ import me.M0dii.VenturaCalendar.Base.Utils.Placeholders;
 import me.M0dii.VenturaCalendar.Base.Utils.UpdateChecker;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
-import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
+import me.M0dii.VenturaCalendar.Game.Config.BaseConfig;
 import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
@@ -48,7 +48,7 @@ public class VenturaCalendar extends JavaPlugin
     
     private static TimeConfig timeConfig;
     private static CalendarConfig calendarConfig;
-    private static CommandConfig cconfig;
+    private static BaseConfig cconfig;
     
     private static List<UUID> redeemed;
     
@@ -77,8 +77,6 @@ public class VenturaCalendar extends JavaPlugin
         setupMetrics();
     
         checkForUpdates();
-        
-        PREFIX = cconfig.getString("messages.prefix");
         
         this.getLogger().info("VenturaCalendar has been enabled.");
     
@@ -119,73 +117,70 @@ public class VenturaCalendar extends JavaPlugin
         metrics.addCustomChart(c);
     }
     
-    boolean newDay = false;
+    static boolean newDay = false;
     
     private void checkNewDay()
     {
-        TimeSystem ts = getTimeConfig().getTimeSystems().get("default");
-        
-        World w = Bukkit.getWorld(ts.getWorldName());
-        
-        if(w != null)
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
         {
-            Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
+            TimeSystem ts = getTimeConfig().getTimeSystems().get("default");
+
+            World w = Bukkit.getWorld(ts.getWorldName());
+            
+            if(w != null && w.getTime() >= 0 && w.getTime() <= 200 && !newDay)
             {
-                long time = w.getTime();
-                
                 Date date = getDateCalculator().fromTicks(w.getFullTime(), ts);
-        
-                if(time >= 0 && time <= 200 && !newDay)
-                {
-                    if(cconfig.rewardsEnabled())
-                        redeemed.clear();
-                    
-                    if(cconfig.newDayMessageEnabled())
-                    {
-                        String msg = Utils.replacePlaceholder(
-                                cconfig.getMessage(Messages.NEW_DAY_TEXT), date, false);
     
-                        for(Player p : Bukkit.getOnlinePlayers())
-                        {
-                            msg = PlaceholderAPI.setPlaceholders(p, msg);
-                            
-                            w.sendMessage(Component.text(msg));
-                        }
-                    }
-                    
-                    if(cconfig.titleEnabled())
+                if(cconfig.rewardsEnabled())
+                    redeemed.clear();
+                
+                if(cconfig.newDayMessageEnabled())
+                {
+                    String msg = Utils.replacePlaceholder(
+                            cconfig.getMessage(Messages.NEW_DAY_TEXT), date, false);
+
+                    for(Player p : Bukkit.getOnlinePlayers())
                     {
-                        String title = cconfig.getMessage(Messages.TITLE_TEXT);
-                        String subtitle = cconfig.getMessage(Messages.SUBTITLE_TEXT);
+                        msg = PlaceholderAPI.setPlaceholders(p, msg);
                         
-                        int fadein = cconfig.getInteger("new-day.title.fade-in");
-                        int stay = cconfig.getInteger("new-day.title.stay");
-                        int fadeout = cconfig.getInteger("new-day.title.fade-out");
-                        
-                        title = Utils.replacePlaceholder(title, date, false);
-                        subtitle = Utils.replacePlaceholder(subtitle, date, false);
-                        
-                        for(Player p : Bukkit.getOnlinePlayers())
-                        {
-                            title = PlaceholderAPI.setPlaceholders(p, title);
-                            subtitle = PlaceholderAPI.setPlaceholders(p, subtitle);
-                            
-                            p.sendTitle(title, subtitle, fadein, stay, fadeout);
-                        }
+                        w.sendMessage(Component.text(msg));
                     }
-                    
-                    newDay = true;
                 }
                 
-                if(time > 200)
-                    newDay = false;
+                if(cconfig.titleEnabled())
+                {
+                    String title = cconfig.getMessage(Messages.TITLE_TEXT);
+                    String subtitle = cconfig.getMessage(Messages.SUBTITLE_TEXT);
+                    
+                    int fadein = cconfig.getInteger("new-day.title.fade-in");
+                    int stay = cconfig.getInteger("new-day.title.stay");
+                    int fadeout = cconfig.getInteger("new-day.title.fade-out");
+                    
+                    title = Utils.replacePlaceholder(title, date, false);
+                    subtitle = Utils.replacePlaceholder(subtitle, date, false);
+                    
+                    for(Player p : Bukkit.getOnlinePlayers())
+                    {
+                        title = PlaceholderAPI.setPlaceholders(p, title);
+                        subtitle = PlaceholderAPI.setPlaceholders(p, subtitle);
+                        
+                        p.sendTitle(title, subtitle, fadein, stay, fadeout);
+                    }
+                }
                 
-            }, 0L, 90L);
-        }
+                newDay = true;
+            }
+            
+            if(w != null && w.getTime() > 200)
+                newDay = false;
+            
+        }, 0L, 90L);
     }
     
     private void registerObjects()
     {
+        cconfig = new BaseConfig(this);
+        
         placeholders = new Placeholders();
         placeholders.register();
         
@@ -197,7 +192,6 @@ public class VenturaCalendar extends JavaPlugin
         
         timeConfig = new TimeConfig();
         calendarConfig = new CalendarConfig();
-        cconfig = new CommandConfig(this);
     }
 
     private void registerCommands()
@@ -226,11 +220,17 @@ public class VenturaCalendar extends JavaPlugin
     
     public static DateCalculator getDateCalculator()
     {
+        if(dateCalculator == null)
+            dateCalculator = new DateCalculator();
+        
         return dateCalculator;
     }
     
     public static DateUtils getDateUtils()
     {
+        if(dateUtils == null)
+            dateUtils = new DateUtils();
+        
         return dateUtils;
     }
     
@@ -260,10 +260,10 @@ public class VenturaCalendar extends JavaPlugin
         return calendarConfig;
     }
     
-    public static CommandConfig getCConfig()
+    public static BaseConfig getCConfig()
     {
         if(cconfig == null)
-            cconfig = new CommandConfig(instance);
+            cconfig = new BaseConfig(instance);
         
         return cconfig;
     }

@@ -4,7 +4,7 @@ import me.M0dii.VenturaCalendar.Base.DateUtils.FromTo;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemProperties;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.Items;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
-import me.M0dii.VenturaCalendar.Game.Config.CommandConfig;
+import me.M0dii.VenturaCalendar.Game.Config.BaseConfig;
 import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.Game.GUI.Calendar;
 import me.M0dii.VenturaCalendar.Game.GUI.InventoryProperties;
@@ -41,7 +41,7 @@ public class Click
 		{
 			e.setCancelled(true);
 			
-			CommandConfig cc = VenturaCalendar.getCConfig();
+			BaseConfig cc = VenturaCalendar.getCConfig();
 			
 			HashMap<String, FromTo> redeemableMonths = cc.getRedeemableMonths();
 			
@@ -50,15 +50,10 @@ public class Click
 			if(cal.getDate() != null && !cal.getDate().getTimeSystem().getName()
 					.equalsIgnoreCase(cc.getString("rewards.timesystem")))
 				return;
-			
-			Logger logger = VenturaCalendar.instance.getLogger();
-			
+
 			if(cal.getDate() != null && cc.redeemWhitelistEnabled())
 			{
 				FromTo fromTo = redeemableMonths.get(cal.getDate().getMonthName());
-				
-				logger.info(cal.getDate().getMonthName());
-				logger.info(String.valueOf(fromTo == null));
 				
 				if(fromTo != null)
 				{
@@ -66,11 +61,7 @@ public class Click
 					int to = fromTo.getTo();
 					
 					long day = cal.getDate().getDay() + 1;
-					
-					logger.info(String.valueOf(from));
-					logger.info(String.valueOf(to));
-					logger.info(String.valueOf(day));
-					
+
 					if(!(day >= from && day <= to))
 						return;
 				}
@@ -79,11 +70,9 @@ public class Click
 					return;
 			}
 			
-			logger.info("here");
-			
 			HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =
 					(HashMap<Items, HashMap<ItemProperties, Object>>)
-					VenturaCalendar.getCalendarConfig().getCalendarProperties()
+					VenturaCalendar.getCalendarConfig().getCalendarProperties(false)
 					.get(InventoryProperties.ITEMS);
 			
 			HashMap<ItemProperties, Object> today = itemProperties.get(Items.TODAY);
@@ -97,7 +86,7 @@ public class Click
 					if(VenturaCalendar.redeem(player.getUniqueId()))
 					{
 						for(String cmd : cc.getListString("rewards.commands"))
-							sendCommand((Player)e.getWhoClicked(), (Player)e.getWhoClicked(), cmd);
+							sendCommand((Player)e.getWhoClicked(), cmd);
 					}
 					else Utils.sendMsg(e.getWhoClicked(), Messages.REDEEMED);
 				}
@@ -105,23 +94,24 @@ public class Click
 		}
 	}
 	
-	private void sendCommand(Player sender, Player placeholderHolder, String cmd)
+	private void sendCommand(Player player, String cmd)
 	{
-		cmd = PlaceholderAPI.setPlaceholders(placeholderHolder, cmd)
-				.replaceAll("%(player|playername|player_name)%", sender.getName());
+		cmd = PlaceholderAPI.setPlaceholders(player, cmd)
+				.replaceAll("%([pP]layer|[pP]layer[nN]ame|[pP]layer_[nN]ame)%", player.getName());
 		
 		if(cmd.startsWith("["))
 		{
-			String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 2)
-					.substring(cmd.indexOf("]") + 2);
+			String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 2);
+			
+			cmd = cmd.substring(cmd.indexOf("]") + 2);
 			
 			if(sendAs.equalsIgnoreCase("[PLAYER] "))
-				Bukkit.dispatchCommand(sender, cmd);
+				Bukkit.dispatchCommand(player, cmd);
 			else if(sendAs.equalsIgnoreCase("[CONSOLE] "))
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
 						cmd.replace("[CONSOLE] ", ""));
 		}
-		else Bukkit.dispatchCommand(sender, cmd);
+		else Bukkit.dispatchCommand(player, cmd);
 	}
 
 }
