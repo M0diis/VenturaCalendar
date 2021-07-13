@@ -113,7 +113,7 @@ public class Calendar implements InventoryHolder
 				
 				if(isToday(date, creationDate))
 				{
-					ItemStack todayItem =  createItem(todayItemProperties, date);
+					ItemStack todayItem = createItem(todayItemProperties, date);
 					
 					if(todayItem != null && daySlot < 54)
 					{

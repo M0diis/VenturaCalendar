@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class Click
 {
@@ -50,21 +51,35 @@ public class Click
 					.equalsIgnoreCase(cc.getString("rewards.timesystem")))
 				return;
 			
+			Logger logger = VenturaCalendar.instance.getLogger();
+			
 			if(cal.getDate() != null && cc.redeemWhitelistEnabled())
 			{
 				FromTo fromTo = redeemableMonths.get(cal.getDate().getMonthName());
+				
+				logger.info(cal.getDate().getMonthName());
+				logger.info(String.valueOf(fromTo == null));
 				
 				if(fromTo != null)
 				{
 					int from = fromTo.getFrom();
 					int to = fromTo.getTo();
 					
-					long day = cal.getDate().getDay();
+					long day = cal.getDate().getDay() + 1;
+					
+					logger.info(String.valueOf(from));
+					logger.info(String.valueOf(to));
+					logger.info(String.valueOf(day));
 					
 					if(!(day >= from && day <= to))
 						return;
 				}
+				
+				if(fromTo == null)
+					return;
 			}
+			
+			logger.info("here");
 			
 			HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =
 					(HashMap<Items, HashMap<ItemProperties, Object>>)
@@ -93,13 +108,12 @@ public class Click
 	private void sendCommand(Player sender, Player placeholderHolder, String cmd)
 	{
 		cmd = PlaceholderAPI.setPlaceholders(placeholderHolder, cmd)
-				.replace("%sender_name%", sender.getName());
+				.replaceAll("%(player|playername|player_name)%", sender.getName());
 		
 		if(cmd.startsWith("["))
 		{
-			String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 2);
-			
-			cmd = cmd.substring(cmd.indexOf("]") + 2);
+			String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 2)
+					.substring(cmd.indexOf("]") + 2);
 			
 			if(sendAs.equalsIgnoreCase("[PLAYER] "))
 				Bukkit.dispatchCommand(sender, cmd);

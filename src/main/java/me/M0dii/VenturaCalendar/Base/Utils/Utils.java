@@ -35,23 +35,23 @@ public class Utils
         date = du.addZero(date);
         
         message = message
-            .replaceAll("%tick%", String.valueOf(date.getTick()))
-            .replaceAll("%second%", String.valueOf(date.getSecond()))
-            .replaceAll("%minute%", String.valueOf(date.getMinute()))
-            .replaceAll("%hour%", String.valueOf(date.getHour()))
-            .replaceAll("%day%", String.valueOf(date.getDay()))
-            .replaceAll("%week%", String.valueOf(date.getWeek()))
-            .replaceAll("%month%", String.valueOf(date.getMonth()))
-            .replaceAll("%year%", String.valueOf(date.getYear()))
-            .replaceAll("%era%", String.valueOf(date.getEra()));
+            .replaceAll("%[tT]ick%", String.valueOf(date.getTick()))
+            .replaceAll("%[sS]econd%", String.valueOf(date.getSecond()))
+            .replaceAll("%[mM]inute%", String.valueOf(date.getMinute()))
+            .replaceAll("%[hH]our%", String.valueOf(date.getHour()))
+            .replaceAll("%[dD]ay%", String.valueOf(date.getDay()))
+            .replaceAll("%[wW]eek%", String.valueOf(date.getWeek()))
+            .replaceAll("%[mM]onth%", String.valueOf(date.getMonth()))
+            .replaceAll("%[yY]ear%", String.valueOf(date.getYear()))
+            .replaceAll("%[eE]ra%", String.valueOf(date.getEra()));
         
         date = du.removeZero(date);
         long dayOfWeek = du.getDayOfWeek(date);
         
         message = message
-            .replaceAll("%dayName%", timeSystem.getDayNames().get((int) dayOfWeek))
-            .replaceAll("%monthName%", date.getMonthName())
-            .replaceAll("%eraName%", date.getEraName());
+            .replaceAll("%[dD]ay[nN]ame%", timeSystem.getDayNames().get((int) dayOfWeek))
+            .replaceAll("%[mM]onth[nN]ame%", date.getMonthName())
+            .replaceAll("%[eE]ra[nN]ame%", date.getEraName());
         
         if(papi) PlaceholderAPI.setPlaceholders(null, message);
         

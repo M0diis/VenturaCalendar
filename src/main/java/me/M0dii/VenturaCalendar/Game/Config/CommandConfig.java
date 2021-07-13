@@ -83,10 +83,6 @@ public class CommandConfig extends Config implements ConfigUtils
 					int from = Integer.parseInt(fromToString[0]);
 					int to = Integer.parseInt(fromToString[1]);
 					
-					VenturaCalendar.instance.getLogger().info(k);
-					VenturaCalendar.instance.getLogger().info(fromToString[0]);
-					VenturaCalendar.instance.getLogger().info(fromToString[1]);
-					
 					redeemableMonths.put(k, new FromTo(from, to));
 				}
 			});

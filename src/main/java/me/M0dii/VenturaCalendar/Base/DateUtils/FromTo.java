@@ -2,7 +2,8 @@ package me.M0dii.VenturaCalendar.Base.DateUtils;
 
 public class FromTo
 {
-    private int from, to;
+    private final int from;
+    private final int to;
     
     public int getTo()
     {

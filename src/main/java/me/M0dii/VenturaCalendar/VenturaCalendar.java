@@ -180,7 +180,7 @@ public class VenturaCalendar extends JavaPlugin
                 if(time > 200)
                     newDay = false;
                 
-            }, 0L, 100L);
+            }, 0L, 90L);
         }
     }
     

@@ -34,13 +34,13 @@
 # The defined days are inclusive.
 rewards:
   enabled: true
-  redeemable-months:
-    enabled: true
-    January: "10-20"
   timesystem: "default"
   commands:
     - '[CONSOLE] give %player% diamond 1'
-    - '[PLAYER] this will be executed by player'
+  #  - '[PLAYER] this will be executed by player'
+  redeemable-months:
+    enabled: true
+    January: "10-20"
 new-day:
   message:
     enabled: true
