@@ -36,11 +36,10 @@ public class Placeholders extends PlaceholderExpansion {
         return "1.0.0";
     }
     
-    DateUtils du = VenturaCalendar.getDateUtils();
-    
     @Override
-    public String onRequest(OfflinePlayer player, String id)
+    public String onRequest(OfflinePlayer player, @NotNull String id)
     {
+        DateUtils du = VenturaCalendar.getDateUtils();
         TimeSystem ts = VenturaCalendar.getTimeConfig().getTimeSystems().get("default");
         World w = Bukkit.getWorld(ts.getWorldName());
         
@@ -49,6 +48,8 @@ public class Placeholders extends PlaceholderExpansion {
     
         Date date = VenturaCalendar.getDateCalculator().fromTicks(w.getFullTime(), ts);
         long dow = du.getDayOfWeek(date);
+        
+        date = du.addZero(date);
     
         switch(id)
         {
@@ -71,15 +72,14 @@ public class Placeholders extends PlaceholderExpansion {
             case "date_era":
                 return String.valueOf(date.getEra());
             case "date_day_name":
-                return String.valueOf(ts.getDayNames().get((int)dow));
+                return String.valueOf(date.getDayName());
             case "date_month_name":
-                return String.valueOf(ts.getMonthNames().get((int)date.getMonth()));
+                return String.valueOf(date.getMonthName());
             case "date_era_name":
-                return String.valueOf(ts.getMonthNames().get((int)date.getEra()));
+                return String.valueOf(date.getEraName());
             case "date_day_of_week":
                 return String.valueOf(dow);
         }
-       
         
         return null;
     }
