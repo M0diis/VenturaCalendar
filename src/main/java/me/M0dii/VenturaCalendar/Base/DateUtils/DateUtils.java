@@ -139,7 +139,7 @@ public class DateUtils {
 		
 		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
 		
-		DateCalculator dateCalculator = VenturaCalendar.getDateCalculator();
+		DateCalculator dateCalc = VenturaCalendar.getDateCalculator();
 		long ticks = date.getRootTicks();
 		
 		long ticksPerSecond = timeSystem.getTicksPerSecond();
@@ -153,7 +153,7 @@ public class DateUtils {
 		for(long daysThisMonth : timeSystem.getDaysPerMonth())
 			ticksPerMonth.add(ticksPerDay * daysThisMonth);
 			
-		long ticksPerYear  = 0;
+		long ticksPerYear = 0;
 		
 		for(long ticksThisMonth : ticksPerMonth)
 			ticksPerYear = ticksPerYear + ticksThisMonth;
@@ -161,28 +161,28 @@ public class DateUtils {
 		switch(unit)
 		{
 			case tick:
-				return dateCalculator.fromTicks(ticks - count, timeSystem);
+				return dateCalc.fromTicks(ticks - count, timeSystem);
 			
 			case second:
-				return dateCalculator.fromTicks(ticks - (ticksPerSecond * count),  timeSystem);
+				return dateCalc.fromTicks(ticks - (ticksPerSecond * count),  timeSystem);
 			
 			case minute:
-				return dateCalculator.fromTicks(ticks - (ticksPerMinute * count), timeSystem);
+				return dateCalc.fromTicks(ticks - (ticksPerMinute * count), timeSystem);
 			
 			case hour:
-				return dateCalculator.fromTicks(ticks - (ticksPerHour * count), timeSystem);
+				return dateCalc.fromTicks(ticks - (ticksPerHour * count), timeSystem);
 			
 			case day:
-				return dateCalculator.fromTicks(ticks - (ticksPerDay * count), timeSystem);
+				return dateCalc.fromTicks(ticks - (ticksPerDay * count), timeSystem);
 			
 			case week:
-				return dateCalculator.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
+				return dateCalc.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
 			
 			case month:
-				return dateCalculator.fromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
+				return dateCalc.fromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 			
 			case year:
-				return dateCalculator.fromTicks(ticks - (ticksPerYear * count), timeSystem);
+				return dateCalc.fromTicks(ticks - (ticksPerYear * count), timeSystem);
 			
 			default:
 				return date;
@@ -192,16 +192,18 @@ public class DateUtils {
 	public long getDayOfWeek(Date date)
 	{
 		date = new Date(date);
-		date.setDay(date.getDay() + date.getTimeSystem().getDayZero());
 		
-	    int cc = (int) (date.getYear()/100);
-	    int yy = (int) (date.getYear() - ((date.getYear()/100)*100));
+		if(date.getMonth() != 6)
+			date.setDay(date.getDay() + date.getTimeSystem().getDayZero());
+		
+	    int cc = (int) (date.getYear() / 100);
+	    int yy = (int) (date.getYear() - ((date.getYear() / 100) * 100));
 
-	    int c = (cc/4) - 2*cc-1;
-	    int y = 5*yy/4;
-	    int m = (int) (26*(date.getMonth()+1)/10);
+	    int c = (cc / 4) - 2 * cc - 1;
+	    int y = 5 * yy / 4;
+	    int m = (int) (26 * (date.getMonth() + 1) / 10);
 	    int d = (int) date.getDay();
 		
-		return (int) ((c+y+m+d) % date.getTimeSystem().getDaysPerWeek());
+		return (int) ((c + y + m + d) % date.getTimeSystem().getDaysPerWeek());
 	}
 }

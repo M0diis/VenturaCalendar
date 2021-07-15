@@ -154,8 +154,6 @@ public class Calendar implements InventoryHolder
 				weekItems.add(weekItem);
 			}
 			
-			// X =
-			
 			daySlot = (int) (daySlot + (8 - (daysPerWeek - ts.getDayZero())));
 		}
 		

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class DateCalculator
 {
-	TimeSystemUtils timeSystemUtils = VenturaCalendar.getTimeSystemUtils();
+	TimeSystemUtils tsUtils = VenturaCalendar.getTimeSystemUtils();
 	
 	public Date fromMillis(TimeSystem timeSystem)
 	{
@@ -14,7 +14,9 @@ public class DateCalculator
 		
 		long seconds = millis / 1000;
 		
-		long ticks = seconds * 20 - 22389457;
+		long ticks = seconds * 20 - 22320000;
+		
+		VenturaCalendar.instance.getLogger().info(String.valueOf(ticks));
 		
 		return fromTicks(ticks, timeSystem);
 	}
@@ -34,13 +36,13 @@ public class DateCalculator
 		ArrayList<Long> erasBegin = timeSystem.getErasBegin();
 		ArrayList<Long> erasEnd   = timeSystem.getErasEnd();
 		
-		long ticksPerSecond 			= (long) timeSystemUtils.getTicksPerUnit(DateEnum.second, timeSystem);
-		long ticksPerMinute 			= (long) timeSystemUtils.getTicksPerUnit(DateEnum.minute, timeSystem);
-		long ticksPerHour 				= (long) timeSystemUtils.getTicksPerUnit(DateEnum.hour, timeSystem);
-		long ticksPerDay    			= (long) timeSystemUtils.getTicksPerUnit(DateEnum.day, timeSystem);
-		long ticksPerWeek   			= (long) timeSystemUtils.getTicksPerUnit(DateEnum.week, timeSystem);
-		ArrayList<Long> ticksPerMonth 	= (ArrayList<Long>) timeSystemUtils.getTicksPerUnit(DateEnum.month, timeSystem);
-		long ticksPerYear  				= (long) timeSystemUtils.getTicksPerUnit(DateEnum.year, timeSystem);
+		long ticksPerSecond 			= (long) tsUtils.getTPU(DateEnum.second, timeSystem);
+		long ticksPerMinute 			= (long) tsUtils.getTPU(DateEnum.minute, timeSystem);
+		long ticksPerHour 				= (long) tsUtils.getTPU(DateEnum.hour, timeSystem);
+		long ticksPerDay    			= (long) tsUtils.getTPU(DateEnum.day, timeSystem);
+		long ticksPerWeek   			= (long) tsUtils.getTPU(DateEnum.week, timeSystem);
+		ArrayList<Long> ticksPerMonth 	= (ArrayList<Long>) tsUtils.getTPU(DateEnum.month, timeSystem);
+		long ticksPerYear  				= (long) tsUtils.getTPU(DateEnum.year, timeSystem);
 		long rootTicks = ticks;
 
 		year = ticks / ticksPerYear;

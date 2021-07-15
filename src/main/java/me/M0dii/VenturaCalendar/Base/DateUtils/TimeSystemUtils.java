@@ -35,7 +35,7 @@ public class TimeSystemUtils
 		return timeSystemMap;
 	}
 	
-	public Object getTicksPerUnit(DateEnum unit, TimeSystem timeSystem)
+	public Object getTPU(DateEnum unit, TimeSystem timeSystem)
 	{
 		long ticksPerSecond = timeSystem.getTicksPerSecond();
 		long ticksPerMinute = ticksPerSecond * timeSystem.getSecondsPerMinute();
