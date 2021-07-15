@@ -166,11 +166,7 @@ public class TimeSystem
 	public ArrayList<Long> getErasEnd() {
 		return erasEnd;
 	}
-
 	
-	/*
-	 * Zero point getter.
-	 */
 	public long getTickZero() {
 		return tickZero;
 	}
@@ -206,10 +202,6 @@ public class TimeSystem
 	public long getEraZero() {
 		return eraZero;
 	}
-	
-	/*
-	 *  Name getter.
-	 */
 	
 	public ArrayList<String> getDayNames() {
 		return dayNames;

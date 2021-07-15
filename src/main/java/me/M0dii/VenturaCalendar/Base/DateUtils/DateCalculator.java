@@ -14,7 +14,7 @@ public class DateCalculator
 		
 		long seconds = millis / 1000;
 		
-		long ticks = seconds * 20; // - 22389457;
+		long ticks = seconds * 20 - 22389457;
 		
 		return fromTicks(ticks, timeSystem);
 	}
