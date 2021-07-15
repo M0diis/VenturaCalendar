@@ -73,7 +73,8 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 		
 		if(name.equals("calendar"))
 		{
-			timeSystems.forEach((key, value) -> completes.add(value.getName()));
+			if(sender.hasPermission("venturacalendar.command.timesystem"))
+				timeSystems.forEach((key, value) -> completes.add(value.getName()));
 		}
 		
 		return completes;

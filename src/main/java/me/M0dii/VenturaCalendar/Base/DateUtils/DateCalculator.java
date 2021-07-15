@@ -14,7 +14,7 @@ public class DateCalculator
 		
 		long seconds = millis / 1000;
 		
-		long ticks = seconds * 20;
+		long ticks = seconds * 20; // - 22389457;
 		
 		return fromTicks(ticks, timeSystem);
 	}
@@ -33,8 +33,7 @@ public class DateCalculator
 		
 		ArrayList<Long> erasBegin = timeSystem.getErasBegin();
 		ArrayList<Long> erasEnd   = timeSystem.getErasEnd();
-			
-
+		
 		long ticksPerSecond 			= (long) timeSystemUtils.getTicksPerUnit(DateEnum.second, timeSystem);
 		long ticksPerMinute 			= (long) timeSystemUtils.getTicksPerUnit(DateEnum.minute, timeSystem);
 		long ticksPerHour 				= (long) timeSystemUtils.getTicksPerUnit(DateEnum.hour, timeSystem);

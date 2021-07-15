@@ -1,6 +1,6 @@
 package me.M0dii.VenturaCalendar;
 
-import me.M0dii.VenturaCalendar.Base.ConfigUitls.TimeConfig;
+import me.M0dii.VenturaCalendar.Base.ConfigUtils.TimeConfig;
 import me.M0dii.VenturaCalendar.Base.DateUtils.*;
 import me.M0dii.VenturaCalendar.Base.DateUtils.Date;
 import me.M0dii.VenturaCalendar.Base.Utils.Placeholders;
@@ -205,7 +205,6 @@ public class VenturaCalendar extends JavaPlugin
             if(pcmd != null)
                 pcmd.setExecutor(commandCaller);
         }
-    
     }
 
     private void registerEvents()

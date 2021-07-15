@@ -6,6 +6,5 @@ public enum ItemProperties
 	NAME,
 	LORE,
 	MATERIAL,
-	ID,
 	AMOUNT
 }

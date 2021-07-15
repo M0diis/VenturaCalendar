@@ -13,7 +13,7 @@ shadowJar {
     relocate 'org.bstats', 'me.m0dii.VenturaCalendar'
     minimize()
 
-    archiveFileName = "VenturaCalendar-${version}.jar"
+    archiveFileName = "C:/Users/modes/Desktop/Coding/M0-Development/Minecraft/Servers/1.16.5/plugins/VenturaCalendar-${version}.jar"
 }
 
 repositories {

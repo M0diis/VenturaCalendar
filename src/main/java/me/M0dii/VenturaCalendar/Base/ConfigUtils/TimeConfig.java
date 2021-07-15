@@ -1,4 +1,4 @@
-package me.M0dii.VenturaCalendar.Base.ConfigUitls;
+package me.M0dii.VenturaCalendar.Base.ConfigUtils;
 
 import me.M0dii.VenturaCalendar.Base.DateUtils.TimeSystem;
 import me.M0dii.VenturaCalendar.VenturaCalendar;

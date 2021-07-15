@@ -2,8 +2,8 @@ package me.M0dii.VenturaCalendar.Game.Config;
 
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
-import me.M0dii.VenturaCalendar.Base.ConfigUitls.Config;
-import me.M0dii.VenturaCalendar.Base.ConfigUitls.ConfigUtils;
+import me.M0dii.VenturaCalendar.Base.ConfigUtils.Config;
+import me.M0dii.VenturaCalendar.Base.ConfigUtils.ConfigUtils;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.ItemProperties;
 import me.M0dii.VenturaCalendar.Base.ItemUtils.Items;
 import me.M0dii.VenturaCalendar.Game.GUI.InventoryProperties;
@@ -12,7 +12,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

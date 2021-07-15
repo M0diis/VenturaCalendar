@@ -145,6 +145,9 @@ public class TimeSystem
 
 	public long getDaysPerWeek()
 	{
+		if(daysPerWeek > 8)
+			return 8;
+		
 		return daysPerWeek;
 	}
 

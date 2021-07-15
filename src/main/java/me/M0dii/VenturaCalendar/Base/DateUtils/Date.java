@@ -121,19 +121,23 @@ public class Date
 		return day;
 	}
 
-	public void setDay(long day) {
+	public void setDay(long day)
+	{
 		this.day = day;
 	}
 
-	public long getWeek() {
+	public long getWeek()
+	{
 		return week;
 	}
 
-	public void setWeek(long week) {
+	public void setWeek(long week)
+	{
 		this.week = week;
 	}
 
-	public long getMonth() {
+	public long getMonth()
+	{
 		return month;
 	}
 	

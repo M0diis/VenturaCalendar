@@ -1,6 +1,7 @@
 package me.M0dii.VenturaCalendar.Base.ItemUtils;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

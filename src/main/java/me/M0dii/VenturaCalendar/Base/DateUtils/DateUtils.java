@@ -30,19 +30,14 @@ public class DateUtils {
 		
 		return dateMap;
 	}
-	
-	/*
-	 * Method to create a date with a timeSystem, but 0 paramaters.
-	 */
-	public Date getNullDate(TimeSystem timeSystem){
+
+	public Date getNullDate(TimeSystem timeSystem)
+	{
 		return new Date(timeSystem, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
 	
-	/*
-	 * Method to add the zero points to the given date object, with the given timeSystem.
-	 * Return a new Date object.
-	 */
-	public Date addZero(Date date){
+	public Date addZeroPoints(Date date)
+	{
 		date = new Date(date);
 		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
 		
@@ -58,13 +53,11 @@ public class DateUtils {
 		
 		return date;
 	}
-	
-	/*
-	 * Method to remove/discount the zero points from the given date object, with the given timeSystem.
-	 * Returns a new Date object.
-	 */
-	public Date removeZero(Date date){
+
+	public Date removeZeroPoints(Date date)
+	{
 		date = new Date(date);
+		
 		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
 		
 		date.setTick	(date.getTick() 	- timeSystem.getTickZero());
@@ -83,14 +76,14 @@ public class DateUtils {
 	/*
 	 * Methods to calculate up or down a single parameter from a given date, with the date timeSystem.
 	 * With maximum and minimum check.
-	 */	
+	 */
 	public Date up(DateEnum unit, int count, Date date)
 	{
 		date = new Date(date);
 		
 		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
 		
-		DateCalculator dateCalculator = VenturaCalendar.getDateCalculator();
+		DateCalculator dateCalc = VenturaCalendar.getDateCalculator();
 		long ticks = date.getRootTicks();
 		
 		long ticksPerSecond = timeSystem.getTicksPerSecond();
@@ -98,6 +91,7 @@ public class DateUtils {
 		long ticksPerHour 	= ticksPerMinute * timeSystem.getMinutesPerHour();
 		long ticksPerDay    = ticksPerHour   * timeSystem.getHoursPerDay();
 		long ticksPerWeek   = ticksPerDay    * timeSystem.getDaysPerWeek();
+		
 		ArrayList<Long> ticksPerMonth = new ArrayList<>();
 		
 		for(long daysThisMonth : timeSystem.getDaysPerMonth())
@@ -111,28 +105,28 @@ public class DateUtils {
 		switch(unit)
 		{
 			case tick:
-				return dateCalculator.fromTicks(ticks + count, timeSystem);
+				return dateCalc.fromTicks(ticks + count, timeSystem);
 			
 			case second:
-				return dateCalculator.fromTicks(ticks + (ticksPerSecond * count),  timeSystem);
+				return dateCalc.fromTicks(ticks + (ticksPerSecond * count),  timeSystem);
 			
 			case minute:
-				return dateCalculator.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
+				return dateCalc.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
 			
 			case hour:
-				return dateCalculator.fromTicks(ticks + (ticksPerHour * count), timeSystem);
+				return dateCalc.fromTicks(ticks + (ticksPerHour * count), timeSystem);
 			
 			case day:
-				return dateCalculator.fromTicks(ticks + (ticksPerDay * count), timeSystem);
+				return dateCalc.fromTicks(ticks + (ticksPerDay * count), timeSystem);
 			
 			case week:
-				return dateCalculator.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
+				return dateCalc.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
 			
 			case month:
-				return dateCalculator.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() + 1), timeSystem);
+				return dateCalc.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() + 1), timeSystem);
 			
 			case year:
-				return dateCalculator.fromTicks(ticks + (ticksPerYear * count), timeSystem);
+				return dateCalc.fromTicks(ticks + (ticksPerYear * count), timeSystem);
 			
 			default:
 				return date;
@@ -153,6 +147,7 @@ public class DateUtils {
 		long ticksPerHour 	= ticksPerMinute * timeSystem.getMinutesPerHour();
 		long ticksPerDay    = ticksPerHour   * timeSystem.getHoursPerDay();
 		long ticksPerWeek   = ticksPerDay    * timeSystem.getDaysPerWeek();
+		
 		ArrayList<Long> ticksPerMonth = new ArrayList<>();
 		
 		for(long daysThisMonth : timeSystem.getDaysPerMonth())

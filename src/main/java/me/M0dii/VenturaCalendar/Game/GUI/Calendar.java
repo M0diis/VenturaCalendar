@@ -79,11 +79,10 @@ public class Calendar implements InventoryHolder
 				getInventorySize(date, ts), Component.text(title));
 		
 		double daysPerMonth = ts.getDaysPerMonth().get((int) date.getMonth());
-		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.day, (int) date.getDay(), date));
+		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.day,
+				(int) date.getDay(), date));
+
 		double daysPerWeek = ts.getDaysPerWeek();
-		
-		 if(daysPerWeek > 8)
-			 daysPerWeek = 8;
 		 
 		double weeksThisMonth = Math.ceil(((daysPerMonth + firstWeekDay) / daysPerWeek));
 		
@@ -98,9 +97,9 @@ public class Calendar implements InventoryHolder
 				(HashMap<Items, HashMap<ItemProperties, Object>>)
 				calendarProperties.get(InventoryProperties.ITEMS);
 		
-		HashMap<ItemProperties, Object> todayItemProperties = itemProperties.get(Items.TODAY);
-		HashMap<ItemProperties, Object> dayItemProperties = itemProperties.get(Items.DAY);
-		HashMap<ItemProperties, Object> weekItemProperties = itemProperties.get(Items.WEEK);
+		HashMap<ItemProperties, Object> todayProperties = itemProperties.get(Items.TODAY);
+		HashMap<ItemProperties, Object> dayProperties = itemProperties.get(Items.DAY);
+		HashMap<ItemProperties, Object> weekProperties = itemProperties.get(Items.WEEK);
 
 		for(long week = ts.getWeekZero(); week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9)
 		{
@@ -112,9 +111,9 @@ public class Calendar implements InventoryHolder
 				
 				if(isToday(date, creationDate))
 				{
-					ItemStack todayItem = createItem(todayItemProperties, date);
+					ItemStack todayItem = createItem(todayProperties, date);
 					
-					if(todayItem != null && daySlot < 54)
+					if(todayItem != null && daySlot < 55)
 					{
 						inventory.setItem(daySlot, todayItem);
 						items.put(Items.TODAY, todayItem);
@@ -123,9 +122,9 @@ public class Calendar implements InventoryHolder
 				}
 				else
 				{
-					ItemStack dayItem = createItem(dayItemProperties, date);
+					ItemStack dayItem = createItem(dayProperties, date);
 					
-					if (dayItem != null && daySlot < 54)
+					if (dayItem != null && daySlot < 55)
 					{
 						inventory.setItem(daySlot, dayItem);
 						dayItems.add(dayItem);
@@ -147,13 +146,15 @@ public class Calendar implements InventoryHolder
 				}
 			}
 
-			ItemStack weekItem = createItem(weekItemProperties, date);
+			ItemStack weekItem = createItem(weekProperties, date);
 			
-			if(weekItem != null && weekSlot < 54)
+			if(weekItem != null && weekSlot < 55)
 			{
 				inventory.setItem(weekSlot, weekItem);
 				weekItems.add(weekItem);
 			}
+			
+			// X =
 			
 			daySlot = (int) (daySlot + (8 - (daysPerWeek - ts.getDayZero())));
 		}

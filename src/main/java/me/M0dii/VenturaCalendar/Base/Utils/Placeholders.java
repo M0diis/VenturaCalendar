@@ -49,7 +49,7 @@ public class Placeholders extends PlaceholderExpansion {
         Date date = VenturaCalendar.getDateCalculator().fromTicks(w.getFullTime(), ts);
         long dow = du.getDayOfWeek(date);
         
-        date = du.addZero(date);
+        date = du.addZeroPoints(date);
     
         switch(id)
         {

@@ -1,4 +1,4 @@
-package me.M0dii.VenturaCalendar.Base.ConfigUitls;
+package me.M0dii.VenturaCalendar.Base.ConfigUtils;
 
 import java.io.File;
 import java.io.IOException;

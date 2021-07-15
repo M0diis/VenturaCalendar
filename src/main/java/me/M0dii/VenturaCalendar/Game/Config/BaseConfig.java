@@ -6,8 +6,8 @@ import java.util.List;
 import me.M0dii.VenturaCalendar.Base.DateUtils.FromTo;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
-import me.M0dii.VenturaCalendar.Base.ConfigUitls.Config;
-import me.M0dii.VenturaCalendar.Base.ConfigUitls.ConfigUtils;
+import me.M0dii.VenturaCalendar.Base.ConfigUtils.Config;
+import me.M0dii.VenturaCalendar.Base.ConfigUtils.ConfigUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 

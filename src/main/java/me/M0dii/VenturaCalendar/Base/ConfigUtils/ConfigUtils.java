@@ -1,6 +1,5 @@
-package me.M0dii.VenturaCalendar.Base.ConfigUitls;
+package me.M0dii.VenturaCalendar.Base.ConfigUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ConfigUtils

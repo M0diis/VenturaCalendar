@@ -35,7 +35,7 @@ public class Utils
         
         date = new Date(date);
         TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
-        date = du.addZero(date);
+        date = du.addZeroPoints(date);
         
         message = message
             .replaceAll("%[tT]ick%", String.valueOf(date.getTick()))
@@ -48,7 +48,7 @@ public class Utils
             .replaceAll("%[yY]ear%", String.valueOf(date.getYear()))
             .replaceAll("%[eE]ra%", String.valueOf(date.getEra()));
         
-        date = du.removeZero(date);
+        date = du.removeZeroPoints(date);
         long dayOfWeek = du.getDayOfWeek(date);
         
         message = message
