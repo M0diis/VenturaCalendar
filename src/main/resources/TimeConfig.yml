@@ -6,6 +6,15 @@
 # The timesystem time will be used by specified world name
 # If set to "current" it will use the current world the player is in
 #
+# If you want to use real life calendar:
+#
+# make sure the months and their days are equal to real life ones
+# set the world-name to "real-time"
+# set the starting year to 1970
+#
+# ticksPerSecond: 20
+# secondsPerMinute: 60
+# minutesPerHour: 60
 Time-Systems:
   default:
     world-name: 'world'

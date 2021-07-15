@@ -42,7 +42,7 @@ public class Calendar implements InventoryHolder
 		this.date = date;
 		this.creationDate = creationDate;
 		
-		inventory = createInventory(date, creationDate);
+		this.inventory = createInventory(date, creationDate);
 	}
 	
 	public Date getDate()
@@ -53,21 +53,20 @@ public class Calendar implements InventoryHolder
 	
 	public @NotNull Inventory getInventory()
 	{
-		return inventory;
+		return this.inventory;
 	}
 	
 	public HashMap<Items, Object> getItems()
 	{
-		return items;
+		return this.items;
 	}
 	
 	private Inventory createInventory(Date date, Date creationDate)
 	{
 		date = new Date(date);
+		creationDate = new Date(creationDate);
 		
 		TimeSystem ts = new TimeSystem(date.getTimeSystem());
-		
-		creationDate = new Date(creationDate);
 		
 		HashMap<InventoryProperties, Object> calendarProperties = calConf.getCalendarProperties(false);
 

@@ -46,7 +46,17 @@ public class CalendarCommand
 					if(wname.equalsIgnoreCase("current"))
 						world = pl.getWorld();
 					
-					if(world != null)
+					if(wname.equalsIgnoreCase("real-time"))
+					{
+						Date date = VenturaCalendar.getDateCalculator().fromMillis(timeSystem);
+						Date creationDate = VenturaCalendar.getDateCalculator().fromMillis(timeSystem);
+						
+						Calendar calendar = new Calendar(date, creationDate);
+						storageUtils.storeCalendar(pl, calendar);
+						
+						pl.openInventory(calendar.getInventory());
+					}
+					else if(world != null)
 					{
 						Date date = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
 						Date creationDate = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
@@ -84,7 +94,17 @@ public class CalendarCommand
 					if(wname.equalsIgnoreCase("current"))
 						world = pl.getWorld();
 					
-					if(world != null)
+					if(wname.equalsIgnoreCase("real-time"))
+					{
+						Date date = VenturaCalendar.getDateCalculator().fromMillis(timeSystem);
+						Date creationDate = VenturaCalendar.getDateCalculator().fromMillis(timeSystem);
+						
+						Calendar calendar = new Calendar(date, creationDate);
+						storageUtils.storeCalendar(pl, calendar);
+						
+						pl.openInventory(calendar.getInventory());
+					}
+					else if(world != null)
 					{
 						Date date = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
 						Date creationDate = VenturaCalendar.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);

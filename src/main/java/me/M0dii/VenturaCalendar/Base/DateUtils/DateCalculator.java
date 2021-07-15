@@ -8,6 +8,17 @@ public class DateCalculator
 {
 	TimeSystemUtils timeSystemUtils = VenturaCalendar.getTimeSystemUtils();
 	
+	public Date fromMillis(TimeSystem timeSystem)
+	{
+		long millis = System.currentTimeMillis();
+		
+		long seconds = millis / 1000;
+		
+		long ticks = seconds * 20;
+		
+		return fromTicks(ticks, timeSystem);
+	}
+	
 	public Date fromTicks(long ticks, TimeSystem timeSystem)
 	{
 		long tick	 = 0;

@@ -9,7 +9,7 @@
 #    venturacalendar.command.venturacalendar - Permission to the base command
 #    venturacalendar.command.reload - Permission to the reload the config
 #    venturacalendar.command.calendar - Permission to the calendar command
-#    venturacalendar.command.changetime- Permission to the add and subtract time
+#    venturacalendar.command.changetime - Permission to the add/subtract time, set starting year
 #
 #  Placeholders:
 #    - %tick%      - displays the current tick.

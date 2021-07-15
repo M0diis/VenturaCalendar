@@ -15,13 +15,15 @@ commands:
     permission: venturacalendar.command.calendar
     usage: /<command>
 permissions:
-  venturacalendar.command.vc:
+  venturacalendar.command.venturacalendar:
     description: Permission to use base command
     default: op
+  venturacalendar.command.changetime:
+    description: Permission to add/subtract time, set starting year
+  venturacalendar.command.reload:
+    description: Permission to reload the plugin
+    default: op
   venturacalendar.command.calendar:
-    description: Command to open calendar
-  TheTime.calendar:
-    description: Gives access to all TheTime calendar commands.
-    children:
-      TheTime.calendar.default: true
-      TheTime.calendar.TimeSystem: true
+    description: Permission to use the calendar
+  venturacalendar.command.timesystem:
+    description: Permission to use different timesystems
