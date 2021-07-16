@@ -49,10 +49,9 @@ public class Utils
             .replaceAll("%[eE]ra%", String.valueOf(date.getEra()));
         
         date = du.removeZeroPoints(date);
-        long dayOfWeek = du.getDayOfWeek(date);
         
         message = message
-            .replaceAll("%[dD]ay[nN]ame%", timeSystem.getDayNames().get((int) dayOfWeek))
+            .replaceAll("%[dD]ay[nN]ame%", date.getDayName())
             .replaceAll("%[mM]onth[nN]ame%", date.getMonthName())
             .replaceAll("%[eE]ra[nN]ame%", date.getEraName());
         

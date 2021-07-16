@@ -159,7 +159,8 @@ public class DateUtils {
 		
 		date = new Date(date);
 		
-		if(date.getMonth() != 6)
+		if(!date.getTimeSystem().getWorldName()
+				.equalsIgnoreCase("real-time") && date.getMonth() != 6)
 			date.setDay(date.getDay() + date.getTimeSystem().getDayZero());
 		
 	    int cc = (int) (date.getYear() / 100);

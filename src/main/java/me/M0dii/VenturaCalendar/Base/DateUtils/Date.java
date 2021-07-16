@@ -148,7 +148,9 @@ public class Date
 	
 	public String getDayName()
 	{
-		return this.getTimeSystem().getDayNames().get((int)this.day);
+		long dow = VenturaCalendar.getDateUtils().getDayOfWeek(this);
+		
+		return this.getTimeSystem().getDayNames().get((int)dow);
 	}
 	
 	public String getEraName()
