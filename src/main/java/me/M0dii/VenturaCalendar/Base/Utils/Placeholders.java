@@ -10,6 +10,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 public class Placeholders extends PlaceholderExpansion {
     
     @Override
@@ -43,15 +45,21 @@ public class Placeholders extends PlaceholderExpansion {
         TimeSystem ts = VenturaCalendar.getTimeConfig().getTimeSystems().get("default");
         World w = Bukkit.getWorld(ts.getWorldName());
         
-        if(w == null)
+        if(!ts.getWorldName().equalsIgnoreCase("real-time") && w == null)
             return null;
-    
-        Date date = VenturaCalendar.getDateCalculator().fromTicks(w.getFullTime(), ts);
+        
+        Date date = null;
+        
+        if(ts.getWorldName().equalsIgnoreCase("real-time"))
+            date = VenturaCalendar.getDateCalculator().fromMillis(ts);
+        else if (w != null)
+            date = VenturaCalendar.getDateCalculator().fromTicks(w.getFullTime(), ts);
+        
         long dow = du.getDayOfWeek(date);
         
         date = du.addZeroPoints(date);
     
-        switch(id)
+        switch(id.toLowerCase(Locale.ROOT))
         {
             case "date_tick":
                 return String.valueOf(date.getTick());

@@ -39,6 +39,7 @@ public class DateUtils {
 	public Date addZeroPoints(Date date)
 	{
 		date = new Date(date);
+		
 		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
 		
 		date.setTick	(date.getTick() 	+ timeSystem.getTickZero());
@@ -79,61 +80,15 @@ public class DateUtils {
 	 */
 	public Date up(DateEnum unit, int count, Date date)
 	{
-		date = new Date(date);
-		
-		TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
-		
-		DateCalculator dateCalc = VenturaCalendar.getDateCalculator();
-		long ticks = date.getRootTicks();
-		
-		long ticksPerSecond = timeSystem.getTicksPerSecond();
-		long ticksPerMinute = ticksPerSecond * timeSystem.getSecondsPerMinute();
-		long ticksPerHour 	= ticksPerMinute * timeSystem.getMinutesPerHour();
-		long ticksPerDay    = ticksPerHour   * timeSystem.getHoursPerDay();
-		long ticksPerWeek   = ticksPerDay    * timeSystem.getDaysPerWeek();
-		
-		ArrayList<Long> ticksPerMonth = new ArrayList<>();
-		
-		for(long daysThisMonth : timeSystem.getDaysPerMonth())
-			ticksPerMonth.add(ticksPerDay * daysThisMonth);
-			
-		long ticksPerYear  = 0;
-		
-		for(long ticksThisMonth : ticksPerMonth)
-			ticksPerYear = ticksPerYear + ticksThisMonth;
-		
-		switch(unit)
-		{
-			case tick:
-				return dateCalc.fromTicks(ticks + count, timeSystem);
-			
-			case second:
-				return dateCalc.fromTicks(ticks + (ticksPerSecond * count),  timeSystem);
-			
-			case minute:
-				return dateCalc.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
-			
-			case hour:
-				return dateCalc.fromTicks(ticks + (ticksPerHour * count), timeSystem);
-			
-			case day:
-				return dateCalc.fromTicks(ticks + (ticksPerDay * count), timeSystem);
-			
-			case week:
-				return dateCalc.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
-			
-			case month:
-				return dateCalc.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() + 1), timeSystem);
-			
-			case year:
-				return dateCalc.fromTicks(ticks + (ticksPerYear * count), timeSystem);
-			
-			default:
-				return date;
-		}
+		return calculate(unit, count, date, false);
 	}
 	
 	public Date down(DateEnum unit, int count, Date date)
+	{
+		return calculate(unit, count, date, true);
+	}
+	
+	private Date calculate(DateEnum unit, int count, Date date, boolean down)
 	{
 		date = new Date(date);
 		
@@ -152,7 +107,7 @@ public class DateUtils {
 		
 		for(long daysThisMonth : timeSystem.getDaysPerMonth())
 			ticksPerMonth.add(ticksPerDay * daysThisMonth);
-			
+		
 		long ticksPerYear = 0;
 		
 		for(long ticksThisMonth : ticksPerMonth)
@@ -161,27 +116,35 @@ public class DateUtils {
 		switch(unit)
 		{
 			case tick:
+				if(!down) return dateCalc.fromTicks(ticks + count, timeSystem);
 				return dateCalc.fromTicks(ticks - count, timeSystem);
 			
 			case second:
+				if(!down) return dateCalc.fromTicks(ticks + (ticksPerSecond * count),  timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerSecond * count),  timeSystem);
 			
 			case minute:
+				if(!down) return dateCalc.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerMinute * count), timeSystem);
 			
 			case hour:
+				if(!down) return dateCalc.fromTicks(ticks + (ticksPerHour * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerHour * count), timeSystem);
 			
 			case day:
+				if(!down) return dateCalc.fromTicks(ticks + (ticksPerDay * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerDay * count), timeSystem);
 			
 			case week:
+				if(!down) return dateCalc.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
 			
 			case month:
+				if(!down) return dateCalc.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 				return dateCalc.fromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 			
 			case year:
+				if(!down) return dateCalc.fromTicks(ticks + (ticksPerYear * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerYear * count), timeSystem);
 			
 			default:
@@ -191,6 +154,9 @@ public class DateUtils {
 	
 	public long getDayOfWeek(Date date)
 	{
+		if(date == null)
+			return 0L;
+		
 		date = new Date(date);
 		
 		if(date.getMonth() != 6)

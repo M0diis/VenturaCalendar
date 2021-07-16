@@ -49,8 +49,9 @@ public class TimeSystemUtils
 			ticksPerMonth.add(ticksPerDay * daysThisMonth);
 		
 		long ticksPerYear  = 0;
-			for(long ticksThisMonth : ticksPerMonth)
-				ticksPerYear = ticksPerYear + ticksThisMonth;
+		
+		for(long ticksThisMonth : ticksPerMonth)
+			ticksPerYear = ticksPerYear + ticksThisMonth;
 			
 		switch(unit)
 		{

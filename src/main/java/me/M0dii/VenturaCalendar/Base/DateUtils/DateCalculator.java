@@ -2,7 +2,9 @@ package me.M0dii.VenturaCalendar.Base.DateUtils;
 
 import me.M0dii.VenturaCalendar.VenturaCalendar;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class DateCalculator
 {
@@ -12,11 +14,17 @@ public class DateCalculator
 	{
 		long millis = System.currentTimeMillis();
 		
-		long seconds = millis / 1000;
+		long ticks = millis / 50 - 22320000;
 		
-		long ticks = seconds * 20 - 22320000;
+		SimpleDateFormat simpleDateFormat =
+				new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
-		VenturaCalendar.instance.getLogger().info(String.valueOf(ticks));
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(millis);
+		
+		String format = simpleDateFormat.format(calendar.getTime());
+		
+		VenturaCalendar.instance.getLogger().info(format);
 		
 		return fromTicks(ticks, timeSystem);
 	}
