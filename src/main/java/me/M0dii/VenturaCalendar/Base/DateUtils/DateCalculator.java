@@ -16,16 +16,6 @@ public class DateCalculator
 		
 		long ticks = millis / 50 - 22320000;
 		
-		SimpleDateFormat simpleDateFormat =
-				new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(millis);
-		
-		String format = simpleDateFormat.format(calendar.getTime());
-		
-		VenturaCalendar.instance.getLogger().info(format);
-		
 		return fromTicks(ticks, timeSystem);
 	}
 	
