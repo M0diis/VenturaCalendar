@@ -62,7 +62,6 @@ public class VenturaCalendar extends JavaPlugin
         return true;
     }
     
-    
     public static String PREFIX;
     
     public void onEnable()
@@ -75,12 +74,12 @@ public class VenturaCalendar extends JavaPlugin
         registerEvents();
         
         setupMetrics();
-    
-        checkForUpdates();
         
-        this.getLogger().info("VenturaCalendar has been enabled.");
-    
         checkNewDay();
+    
+        this.getLogger().info("VenturaCalendar has been enabled.");
+        
+        checkForUpdates();
     }
     
     private void checkForUpdates()

@@ -79,7 +79,7 @@ public class Calendar implements InventoryHolder
 				getInventorySize(date, ts), Component.text(title));
 		
 		double daysPerMonth = ts.getDaysPerMonth().get((int) date.getMonth());
-		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.day,
+		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.DAY,
 				(int) date.getDay(), date));
 
 		double daysPerWeek = ts.getDaysPerWeek();
@@ -227,7 +227,7 @@ public class Calendar implements InventoryHolder
 		int slots = 0;
 		
 		double daysPerMonth = timeSystem.getDaysPerMonth().get((int) date.getMonth());
-		double firstWeekDay = (double) dateUtils.getDayOfWeek(dateUtils.down(DateEnum.day, (int) date.getDay(), date));
+		double firstWeekDay = (double) dateUtils.getDayOfWeek(dateUtils.down(DateEnum.DAY, (int) date.getDay(), date));
 		double daysPerWeek = timeSystem.getDaysPerWeek();
 
 		if(daysPerWeek > 8)

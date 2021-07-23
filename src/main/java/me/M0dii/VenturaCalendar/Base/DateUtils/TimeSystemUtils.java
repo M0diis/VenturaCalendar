@@ -55,19 +55,19 @@ public class TimeSystemUtils
 			
 		switch(unit)
 		{
-			case tick:
+			case TICK:
 				return 1;
-			case second:
+			case SECOND:
 				return ticksPerSecond;
-			case minute:
+			case MINUTE:
 				return ticksPerMinute;
-			case hour:
+			case HOUR:
 				return ticksPerHour;
-			case day:
+			case DAY:
 				return ticksPerDay;
-			case week:
+			case WEEK:
 				return ticksPerWeek;
-			case month:
+			case MONTH:
 				return ticksPerMonth;
 			case year:
 				return ticksPerYear;

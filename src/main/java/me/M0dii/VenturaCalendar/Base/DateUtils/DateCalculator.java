@@ -32,12 +32,12 @@ public class DateCalculator
 		ArrayList<Long> erasBegin = timeSystem.getErasBegin();
 		ArrayList<Long> erasEnd   = timeSystem.getErasEnd();
 		
-		long ticksPerSecond 		  = (long) tsUtils.getTPU(DateEnum.second, timeSystem);
-		long ticksPerMinute 		  = (long) tsUtils.getTPU(DateEnum.minute, timeSystem);
-		long ticksPerHour 			  = (long) tsUtils.getTPU(DateEnum.hour, timeSystem);
-		long ticksPerDay    		  = (long) tsUtils.getTPU(DateEnum.day, timeSystem);
-		long ticksPerWeek   		  = (long) tsUtils.getTPU(DateEnum.week, timeSystem);
-		ArrayList<Long> ticksPerMonth = (ArrayList<Long>) tsUtils.getTPU(DateEnum.month, timeSystem);
+		long ticksPerSecond 		  = (long) tsUtils.getTPU(DateEnum.SECOND, timeSystem);
+		long ticksPerMinute 		  = (long) tsUtils.getTPU(DateEnum.MINUTE, timeSystem);
+		long ticksPerHour 			  = (long) tsUtils.getTPU(DateEnum.HOUR, timeSystem);
+		long ticksPerDay    		  = (long) tsUtils.getTPU(DateEnum.DAY, timeSystem);
+		long ticksPerWeek   		  = (long) tsUtils.getTPU(DateEnum.WEEK, timeSystem);
+		ArrayList<Long> ticksPerMonth = (ArrayList<Long>) tsUtils.getTPU(DateEnum.MONTH, timeSystem);
 		long ticksPerYear  			  = (long) tsUtils.getTPU(DateEnum.year, timeSystem);
 		long rootTicks                = ticks;
 

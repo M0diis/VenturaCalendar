@@ -16,17 +16,17 @@ public class DateUtils {
 		
 		HashMap<DateEnum, Object> dateMap = new HashMap<>();
 		
-		dateMap.put(DateEnum.timeSystem, date.getTimeSystem());
+		dateMap.put(DateEnum.TIMESYSTEM, date.getTimeSystem());
 		
-		dateMap.put(DateEnum.tick, date.getTick());
-		dateMap.put(DateEnum.second, date.getSecond());
-		dateMap.put(DateEnum.minute, date.getMinute());
-		dateMap.put(DateEnum.hour, date.getHour());
-		dateMap.put(DateEnum.day, date.getDay());
-		dateMap.put(DateEnum.week, date.getWeek());
-		dateMap.put(DateEnum.month, date.getMonth());
+		dateMap.put(DateEnum.TICK, date.getTick());
+		dateMap.put(DateEnum.SECOND, date.getSecond());
+		dateMap.put(DateEnum.MINUTE, date.getMinute());
+		dateMap.put(DateEnum.HOUR, date.getHour());
+		dateMap.put(DateEnum.DAY, date.getDay());
+		dateMap.put(DateEnum.WEEK, date.getWeek());
+		dateMap.put(DateEnum.MONTH, date.getMonth());
 		dateMap.put(DateEnum.year, date.getYear());
-		dateMap.put(DateEnum.era, date.getEra());
+		dateMap.put(DateEnum.ERA, date.getEra());
 		
 		return dateMap;
 	}
@@ -115,31 +115,31 @@ public class DateUtils {
 		
 		switch(unit)
 		{
-			case tick:
+			case TICK:
 				if(!down) return dateCalc.fromTicks(ticks + count, timeSystem);
 				return dateCalc.fromTicks(ticks - count, timeSystem);
 			
-			case second:
+			case SECOND:
 				if(!down) return dateCalc.fromTicks(ticks + (ticksPerSecond * count),  timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerSecond * count),  timeSystem);
 			
-			case minute:
+			case MINUTE:
 				if(!down) return dateCalc.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerMinute * count), timeSystem);
 			
-			case hour:
+			case HOUR:
 				if(!down) return dateCalc.fromTicks(ticks + (ticksPerHour * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerHour * count), timeSystem);
 			
-			case day:
+			case DAY:
 				if(!down) return dateCalc.fromTicks(ticks + (ticksPerDay * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerDay * count), timeSystem);
 			
-			case week:
+			case WEEK:
 				if(!down) return dateCalc.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
 			
-			case month:
+			case MONTH:
 				if(!down) return dateCalc.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 				return dateCalc.fromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 			
