@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.M0dii'
-version '1.4'
+version '1.4.0'
 sourceCompatibility = '8'
 
 archivesBaseName = 'VenturaCalendar'
@@ -13,7 +13,7 @@ shadowJar {
     relocate 'org.bstats', 'me.m0dii.VenturaCalendar'
     minimize()
 
-    archiveFileName = "C:/Users/modes/Desktop/Coding/M0-Development/Minecraft/Servers/1.16.5/plugins/VenturaCalendar-${version}.jar"
+    //archiveFileName = "C:/Users/modes/Desktop/Coding/M0-Development/Minecraft/Servers/1.16.5/plugins/VenturaCalendar-${version}.jar"
 }
 
 repositories {

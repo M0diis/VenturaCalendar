@@ -69,7 +69,7 @@ public class TimeSystemUtils
 				return ticksPerWeek;
 			case MONTH:
 				return ticksPerMonth;
-			case year:
+			case YEAR:
 				return ticksPerYear;
 				
 			default:

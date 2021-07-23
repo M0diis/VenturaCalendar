@@ -25,7 +25,7 @@ public class DateUtils {
 		dateMap.put(DateEnum.DAY, date.getDay());
 		dateMap.put(DateEnum.WEEK, date.getWeek());
 		dateMap.put(DateEnum.MONTH, date.getMonth());
-		dateMap.put(DateEnum.year, date.getYear());
+		dateMap.put(DateEnum.YEAR, date.getYear());
 		dateMap.put(DateEnum.ERA, date.getEra());
 		
 		return dateMap;
@@ -143,7 +143,7 @@ public class DateUtils {
 				if(!down) return dateCalc.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 				return dateCalc.fromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
 			
-			case year:
+			case YEAR:
 				if(!down) return dateCalc.fromTicks(ticks + (ticksPerYear * count), timeSystem);
 				return dateCalc.fromTicks(ticks - (ticksPerYear * count), timeSystem);
 			

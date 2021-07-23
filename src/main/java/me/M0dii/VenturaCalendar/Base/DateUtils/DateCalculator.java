@@ -38,7 +38,7 @@ public class DateCalculator
 		long ticksPerDay    		  = (long) tsUtils.getTPU(DateEnum.DAY, timeSystem);
 		long ticksPerWeek   		  = (long) tsUtils.getTPU(DateEnum.WEEK, timeSystem);
 		ArrayList<Long> ticksPerMonth = (ArrayList<Long>) tsUtils.getTPU(DateEnum.MONTH, timeSystem);
-		long ticksPerYear  			  = (long) tsUtils.getTPU(DateEnum.year, timeSystem);
+		long ticksPerYear  			  = (long) tsUtils.getTPU(DateEnum.YEAR, timeSystem);
 		long rootTicks                = ticks;
 
 		year = ticks / ticksPerYear;
