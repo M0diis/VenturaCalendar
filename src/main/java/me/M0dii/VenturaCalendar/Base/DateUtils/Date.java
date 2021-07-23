@@ -162,7 +162,8 @@ public class Date
 		this.month = month;
 	}
 
-	public long getYear() {
+	public long getYear()
+	{
 		return year;
 	}
 

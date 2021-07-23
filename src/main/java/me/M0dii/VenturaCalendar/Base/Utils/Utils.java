@@ -53,7 +53,10 @@ public class Utils
         message = message
             .replaceAll("%[dD]ay[nN]ame%", date.getDayName())
             .replaceAll("%[mM]onth[nN]ame%", date.getMonthName())
-            .replaceAll("%[eE]ra[nN]ame%", date.getEraName());
+            .replaceAll("%[eE]ra[nN]ame%", date.getEraName())
+            .replaceAll("%[tT]ime[sS]ystem[nN]ame", timeSystem.getName())
+            .replaceAll("%[tT]ime[sS]ystem[wW]orld", timeSystem.getWorldName())
+            .replaceAll("%[yY]ears[pP]assed", String.valueOf(date.getYear()));
         
         if(papi) PlaceholderAPI.setPlaceholders(null, message);
         

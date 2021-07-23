@@ -51,7 +51,7 @@ public class BaseConfig extends Config implements ConfigUtils
 		for(String m : getListString("new-day.message.text"))
 			msg.append(Utils.format(m)).append("\n");
 		
-		return msg.toString();
+		return msg.toString().trim();
 	}
 	
 	public boolean redeemWhitelistEnabled()

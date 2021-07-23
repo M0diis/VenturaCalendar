@@ -77,6 +77,9 @@ public class Placeholders extends PlaceholderExpansion {
                 return String.valueOf(date.getMonth());
             case "date_year":
                 return String.valueOf(date.getYear());
+            case "date_years_passed":
+                date = du.removeZeroPoints(date);
+                return String.valueOf(date.getYear());
             case "date_era":
                 return String.valueOf(date.getEra());
             case "date_day_name":
