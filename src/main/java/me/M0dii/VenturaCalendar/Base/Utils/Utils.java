@@ -58,7 +58,8 @@ public class Utils
             .replaceAll("%[tT]ime[sS]ystem[wW]orld", timeSystem.getWorldName())
             .replaceAll("%[yY]ears[pP]assed", String.valueOf(date.getYear()));
         
-        if(papi) PlaceholderAPI.setPlaceholders(null, message);
+        if(papi)
+            PlaceholderAPI.setPlaceholders(null, message);
         
         return message;
     }
