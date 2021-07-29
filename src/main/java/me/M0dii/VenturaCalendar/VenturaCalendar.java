@@ -38,7 +38,7 @@ public class VenturaCalendar extends JavaPlugin
     
     public static HashMap<Player, Storage> storages = new HashMap<>();
     
-    private static Placeholders placeholders;
+    private Placeholders placeholders;
     
     private static DateCalculator dateCalculator;
     private static DateUtils dateUtils;
