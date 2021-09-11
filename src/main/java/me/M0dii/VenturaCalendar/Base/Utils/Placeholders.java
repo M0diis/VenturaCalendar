@@ -43,14 +43,17 @@ public class Placeholders extends PlaceholderExpansion {
     {
         DateUtils du = VenturaCalendar.getDateUtils();
         TimeSystem ts = VenturaCalendar.getTimeConfig().getTimeSystems().get("default");
-        World w = Bukkit.getWorld(ts.getWorldName());
         
-        if(!ts.getWorldName().equalsIgnoreCase("real-time") && w == null)
+        String worldName = ts.getWorldName();
+        
+        World w = Bukkit.getWorld(worldName);
+        
+        if(!worldName.equalsIgnoreCase("real-time") && w == null)
             return null;
         
         Date date = null;
         
-        if(ts.getWorldName().equalsIgnoreCase("real-time"))
+        if(worldName.equalsIgnoreCase("real-time"))
             date = VenturaCalendar.getDateCalculator().fromMillis(ts);
         else if (w != null)
             date = VenturaCalendar.getDateCalculator().fromTicks(w.getFullTime(), ts);
@@ -59,7 +62,7 @@ public class Placeholders extends PlaceholderExpansion {
         
         date = du.addZeroPoints(date);
     
-        switch(id.toLowerCase(Locale.ROOT))
+        switch(id.toLowerCase())
         {
             case "date_tick":
                 return String.valueOf(date.getTick());
