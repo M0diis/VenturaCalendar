@@ -1,7 +1,7 @@
 name: VenturaCalendar
 main: me.M0dii.VenturaCalendar.VenturaCalendar
 description: VenturaCalendar by M0dii
-version: 1.4.1
+version: 1.4.2
 api-version: 1.13
 author: M0dii
 softdepend: [PlaceholderAPI]

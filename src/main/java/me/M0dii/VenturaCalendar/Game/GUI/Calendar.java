@@ -10,7 +10,6 @@ import me.M0dii.VenturaCalendar.Base.ItemUtils.Items;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
 import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.VenturaCalendar;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -76,7 +75,7 @@ public class Calendar implements InventoryHolder
 		String title = Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date, true);
 		
 		Inventory inventory = Bukkit.createInventory(this,
-				getInventorySize(date, ts), Component.text(title));
+				getInventorySize(date, ts), title);
 		
 		double daysPerMonth = ts.getDaysPerMonth().get((int) date.getMonth());
 		double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.DAY,
