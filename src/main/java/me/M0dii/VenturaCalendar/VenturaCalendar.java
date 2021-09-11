@@ -1,20 +1,19 @@
 package me.M0dii.VenturaCalendar;
 
 import me.M0dii.VenturaCalendar.Base.ConfigUtils.TimeConfig;
-import me.M0dii.VenturaCalendar.Base.DateUtils.*;
 import me.M0dii.VenturaCalendar.Base.DateUtils.Date;
+import me.M0dii.VenturaCalendar.Base.DateUtils.*;
 import me.M0dii.VenturaCalendar.Base.Utils.Placeholders;
 import me.M0dii.VenturaCalendar.Base.Utils.UpdateChecker;
 import me.M0dii.VenturaCalendar.Base.Utils.Utils;
-import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.BaseConfig;
+import me.M0dii.VenturaCalendar.Game.Config.CalendarConfig;
 import me.M0dii.VenturaCalendar.Game.Config.Messages;
 import me.M0dii.VenturaCalendar.Game.GUI.Storage;
 import me.M0dii.VenturaCalendar.Game.GUI.StorageUtils;
 import me.M0dii.VenturaCalendar.Game.Listeners.Commands.CmdExecutor;
 import me.M0dii.VenturaCalendar.Game.Listeners.Inventory.InventoryCaller;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.Component;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
 import org.bstats.charts.MultiLineChart;
@@ -142,7 +141,7 @@ public class VenturaCalendar extends JavaPlugin
                     {
                         msg = PlaceholderAPI.setPlaceholders(p, msg);
                         
-                        w.sendMessage(Component.text(msg));
+                        p.sendMessage(msg);
                     }
                 }
                 
