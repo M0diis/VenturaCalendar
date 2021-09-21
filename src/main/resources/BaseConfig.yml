@@ -42,6 +42,9 @@ rewards:
   redeemable-months:
     enabled: true
     January: "10-20"
+action-bar:
+  enabled: true
+  text: "%dayName% | %hour%:%minute%:%second%"
 new-day:
   message:
     enabled: true

@@ -4,12 +4,11 @@ plugins {
 }
 
 group 'me.M0dii'
-version '1.4.2'
-
-archivesBaseName = 'VenturaCalendar'
+version '1.5.0-preview'
 
 shadowJar {
-    relocate 'org.bstats', 'me.M0dii.VenturaCalendar'
+    relocate 'org.bstats', 'me.M0dii.venturacalendar'
+
     minimize()
 
     archiveFileName = "VenturaCalendar-${version}.jar"
@@ -60,3 +59,5 @@ dependencies {
 }
 
 compileJava.options.encoding = 'UTF-8'
+
+sourceCompatibility = '16'
