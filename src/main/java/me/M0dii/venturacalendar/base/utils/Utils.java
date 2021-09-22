@@ -8,17 +8,23 @@ import me.M0dii.venturacalendar.VenturaCalendar;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.regex.Pattern;
 
 public class Utils
 {
-    static final VenturaCalendar plugin = VenturaCalendar.getInstance();
+    private static final VenturaCalendar plugin = VenturaCalendar.getInstance();
+    
+    private static final Pattern HEX_PATTERN = Pattern.compile("#([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])");
     
     public static String format(String text)
     {
         if(text == null || text.isEmpty())
             return "";
         
-        return ChatColor.translateAlternateColorCodes('&', text);
+        return ChatColor.translateAlternateColorCodes('&',
+                HEX_PATTERN.matcher(text).replaceAll("&x&$1&$2&$3&$4&$5&$6"));
     }
     
     public static void sendFormat(CommandSender sender, String msg)
@@ -32,6 +38,16 @@ public class Utils
     }
     
     public static String replacePlaceholder(String message, Date date, boolean papi)
+    {
+        return replacePlaceholder(message, date, papi, null);
+    }
+    
+    public static String replacePlaceholder(String message, Date date, Player p)
+    {
+        return replacePlaceholder(message, date, true, p);
+    }
+    
+    public static String replacePlaceholder(String message, Date date, boolean papi, Player p)
     {
         DateUtils du = plugin.getDateUtils();
         
@@ -61,7 +77,7 @@ public class Utils
             .replaceAll("%[yY]ears[pP]assed", String.valueOf(date.getYear()));
         
         if(papi)
-            PlaceholderAPI.setPlaceholders(null, message);
+            PlaceholderAPI.setPlaceholders(p, message);
         
         return message;
     }

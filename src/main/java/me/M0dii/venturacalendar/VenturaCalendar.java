@@ -88,15 +88,15 @@ public class VenturaCalendar extends JavaPlugin
     
     private void actionbar()
     {
-        if(getBaseConfig().actionBar().isEmpty())
+        if(getBaseConfig().getActionBarMessage().isEmpty())
             return;
     
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
     
-            if(getBaseConfig().actionBar().isEmpty())
+            if(getBaseConfig().getActionBarMessage().isEmpty())
                 return;
             
-            String msg = getBaseConfig().actionBar().get();
+            String msg = getBaseConfig().getActionBarMessage().get();
             
             TimeSystem timeSystem = getTimeConfig().getTimeSystems().get("default");
     
@@ -107,22 +107,15 @@ public class VenturaCalendar extends JavaPlugin
             {
                 Date date = getDateCalculator().fromMillis(timeSystem);
                 
-                Bukkit.getOnlinePlayers().forEach(p -> {
-                    
-                    p.sendActionBar(Utils.replacePlaceholder(msg, date, true));
-                    
-                });
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.replacePlaceholder(msg, date, p)));
             }
             else if(world != null)
             {
                 Date date = getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
-                
-                
+    
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.replacePlaceholder(msg, date, p)));
             }
-    
             
-    
-    
         }, 0L, 20L);
     }
     
@@ -177,14 +170,16 @@ public class VenturaCalendar extends JavaPlugin
                 if(baseConfig.rewardsEnabled())
                     redeemed.clear();
                 
+                if(baseConfig.getNewDayMessage().isEmpty())
+                    return;
+                
                 if(baseConfig.newDayMessageEnabled())
                 {
-                    String msg = Utils.replacePlaceholder(
-                            baseConfig.getMessage(Messages.NEW_DAY_TEXT), date, false);
+                    String base = baseConfig.getNewDayMessage().get();
 
                     for(Player p : Bukkit.getOnlinePlayers())
                     {
-                        msg = PlaceholderAPI.setPlaceholders(p, msg);
+                        String msg = Utils.replacePlaceholder(base, date, p);
                         
                         p.sendMessage(msg);
     

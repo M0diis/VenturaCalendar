@@ -143,7 +143,7 @@ public class Date
 	
 	public String getMonthName()
 	{
-		return this.getTimeSystem().getMonthNames().get(((int)this.month) - 1);
+		return this.getTimeSystem().getMonthNames().get(((int)this.month));
 	}
 	
 	public String getDayName()

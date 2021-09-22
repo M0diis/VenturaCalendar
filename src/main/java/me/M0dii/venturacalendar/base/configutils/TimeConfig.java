@@ -2,6 +2,7 @@ package me.M0dii.venturacalendar.base.configutils;
 
 import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.M0dii.venturacalendar.VenturaCalendar;
+import me.M0dii.venturacalendar.base.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,23 +12,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TimeConfig extends Config implements ConfigUtils
 {
-	FileConfiguration config;
+	FileConfiguration cfg;
 	
 	public TimeConfig(VenturaCalendar plugin)
 	{
 		super(plugin.getDataFolder(), "TimeConfig.yml", plugin);
 		
-		config = super.loadConfig();
+		cfg = super.loadConfig();
 		
 		reload();
 	}
 	
 	public void set(@NotNull String path, @Nullable Object obj)
 	{
-		config.set(path, obj);
+		cfg.set(path, obj);
 		
 		saveConfig();
 	}
@@ -36,7 +38,7 @@ public class TimeConfig extends Config implements ConfigUtils
 	
 	private void reload()
 	{
-		ConfigurationSection timeSystemsName = config.getConfigurationSection("Time-Systems");
+		ConfigurationSection timeSystemsName = cfg.getConfigurationSection("Time-Systems");
 		
 		if(timeSystemsName != null)
 			for(String timeSystemName : timeSystemsName.getKeys(false))
@@ -75,19 +77,19 @@ public class TimeConfig extends Config implements ConfigUtils
 		ArrayList<String> dayNames 		= new ArrayList<>();
 		
 		//Month
-		ArrayList<Long> daysPerMonth	= new ArrayList<>();
+		ArrayList<Long> daysPerMonth;
 		long monthZero;
-		ArrayList<String> monthNames	= new ArrayList<>();
+		ArrayList<String> monthNames;
 		
 		//Year
 		long monthsPerYear;
 		long yearZero;
 		
 		//Era
-		ArrayList<Long> erasBegin		= new ArrayList<>();
+		ArrayList<Long> erasBegin;
 		long eraZero;
-		ArrayList<String> eraNames		= new ArrayList<>();
-		ArrayList<Long> erasEnd			= new ArrayList<>();
+		ArrayList<String> eraNames;
+		ArrayList<Long> erasEnd;
 		
 		String defaultPath = "Time-Systems." + timeSystemName + ".";
 		String path;
@@ -133,17 +135,15 @@ public class TimeConfig extends Config implements ConfigUtils
 		// Month
 		path = defaultPath + "month.";
 		
-		ArrayList<Object> daysPerMonthObject = getSection(path + "daysPerMonth", "days");
-		
-		for(Object daysThisMonthObject : daysPerMonthObject)
-				daysPerMonth.add(Long.valueOf((String) daysThisMonthObject));
+		daysPerMonth = getSection(path + "daysPerMonth", "days").stream()
+						.map(daysThisMonthObject -> Long.valueOf((String)daysThisMonthObject))
+						.collect(Collectors.toCollection(ArrayList::new));
 
 		monthZero = 1;
 		
-		ArrayList<Object> monthNamesObject = getSection(path + "daysPerMonth", "name");
-		
-		for(Object monthNameObject : monthNamesObject)
-			monthNames.add((String) monthNameObject);
+		monthNames = getSection(path + "daysPerMonth", "name").stream()
+					.map(monthNameObject -> (String)monthNameObject)
+					.collect(Collectors.toCollection(ArrayList::new));
 		
 		// Year
 		path = defaultPath + "year.";
@@ -153,21 +153,18 @@ public class TimeConfig extends Config implements ConfigUtils
 		
 		// Era
 		path = defaultPath + "era.";
+
+		erasBegin = getSection(path + "eras", "startYear").stream()
+					.map(erasBeginObject -> Long.valueOf((String)erasBeginObject))
+					.collect(Collectors.toCollection(ArrayList::new));
+
+		erasEnd = getSection(path + "eras", "endYear").stream()
+				.map(erasEndObject -> Long.valueOf((String)erasEndObject))
+				.collect(Collectors.toCollection(ArrayList::new));
 		
-		ArrayList<Object> erasBeginObjects = getSection(path + "eras", "startYear");
-		
-		for(Object erasBeginObject : erasBeginObjects)
-			erasBegin.add(Long.valueOf((String) erasBeginObject));
-			
-		ArrayList<Object> erasEndObjects = getSection(path + "eras", "endYear");
-		
-		for(Object erasEndObject : erasEndObjects)
-			erasEnd.add(Long.valueOf((String) erasEndObject));
-		
-		ArrayList<Object> erasNameObjects = getSection(path + "eras", "name");
-		
-		for(Object eraNameObject : erasNameObjects)
-			eraNames.add((String) eraNameObject);
+		eraNames = getSection(path + "eras", "name").stream()
+				.map(eraNameObject -> (String)eraNameObject)
+				.collect(Collectors.toCollection(ArrayList::new));
 			
 		eraZero = 1;
 		
@@ -202,11 +199,11 @@ public class TimeConfig extends Config implements ConfigUtils
 
 	public FileConfiguration reloadConfig()
 	{
-		config = super.reloadConfig();
+		cfg = super.reloadConfig();
 		
 		reload();
 		
-		return config;
+		return cfg;
 	}
 	
 	private long getZero(String path)
@@ -218,7 +215,7 @@ public class TimeConfig extends Config implements ConfigUtils
 	{
 		ArrayList<Object> names = new ArrayList<>();
 		
-		ConfigurationSection section = config.getConfigurationSection(path);
+		ConfigurationSection section = cfg.getConfigurationSection(path);
 		
 		if (section != null)
 			for(String key : section.getKeys(false))
@@ -230,31 +227,39 @@ public class TimeConfig extends Config implements ConfigUtils
 	@Override
 	public String getString(String path)
 	{
-		return ChatColor.translateAlternateColorCodes('&', config.getString(path, ""));
+		if(path == null)
+			return "";
+		
+		String str = cfg.getString(path);
+		
+		if(str == null || str.isEmpty())
+			return "";
+		
+		return Utils.format(str);
 	}
 	
 	@Override
 	public Integer getInteger(String path)
 	{
-		return config.getInt(path);
+		return cfg.getInt(path);
 	}
 	
 	@Override
 	public Long getLong(String path)
 	{
-		return Long.valueOf(config.getString(path, "0"));
+		return Long.valueOf(cfg.getString(path, "0"));
 	}
 	
 	@Override
 	public Boolean getBoolean(String path)
 	{
-		return config.getBoolean(path);
+		return cfg.getBoolean(path);
 	}
 
 	@Override
 	public List<String> getListString(String path)
 	{
-		List<String> list = config.getStringList(path);
+		List<String> list = cfg.getStringList(path);
 		
 		for(int index = 0; index < list.size(); index++)
 			list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));

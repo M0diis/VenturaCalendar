@@ -8,7 +8,6 @@ import me.M0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.M0dii.venturacalendar.base.itemutils.Items;
 import me.M0dii.venturacalendar.game.gui.InventoryProperties;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -17,13 +16,13 @@ import java.util.List;
 
 public class CalendarConfig extends Config implements ConfigUtils
 {
-	FileConfiguration config;
+	FileConfiguration cfg;
 	
 	public CalendarConfig(VenturaCalendar plugin)
 	{
 		super(plugin.getDataFolder(), "CalendarConfig.yml", plugin);
 		
-		config = super.loadConfig();
+		cfg = super.loadConfig();
 		
 		reload();
 	}
@@ -80,8 +79,8 @@ public class CalendarConfig extends Config implements ConfigUtils
 		
 		itemProperties.put(ItemProperties.TOGGLE, getBoolean(path + "toggle"));
 		itemProperties.put(ItemProperties.NAME, getString(path + "name"));
-		itemProperties.put(ItemProperties.MATERIAL, Material.getMaterial(config.getString(path + "material", "WHITE_STAINED_GLASS_PANE")));
-		itemProperties.put(ItemProperties.AMOUNT, config.getString(path + "amount"));
+		itemProperties.put(ItemProperties.MATERIAL, Material.getMaterial(cfg.getString(path + "material", "WHITE_STAINED_GLASS_PANE")));
+		itemProperties.put(ItemProperties.AMOUNT, cfg.getString(path + "amount"));
 		itemProperties.put(ItemProperties.LORE, getListString(path + "lore"));
 		
 		return itemProperties;
@@ -89,42 +88,50 @@ public class CalendarConfig extends Config implements ConfigUtils
 	
 	public FileConfiguration reloadConfig()
 	{
-		config = super.reloadConfig();
+		cfg = super.reloadConfig();
 		
 		this.reload();
 		
-		return config;
+		return cfg;
 	}
 	
 	@Override
 	public String getString(String path)
 	{
-		return ChatColor.translateAlternateColorCodes('&', config.getString(path, ""));
+		if(path == null)
+			return "";
+		
+		String str = cfg.getString(path);
+		
+		if(str == null || str.isEmpty())
+			return "";
+		
+		return Utils.format(str);
 	}
 
 	@Override
 	public Integer getInteger(String path)
 	{
-		return config.getInt(path);
+		return cfg.getInt(path);
 	}
 	
 	@Override
 	public Long getLong(String path) {
-		return Long.valueOf(config.getString(path, "0"));
+		return Long.valueOf(cfg.getString(path, "0"));
 	}
 	
 	@Override
 	public Boolean getBoolean(String path)
 	{
-		return config.getBoolean(path);
+		return cfg.getBoolean(path);
 	}
 
 	@Override
 	public List<String> getListString(String path)
 	{
-		if (config.getList(path) != null)
+		if (cfg.getList(path) != null)
 		{
-			List<String> list = config.getStringList(path);
+			List<String> list = cfg.getStringList(path);
 			
 			for(int index = 0; index < list.size(); index++)
 				list.set(index, Utils.format(PlaceholderAPI.setPlaceholders(null, list.get(index))));
