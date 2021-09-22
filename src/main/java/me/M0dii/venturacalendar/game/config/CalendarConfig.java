@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CalendarConfig extends Config implements ConfigUtils
 {
@@ -129,16 +130,9 @@ public class CalendarConfig extends Config implements ConfigUtils
 	@Override
 	public List<String> getListString(String path)
 	{
-		if (cfg.getList(path) != null)
-		{
-			List<String> list = cfg.getStringList(path);
-			
-			for(int index = 0; index < list.size(); index++)
-				list.set(index, Utils.format(PlaceholderAPI.setPlaceholders(null, list.get(index))));
-			
-			return list;
-		}
-		
-		return null;
+		return cfg.getStringList(path).stream()
+				.map(str -> PlaceholderAPI.setPlaceholders(null, str))
+				.map(Utils::format)
+				.collect(Collectors.toList());
 	}
 }

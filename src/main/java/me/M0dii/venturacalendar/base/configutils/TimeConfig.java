@@ -1,9 +1,8 @@
 package me.M0dii.venturacalendar.base.configutils;
 
-import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.M0dii.venturacalendar.VenturaCalendar;
+import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.M0dii.venturacalendar.base.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -52,121 +51,79 @@ public class TimeConfig extends Config implements ConfigUtils
 	
 	private TimeSystem getTimeSystem(String timeSystemName)
 	{
-		//Tick
-		long tickZero		= 0;
-		//Second
-		long ticksPerSecond;
-		long secondZero		= 0;
-		
-		//Minute
-		long secondsPerMinute;
-		long minuteZero		= 0;
-		
-		//Hour
-		long minutesPerHour;
-		long hourZero;
-		
-		//Day
-		long hoursPerDay;
-		long dayZero;
-		
-		//Week
-		long daysPerWeek;
-		long weekZero;
-		
-		ArrayList<String> dayNames 		= new ArrayList<>();
-		
-		//Month
-		ArrayList<Long> daysPerMonth;
-		long monthZero;
-		ArrayList<String> monthNames;
-		
-		//Year
-		long monthsPerYear;
-		long yearZero;
-		
-		//Era
-		ArrayList<Long> erasBegin;
-		long eraZero;
-		ArrayList<String> eraNames;
-		ArrayList<Long> erasEnd;
-		
 		String defaultPath = "Time-Systems." + timeSystemName + ".";
-		String path;
-		
 		String worldname = getString(defaultPath + "world-name");
 		
 		// Tick
-		path = defaultPath + "tick.";
+		long tickZero	= 0;
 		
 		// Second
-		path = defaultPath + "second.";
+		String path = defaultPath + "second.";
 		
-		ticksPerSecond = getLong(path + "ticksPerSecond");
+		long ticksPerSecond = getLong(path + "ticksPerSecond");
+		long secondZero	= 0;
 		
 		// Minute
 		path = defaultPath + "minute.";
 		
-		secondsPerMinute = getLong(path + "secondsPerMinute");
+		long secondsPerMinute = getLong(path + "secondsPerMinute");
+		long minuteZero = 0;
 		
 		// Hour
 		path = defaultPath + "hour.";
 		
-		minutesPerHour = getLong(path + "minutesPerHour");
-		hourZero = 1;
+		long minutesPerHour = getLong(path + "minutesPerHour");
+		long hourZero = 1;
 		
 		// Day
 		path = defaultPath + "day.";
 		
-		hoursPerDay = getLong(path + "hoursPerDay");
-		dayZero = 1;
+		long hoursPerDay = getLong(path + "hoursPerDay");
+		long dayZero = 1;
 		
-		ArrayList<Object> dayNamesObject = getSection(path + "dayNames", "name");
-		
-		for(Object dayNameObject : dayNamesObject)
-			dayNames.add((String) dayNameObject);
+		ArrayList<String> dayNames = getSection(path + "dayNames", "name").stream()
+				.map(dayNameObject -> (String)dayNameObject)
+				.collect(Collectors.toCollection(ArrayList::new));
 		
 		// Week
-		path = defaultPath + "week.";
-		
-		daysPerWeek = getLong(path + "daysPerWeek");
-		weekZero = 1;
+		long daysPerWeek = getLong(defaultPath + "week." + "daysPerWeek");
+		long weekZero = 1;
 		
 		// Month
 		path = defaultPath + "month.";
 		
-		daysPerMonth = getSection(path + "daysPerMonth", "days").stream()
-						.map(daysThisMonthObject -> Long.valueOf((String)daysThisMonthObject))
-						.collect(Collectors.toCollection(ArrayList::new));
-
-		monthZero = 1;
+		ArrayList<Long> daysPerMonth = getSection(path + "daysPerMonth", "days").stream()
+				.map(daysThisMonthObject -> Long.valueOf((String)daysThisMonthObject))
+				.collect(Collectors.toCollection(ArrayList::new));
 		
-		monthNames = getSection(path + "daysPerMonth", "name").stream()
-					.map(monthNameObject -> (String)monthNameObject)
-					.collect(Collectors.toCollection(ArrayList::new));
+		long monthZero = 1;
+		
+		ArrayList<String> monthNames = getSection(path + "daysPerMonth", "name").stream()
+				.map(monthNameObject -> (String)monthNameObject)
+				.collect(Collectors.toCollection(ArrayList::new));
 		
 		// Year
 		path = defaultPath + "year.";
 		
-		monthsPerYear = getLong(path + "monthsPerYear");
-		yearZero = getZero(path);
+		long monthsPerYear = getLong(path + "monthsPerYear");
+		long yearZero = getZero(path);
 		
 		// Era
 		path = defaultPath + "era.";
-
-		erasBegin = getSection(path + "eras", "startYear").stream()
-					.map(erasBeginObject -> Long.valueOf((String)erasBeginObject))
-					.collect(Collectors.toCollection(ArrayList::new));
-
-		erasEnd = getSection(path + "eras", "endYear").stream()
+		
+		ArrayList<Long> erasBegin = getSection(path + "eras", "startYear").stream()
+				.map(erasBeginObject -> Long.valueOf((String)erasBeginObject))
+				.collect(Collectors.toCollection(ArrayList::new));
+		
+		ArrayList<Long> erasEnd = getSection(path + "eras", "endYear").stream()
 				.map(erasEndObject -> Long.valueOf((String)erasEndObject))
 				.collect(Collectors.toCollection(ArrayList::new));
 		
-		eraNames = getSection(path + "eras", "name").stream()
+		ArrayList<String> eraNames = getSection(path + "eras", "name").stream()
 				.map(eraNameObject -> (String)eraNameObject)
 				.collect(Collectors.toCollection(ArrayList::new));
-			
-		eraZero = 1;
+		
+		long eraZero = 1;
 		
 		return new TimeSystem(
 			   worldname,
@@ -259,11 +216,8 @@ public class TimeConfig extends Config implements ConfigUtils
 	@Override
 	public List<String> getListString(String path)
 	{
-		List<String> list = cfg.getStringList(path);
-		
-		for(int index = 0; index < list.size(); index++)
-			list.set(index, ChatColor.translateAlternateColorCodes('&', list.get(index)));
-			
-		return list;
+		return cfg.getStringList(path).stream()
+				.map(Utils::format)
+				.collect(Collectors.toList());
 	}
 }

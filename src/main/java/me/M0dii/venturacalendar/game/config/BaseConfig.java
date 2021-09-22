@@ -5,6 +5,7 @@ import me.M0dii.venturacalendar.base.configutils.Config;
 import me.M0dii.venturacalendar.base.configutils.ConfigUtils;
 import me.M0dii.venturacalendar.base.dateutils.FromTo;
 import me.M0dii.venturacalendar.base.utils.Utils;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -161,10 +162,9 @@ public class BaseConfig extends Config implements ConfigUtils
 	@Override
 	public List<String> getListString(String path)
 	{
-		if (cfg.getList(path) != null)
-			return cfg.getStringList(path).stream().map(Utils::format)
-					.collect(Collectors.toList());
-		
-		return null;
+		return cfg.getStringList(path).stream()
+				.map(str -> PlaceholderAPI.setPlaceholders(null, str))
+				.map(Utils::format)
+				.collect(Collectors.toList());
 	}
 }
