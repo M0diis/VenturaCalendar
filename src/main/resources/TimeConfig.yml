@@ -3,8 +3,8 @@
 #
 # Here you can set-up different time-systems
 #
-# The timesystem time will be used by specified world name
-# If set to "current" it will use the current world the player is in
+# The timesystem time will be used by specified world name.
+# If set to "current" it will use the current world the player is in.
 #
 # If you want to use real life calendar:
 #
@@ -48,39 +48,51 @@ Time-Systems:
         '1':
           name: January
           days: 31
+          season: 'Winter'
         '2':
           name: February
           days: 28
+          season: 'Winter'
         '3':
           name: March
           days: 31
+          season: 'Spring'
         '4':
           name: April
           days: 30
+          season: 'Spring'
         '5':
           name: May
           days: 31
+          season: 'Spring'
         '6':
           name: June
           days: 30
+          season: 'Summer'
         '7':
           name: July
           days: 31
+          season: 'Summer'
         '8':
           name: August
           days: 31
+          season: 'Summer'
         '9':
           name: September
           days: 30
+          season: 'Fall'
         '10':
           name: October
           days: 31
+          season: 'Fall'
         '11':
           name: November
           days: 30
+          season: 'Fall'
         '12':
           name: December
           days: 31
+          season: 'Winter'
     year:
       zero: 0
       monthsPerYear: 12

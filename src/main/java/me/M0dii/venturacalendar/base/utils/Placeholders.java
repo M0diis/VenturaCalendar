@@ -96,7 +96,10 @@ public class Placeholders extends PlaceholderExpansion {
             case "date_day_name":
                 return String.valueOf(date.getDayName());
             case "date_month_name":
+                date = du.removeZeroPoints(date);
                 return String.valueOf(date.getMonthName());
+            case "date_season_name":
+                return String.valueOf(date.getSeasonName());
             case "date_era_name":
                 return String.valueOf(date.getEraName());
             case "date_day_of_week":

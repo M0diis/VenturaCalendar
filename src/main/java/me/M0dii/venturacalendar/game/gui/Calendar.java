@@ -1,9 +1,6 @@
 package me.M0dii.venturacalendar.game.gui;
 
-import me.M0dii.venturacalendar.base.dateutils.Date;
-import me.M0dii.venturacalendar.base.dateutils.DateEnum;
-import me.M0dii.venturacalendar.base.dateutils.DateUtils;
-import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
+import me.M0dii.venturacalendar.base.dateutils.*;
 import me.M0dii.venturacalendar.base.itemutils.ItemCreator;
 import me.M0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.M0dii.venturacalendar.base.itemutils.Items;
@@ -33,6 +30,8 @@ public class Calendar implements InventoryHolder
 	final Inventory inventory;
 	final HashMap<Items, Object> items = new HashMap<>();
 	
+	final List<MonthEvent> events;
+	
 	public Calendar(Date date, Date creationDate, VenturaCalendar plugin)
 	{
 		dateUtils = plugin.getDateUtils();
@@ -40,6 +39,8 @@ public class Calendar implements InventoryHolder
 		
 		date = new Date(date);
 		creationDate = new Date(creationDate);
+		
+		this.events = plugin.getBaseConfig().getEvents();
 		
 		this.date = date;
 		this.creationDate = creationDate;
@@ -111,7 +112,7 @@ public class Calendar implements InventoryHolder
 				
 				if(isToday(date, creationDate))
 				{
-					ItemStack todayItem = createItem(todayProperties, date);
+					ItemStack todayItem = createItem(todayProperties, date, false);
 					
 					if(todayItem != null && daySlot < 55)
 					{
@@ -122,7 +123,7 @@ public class Calendar implements InventoryHolder
 				}
 				else
 				{
-					ItemStack dayItem = createItem(dayProperties, date);
+					ItemStack dayItem = createItem(dayProperties, date, false);
 					
 					if (dayItem != null && daySlot < 55)
 					{
@@ -146,7 +147,7 @@ public class Calendar implements InventoryHolder
 				}
 			}
 
-			ItemStack weekItem = createItem(weekProperties, date);
+			ItemStack weekItem = createItem(weekProperties, date, true);
 			
 			if(weekItem != null && weekSlot < 55)
 			{
@@ -190,19 +191,36 @@ public class Calendar implements InventoryHolder
 		return date.getDay() == daysPerMonth - timeSystem.getDayZero();
 	}
 	
-	public ItemStack createItem(HashMap<ItemProperties, Object> itemProperties, Date date)
+	public ItemStack createItem(HashMap<ItemProperties, Object> itemProperties, Date date, boolean week)
 	{
 		String name = Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.NAME), date, true);
 		Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
 		int amount = Integer.parseInt(Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.AMOUNT), date, true));
 		
-		List<String> lore = null;
+		List<String> lore = new ArrayList<>();
 		
 		if(itemProperties.get(ItemProperties.LORE) != null)
 		{
 			lore = new ArrayList<>((List<String>) itemProperties.get(ItemProperties.LORE))
 					.stream().map(str -> Utils.replacePlaceholder(str, date, true))
 					.collect(Collectors.toList());
+		}
+		
+		if(!week)
+		{
+			for(MonthEvent event : events)
+			{
+				if(event.includesMonth(date.getMonthName()) && event.includesDay((int)date.getDay() + 1))
+				{
+					material = event.getDisplay();
+					
+					name = "%s%s".formatted(name, " " + event.getName());
+					
+					lore.add("");
+					
+					lore.addAll(event.getDescription());
+				}
+			}
 		}
 		
 		if((boolean) itemProperties.get(ItemProperties.TOGGLE))

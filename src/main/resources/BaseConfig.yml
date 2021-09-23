@@ -4,6 +4,8 @@
 #   Formatting codes can be used with &<code>.
 #   Here you will find a list with all formatting codes:
 #   http://minecraft.gamepedia.com/Formatting_codes
+#
+#   HEX color codes are also supported.
 # 
 #  Permissions:
 #    venturacalendar.command.venturacalendar - Permission to the base command
@@ -31,6 +33,7 @@
 #
 # If redeemable months are disabled, you will be able to redeem
 # on all days and months.
+# If you don't want to give any rewards - leave the commands empty.
 #
 # The defined days are inclusive.
 rewards:
@@ -41,10 +44,18 @@ rewards:
   #  - '[PLAYER] this will be executed by player'
   redeemable-months:
     enabled: true
-    January: "10-20"
+    January: '1-7'
+events:
+  new-year:
+    name: '&a| &2New Year''s day'
+    month: 'January'
+    days: '1-1'
+    description:
+      - "&6Happy new year!"
+    display-material: RED_STAINED_GLASS_PANE # Will override current days display
 action-bar:
   enabled: true
-  text: "%dayName% | %hour%:%minute%:%second%"
+  text: '&a%dayName% &2| &a%hour%&2:&a%minute%&2:&a%second%'
 new-day:
   message:
     enabled: true

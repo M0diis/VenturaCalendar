@@ -4,11 +4,14 @@ import me.M0dii.venturacalendar.VenturaCalendar;
 import me.M0dii.venturacalendar.base.configutils.Config;
 import me.M0dii.venturacalendar.base.configutils.ConfigUtils;
 import me.M0dii.venturacalendar.base.dateutils.FromTo;
+import me.M0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.M0dii.venturacalendar.base.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +71,42 @@ public class BaseConfig extends Config implements ConfigUtils
 		return cfg.getBoolean("rewards.redeemable-months.enabled");
 	}
 	
+	public List<MonthEvent> getEvents()
+	{
+		ConfigurationSection sec = cfg.
+				getConfigurationSection("events");
+		
+		List<MonthEvent> events = new ArrayList<>();
+		
+		if(sec != null)
+		{
+			sec.getValues(false).forEach((k, v) -> {
+				ConfigurationSection eventSection = sec.getConfigurationSection(k);
+				
+				if(eventSection != null)
+				{
+					String eventName = Utils.format(eventSection.getString("name"));
+					
+					FromTo fromTo = new FromTo(eventSection.getString("days"));
+					
+					List<String> description = eventSection.getStringList("description").stream()
+							.map(Utils::format)
+							.collect(Collectors.toList());
+					
+					Material m = Material.getMaterial(eventSection.getString("material", "RED_STAINED_GLASS_PANE"));
+					
+					String month = eventSection.getString("month");
+					
+					MonthEvent event = new MonthEvent(eventName, month, m, fromTo, description);
+					
+					events.add(event);
+				}
+			});
+		}
+		
+		return events;
+	}
+	
 	public HashMap<String, FromTo> getRedeemableMonths()
 	{
 		ConfigurationSection sec = cfg.
@@ -78,14 +117,7 @@ public class BaseConfig extends Config implements ConfigUtils
 			sec.getValues(false).forEach((k, v) -> {
 			
 				if(!k.equalsIgnoreCase("enabled"))
-				{
-					String[] fromToString = String.valueOf(v).split("-");
-					
-					int from = Integer.parseInt(fromToString[0]);
-					int to = Integer.parseInt(fromToString[1]);
-					
-					redeemableMonths.put(k, new FromTo(from, to));
-				}
+					redeemableMonths.put(k, new FromTo(String.valueOf(v)));
 			});
 		}
 
@@ -163,7 +195,6 @@ public class BaseConfig extends Config implements ConfigUtils
 	public List<String> getListString(String path)
 	{
 		return cfg.getStringList(path).stream()
-				.map(str -> PlaceholderAPI.setPlaceholders(null, str))
 				.map(Utils::format)
 				.collect(Collectors.toList());
 	}

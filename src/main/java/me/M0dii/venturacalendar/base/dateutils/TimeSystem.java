@@ -1,6 +1,6 @@
 package me.M0dii.venturacalendar.base.dateutils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TimeSystem
 {
@@ -13,10 +13,10 @@ public class TimeSystem
 	private final long minutesPerHour;
 	private final long hoursPerDay;
 	private final long daysPerWeek;
-	private final ArrayList<Long> daysPerMonth;
+	private final List<Long> daysPerMonth;
 	private final long monthsPerYear;
-	private final ArrayList<Long> erasBegin;
-	private final ArrayList<Long> erasEnd;
+	private final List<Long> erasBegin;
+	private final List<Long> erasEnd;
 
 	// Zero points
 	private final long tickZero;
@@ -30,9 +30,10 @@ public class TimeSystem
 	private final long eraZero;
 	
 	// Date parameter names.
-	private final ArrayList<String> dayNames;
-	private final ArrayList<String> monthNames;
-	private final ArrayList<String> eraNames;
+	private final List<String> dayNames;
+	private final List<String> monthNames;
+	private final List<String> seasonNames;
+	private final List<String> eraNames;
 	
 	public TimeSystem(String worldname,
 			          String name,
@@ -41,10 +42,10 @@ public class TimeSystem
 					  long minutesPerHour,
 					  long hoursPerDay,
 					  long daysPerWeek,
-					  ArrayList<Long> daysPerMonth,
+					  List<Long> daysPerMonth,
 					  long monthsPerYear,
-					  ArrayList<Long> erasBegin,
-					  ArrayList<Long> erasEnd,
+					  List<Long> erasBegin,
+					  List<Long> erasEnd,
 					  
 					  long tickZero,
 					  long secondZero,
@@ -55,10 +56,11 @@ public class TimeSystem
 					  long monthZero,
 					  long yearZero,
 					  long eraZero,
-					  
-					  ArrayList<String> dayNames,
-					  ArrayList<String> monthNames,
-					  ArrayList<String> eraNames)
+					
+					  List<String> dayNames,
+					  List<String> monthNames,
+					  List<String> seasonNames,
+					  List<String> eraNames)
 	{
 		this.worldName          = worldname;
 		this.name 				= name;
@@ -85,6 +87,7 @@ public class TimeSystem
 		
 		this.dayNames = dayNames;
 		this.monthNames = monthNames;
+		this.seasonNames = seasonNames;
 		this.eraNames = eraNames;
 	}
 	
@@ -115,6 +118,7 @@ public class TimeSystem
 		
 		this.dayNames 			= timeSystem.getDayNames();
 		this.monthNames			= timeSystem.getMonthNames();
+		this.seasonNames	    = timeSystem.getSeasonNames();
 		this.eraNames			= timeSystem.getEraNames();
 	}
 	
@@ -151,7 +155,7 @@ public class TimeSystem
 		return daysPerWeek;
 	}
 
-	public ArrayList<Long> getDaysPerMonth() {
+	public List<Long> getDaysPerMonth() {
 		return daysPerMonth;
 	}
 
@@ -159,11 +163,11 @@ public class TimeSystem
 		return monthsPerYear;
 	}
 
-	public ArrayList<Long> getErasBegin() {
+	public List<Long> getErasBegin() {
 		return erasBegin;
 	}
 
-	public ArrayList<Long> getErasEnd() {
+	public List<Long> getErasEnd() {
 		return erasEnd;
 	}
 	
@@ -203,16 +207,23 @@ public class TimeSystem
 		return eraZero;
 	}
 	
-	public ArrayList<String> getDayNames() {
+	public List<String> getDayNames()
+	{
 		return dayNames;
 	}
 	
-	public ArrayList<String> getMonthNames() {
+	public List<String> getMonthNames()
+	{
 		return monthNames;
 	}
 	
-	public ArrayList<String> getEraNames() {
-		return eraNames;
+	public List<String> getSeasonNames()
+	{
+		return seasonNames;
 	}
 	
+	public List<String> getEraNames()
+	{
+		return eraNames;
+	}
 }

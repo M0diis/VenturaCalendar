@@ -3,6 +3,7 @@ package me.M0dii.venturacalendar.base.dateutils;
 import me.M0dii.venturacalendar.VenturaCalendar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DateCalculator
 {
@@ -29,15 +30,15 @@ public class DateCalculator
 		long year  	 = 0;
 		long era	 = 0;
 		
-		ArrayList<Long> erasBegin = timeSystem.getErasBegin();
-		ArrayList<Long> erasEnd   = timeSystem.getErasEnd();
+		List<Long> erasBegin = timeSystem.getErasBegin();
+		List<Long> erasEnd   = timeSystem.getErasEnd();
 		
 		long ticksPerSecond 		  = (long) tsUtils.getTPU(DateEnum.SECOND, timeSystem);
 		long ticksPerMinute 		  = (long) tsUtils.getTPU(DateEnum.MINUTE, timeSystem);
 		long ticksPerHour 			  = (long) tsUtils.getTPU(DateEnum.HOUR, timeSystem);
 		long ticksPerDay    		  = (long) tsUtils.getTPU(DateEnum.DAY, timeSystem);
 		long ticksPerWeek   		  = (long) tsUtils.getTPU(DateEnum.WEEK, timeSystem);
-		ArrayList<Long> ticksPerMonth = (ArrayList<Long>) tsUtils.getTPU(DateEnum.MONTH, timeSystem);
+		List<Long> ticksPerMonth = (List<Long>) tsUtils.getTPU(DateEnum.MONTH, timeSystem);
 		long ticksPerYear  			  = (long) tsUtils.getTPU(DateEnum.YEAR, timeSystem);
 		long rootTicks                = ticks;
 

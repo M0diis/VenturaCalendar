@@ -16,6 +16,7 @@ public class Date
 	private long day;
 	private long week;
 	private long month;
+	private long season;
 	private long year;
 	private long era;
 
@@ -144,6 +145,11 @@ public class Date
 	public String getMonthName()
 	{
 		return this.getTimeSystem().getMonthNames().get(((int)this.month));
+	}
+	
+	public String getSeasonName()
+	{
+		return this.getTimeSystem().getSeasonNames().get(((int)this.month));
 	}
 	
 	public String getDayName()

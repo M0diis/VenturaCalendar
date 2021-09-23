@@ -1,9 +1,12 @@
 package me.M0dii.venturacalendar.base.configutils;
 
 import me.M0dii.venturacalendar.VenturaCalendar;
+import me.M0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.M0dii.venturacalendar.base.utils.Utils;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,26 +56,21 @@ public class TimeConfig extends Config implements ConfigUtils
 	{
 		String defaultPath = "Time-Systems." + timeSystemName + ".";
 		String worldname = getString(defaultPath + "world-name");
+		String path;
 		
 		// Tick
 		long tickZero	= 0;
 		
 		// Second
-		String path = defaultPath + "second.";
-		
-		long ticksPerSecond = getLong(path + "ticksPerSecond");
+		long ticksPerSecond = getLong(defaultPath + "second.ticksPerSecond");
 		long secondZero	= 0;
 		
 		// Minute
-		path = defaultPath + "minute.";
-		
-		long secondsPerMinute = getLong(path + "secondsPerMinute");
+		long secondsPerMinute = getLong(defaultPath + "minute.secondsPerMinute");
 		long minuteZero = 0;
 		
 		// Hour
-		path = defaultPath + "hour.";
-		
-		long minutesPerHour = getLong(path + "minutesPerHour");
+		long minutesPerHour = getLong(defaultPath + "hour.minutesPerHour");
 		long hourZero = 1;
 		
 		// Day
@@ -86,20 +84,24 @@ public class TimeConfig extends Config implements ConfigUtils
 				.collect(Collectors.toCollection(ArrayList::new));
 		
 		// Week
-		long daysPerWeek = getLong(defaultPath + "week." + "daysPerWeek");
+		long daysPerWeek = getLong(defaultPath + "week.daysPerWeek");
 		long weekZero = 1;
 		
 		// Month
-		path = defaultPath + "month.";
+		path = defaultPath + "month.daysPerMonth";
 		
-		ArrayList<Long> daysPerMonth = getSection(path + "daysPerMonth", "days").stream()
+		ArrayList<Long> daysPerMonth = getSection(path, "days").stream()
 				.map(daysThisMonthObject -> Long.valueOf((String)daysThisMonthObject))
 				.collect(Collectors.toCollection(ArrayList::new));
 		
 		long monthZero = 1;
 		
-		ArrayList<String> monthNames = getSection(path + "daysPerMonth", "name").stream()
+		ArrayList<String> monthNames = getSection(path, "name").stream()
 				.map(monthNameObject -> (String)monthNameObject)
+				.collect(Collectors.toCollection(ArrayList::new));
+		
+		ArrayList<String> seasonNames = getSection(path, "season").stream()
+				.map(seasonNameObject -> (String)seasonNameObject)
 				.collect(Collectors.toCollection(ArrayList::new));
 		
 		// Year
@@ -150,6 +152,7 @@ public class TimeConfig extends Config implements ConfigUtils
 			   
 			   dayNames,
 			   monthNames,
+			   seasonNames,
 			   eraNames
 		);
 	}

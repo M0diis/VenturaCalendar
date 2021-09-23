@@ -54,12 +54,9 @@ public class Click
 				
 				if(fromTo != null)
 				{
-					int from = fromTo.getFrom();
-					int to = fromTo.getTo();
-					
 					long day = cal.getDate().getDay() + 1;
 
-					if(!(day >= from && day <= to))
+					if(!fromTo.includes((int)day))
 						return;
 				}
 				
@@ -94,7 +91,7 @@ public class Click
 	private void sendCommand(Player player, String cmd)
 	{
 		cmd = PlaceholderAPI.setPlaceholders(player, cmd)
-				.replaceAll("%([pP]layer|[pP]layer[nN]ame|[pP]layer_[nN]ame)%", player.getName());
+				.replaceAll("%([pP]layer|[pP]layer(_|.*)[nN]ame)%", player.getName());
 		
 		if(cmd.startsWith("["))
 		{
