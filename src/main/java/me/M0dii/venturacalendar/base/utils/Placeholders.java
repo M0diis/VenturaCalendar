@@ -55,7 +55,7 @@ public class Placeholders extends PlaceholderExpansion {
         World w = Bukkit.getWorld(worldName);
         
         if(!worldName.equalsIgnoreCase("real-time") && w == null)
-            return null;
+            return "";
         
         Date date = null;
     
@@ -69,6 +69,9 @@ public class Placeholders extends PlaceholderExpansion {
         long dow = du.getDayOfWeek(date);
         
         date = du.addZeroPoints(date);
+        
+        if(date == null)
+            return "";
     
         switch(id.toLowerCase())
         {
@@ -106,6 +109,6 @@ public class Placeholders extends PlaceholderExpansion {
                 return String.valueOf(dow);
         }
         
-        return null;
+        return "";
     }
 }

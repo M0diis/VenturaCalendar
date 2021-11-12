@@ -21,6 +21,11 @@ public class MonthEvent
         this.display = disp;
     }
     
+    public boolean includesDate(Date date)
+    {
+        return includesMonth(date.getMonthName()) && includesDay((int)date.getDay() + 1);
+    }
+    
     public boolean includesMonth(String monthName)
     {
         return this.monthName.equalsIgnoreCase(monthName);

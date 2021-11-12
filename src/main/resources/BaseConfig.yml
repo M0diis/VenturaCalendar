@@ -14,19 +14,20 @@
 #    venturacalendar.command.changetime - Permission to the add/subtract time, set starting year
 #
 #  Placeholders:
-#    - %tick%      - displays the current tick.
-#    - %second%    - displays the current second.
-#    - %minute%    - displays the current minute.
-#    - %hour%      - displays the current hour.
-#    - %day%       - displays the day of the item.
-#    - %week%      - displays the week of the item.
-#    - %month%     - displays the current month.
-#    - %year%      - displays the current year.
-#    - %era%       - displays the current era.
+#    - %tick%       - displays the current tick.
+#    - %second%     - displays the current second.
+#    - %minute%     - displays the current minute.
+#    - %hour%       - displays the current hour.
+#    - %day%        - displays the day of the item.
+#    - %week%       - displays the week of the item.
+#    - %month%      - displays the current month.
+#    - %year%       - displays the current year.
+#    - %era%        - displays the current era.
 #  
-#    - %dayName%   - displays the name of the day.
-#    - %monthName% - displays the current month name.
-#    - %eraName%   - displays the current era name.
+#    - %dayName%    - displays the name of the day.
+#    - %monthName%  - displays the current season name.
+#    - %seasonName% - displays the current month name.
+#    - %eraName%    - displays the current era name.
 #
 # fade-in, stay and fade-out are defined in ticks
 # 20 ticks = 1 second

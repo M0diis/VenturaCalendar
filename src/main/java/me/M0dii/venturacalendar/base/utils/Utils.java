@@ -69,13 +69,13 @@ public class Utils
         date = du.removeZeroPoints(date);
         
         message = message
-            .replaceAll("%[dD]ay(_|.*)[nN]ame%", date.getDayName())
-            .replaceAll("%[mM]onth(_|.*)[nN]ame%", date.getMonthName())
-            .replaceAll("%[sS]eason(_|.*)[nN]ame%", date.getSeasonName())
-            .replaceAll("%[eE]ra(_|.*)[nN]ame%", date.getEraName())
-            .replaceAll("%[tT]ime[sS]ystem(_|.*)[nN]ame", timeSystem.getName())
-            .replaceAll("%[tT]ime[sS]ystem(_|.*)[wW]orld", timeSystem.getWorldName())
-            .replaceAll("%[yY]ears(_|.*)[pP]assed", String.valueOf(date.getYear()));
+            .replaceAll("%[dD]ay(_|)[nN]ame%", date.getDayName())
+            .replaceAll("%[mM]onth(_|)[nN]ame%", date.getMonthName())
+            .replaceAll("%[sS]eason(_|)[nN]ame%", date.getSeasonName())
+            .replaceAll("%[eE]ra(_|)[nN]ame%", date.getEraName())
+            .replaceAll("%[tT]ime[sS]ystem(_|)[nN]ame%", timeSystem.getName())
+            .replaceAll("%[tT]ime[sS]ystem(_|)[wW]orld%", timeSystem.getWorldName())
+            .replaceAll("%[yY]ears(_|)[pP]assed%", String.valueOf(date.getYear()));
         
         if(papi)
             PlaceholderAPI.setPlaceholders(p, message);

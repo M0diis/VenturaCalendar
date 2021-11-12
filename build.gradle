@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.M0dii'
-version '1.5.0'
+version '1.5.1'
 
 shadowJar {
     relocate 'org.bstats', 'me.M0dii.venturacalendar'
@@ -12,7 +12,6 @@ shadowJar {
     minimize()
 
     archiveFileName = "VenturaCalendar-${version}.jar"
-    //archiveFileName = "C:/Users/modes/Desktop/Coding/M0-Development/Minecraft/Servers/1.16.5/plugins/VenturaCalendar-${version}.jar"
 }
 
 repositories {
@@ -33,10 +32,6 @@ repositories {
     }
 
     maven {
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-    }
-
-    maven {
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
 
@@ -49,7 +44,6 @@ dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 
-    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.10'
 
     implementation 'org.bstats:bstats-bukkit:2.2.1'
