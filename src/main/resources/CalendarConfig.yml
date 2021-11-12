@@ -7,19 +7,20 @@
 #   http://minecraft.gamepedia.com/Formatting_codes
 #     
 #  Placeholders:
-#    - %tick%      - displays the current tick.
-#    - %second%    - displays the current second.
-#    - %minute%    - displays the current minute.
-#    - %hour%      - displays the current hour.
-#    - %day%       - displays the day of the item.
-#    - %week%      - displays the week of the item.
-#    - %month%     - displays the current month.
-#    - %year%      - displays the current year.
-#    - %era%       - displays the current era.
+#    - %tick%       - displays the current tick.
+#    - %second%     - displays the current second.
+#    - %minute%     - displays the current minute.
+#    - %hour%       - displays the current hour.
+#    - %day%        - displays the day of the item.
+#    - %week%       - displays the week of the item.
+#    - %month%      - displays the current month.
+#    - %year%       - displays the current year.
+#    - %era%        - displays the current era.
 #
-#    - %dayName%   - displays the name of the day.
-#    - %monthName% - displays the current month name.
-#    - %eraName%   - displays the current era name.
+#    - %dayName%    - displays the name of the day.
+#    - %monthName%  - displays the current season name.
+#    - %seasonName% - displays the current month name.
+#    - %eraName%    - displays the current era name.
 # 
 #  A list of all available block materials can be found here:
 #  https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
@@ -29,6 +30,7 @@
 #    'toggle' if you set this to false the item will not be displayed.
 #    'amount' The amount can also be a placeholder.
 #    'lore' if you remove this parameter there will be no lore displayed.
+#
 #   You can also add it again. (Don't leave it there with no value it will cause errors)
 #
 title: '%dayName%, %day%. %monthName% - %year%'

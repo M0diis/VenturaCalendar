@@ -14,16 +14,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CalendarConfig extends Config implements ConfigUtils
 {
+	private final VenturaCalendar plugin;
 	FileConfiguration cfg;
 	
 	public CalendarConfig(VenturaCalendar plugin)
 	{
 		super(plugin.getDataFolder(), "CalendarConfig.yml", plugin);
 		
-		cfg = super.loadConfig();
+		this.plugin = plugin;
+		
+		this.cfg = super.loadConfig();
 		
 		reload();
 	}
@@ -130,9 +134,13 @@ public class CalendarConfig extends Config implements ConfigUtils
 	@Override
 	public List<String> getListString(String path)
 	{
-		return cfg.getStringList(path).stream()
-				.map(str -> PlaceholderAPI.setPlaceholders(null, str))
-				.map(Utils::format)
-				.collect(Collectors.toList());
+		Stream<String> list = cfg.getStringList(path).stream().map(Utils::format);
+		
+		if(plugin.papiEnabled())
+		{
+			list = list.map(str -> PlaceholderAPI.setPlaceholders(null, str));
+		}
+		
+		return list.collect(Collectors.toList());
 	}
 }

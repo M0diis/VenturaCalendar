@@ -210,14 +210,13 @@ public class Calendar implements InventoryHolder
 		{
 			for(MonthEvent event : events)
 			{
-				if(event.includesMonth(date.getMonthName()) && event.includesDay((int)date.getDay() + 1))
+				if(event.includesDate(date))
 				{
 					material = event.getDisplay();
 					
-					name = "%s%s".formatted(name, " " + event.getName());
+					name = "%s %s".formatted(name, event.getName());
 					
 					lore.add("");
-					
 					lore.addAll(event.getDescription());
 				}
 			}

@@ -22,8 +22,12 @@ import java.util.HashMap;
 
 public class Click
 {
+	private final VenturaCalendar plugin;
+	
 	public Click(InventoryClickEvent e, VenturaCalendar plugin)
 	{
+		this.plugin = plugin;
+		
 		Player player = (Player) e.getWhoClicked();
 		
 		Inventory inv = e.getClickedInventory();
@@ -90,8 +94,12 @@ public class Click
 	
 	private void sendCommand(Player player, String cmd)
 	{
-		cmd = PlaceholderAPI.setPlaceholders(player, cmd)
-				.replaceAll("%([pP]layer|[pP]layer(_|.*)[nN]ame)%", player.getName());
+		cmd = cmd.replaceAll("%([pP]layer|[pP]layer(_|.*)[nN]ame)%", player.getName());
+		
+		if(plugin.papiEnabled())
+		{
+			cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+		}
 		
 		if(cmd.startsWith("["))
 		{
