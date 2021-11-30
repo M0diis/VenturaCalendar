@@ -48,6 +48,11 @@ public class BaseConfig extends Config implements ConfigUtils
 		VenturaCalendar.PREFIX = getString("messages.prefix");
 	}
 	
+	public List<String> getNewDayCommands()
+	{
+		return getListString("new-day.commands");
+	}
+	
 	public Optional<String> getNewDayMessage()
 	{
 		if(!getBoolean("new-day.message.enabled"))
@@ -80,7 +85,8 @@ public class BaseConfig extends Config implements ConfigUtils
 		
 		if(sec != null)
 		{
-			sec.getValues(false).forEach((k, v) -> {
+			sec.getValues(false).forEach((k, v) ->
+			{
 				ConfigurationSection eventSection = sec.getConfigurationSection(k);
 				
 				if(eventSection != null)
@@ -97,7 +103,9 @@ public class BaseConfig extends Config implements ConfigUtils
 					
 					String month = eventSection.getString("month");
 					
-					MonthEvent event = new MonthEvent(eventName, month, m, fromTo, description);
+					List<String> commands = eventSection.getStringList("commands");
+					
+					MonthEvent event = new MonthEvent(eventName, month, m, fromTo, description, commands);
 					
 					events.add(event);
 				}

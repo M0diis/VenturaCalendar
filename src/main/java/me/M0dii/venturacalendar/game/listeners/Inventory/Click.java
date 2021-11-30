@@ -84,7 +84,7 @@ public class Click
 					if(plugin.redeem(player.getUniqueId()))
 					{
 						for(String cmd : cc.getListString("rewards.commands"))
-							sendCommand((Player)e.getWhoClicked(), cmd);
+							Utils.sendCommand((Player)e.getWhoClicked(), cmd);
 					}
 					else Utils.sendMsg(e.getWhoClicked(), Messages.REDEEMED);
 				}
@@ -92,28 +92,6 @@ public class Click
 		}
 	}
 	
-	private void sendCommand(Player player, String cmd)
-	{
-		cmd = cmd.replaceAll("%([pP]layer|[pP]layer(_|.*)[nN]ame)%", player.getName());
-		
-		if(plugin.papiEnabled())
-		{
-			cmd = PlaceholderAPI.setPlaceholders(player, cmd);
-		}
-		
-		if(cmd.startsWith("["))
-		{
-			String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 2);
-			
-			cmd = cmd.substring(cmd.indexOf("]") + 2);
-			
-			if(sendAs.equalsIgnoreCase("[PLAYER] "))
-				Bukkit.dispatchCommand(player, cmd);
-			else if(sendAs.equalsIgnoreCase("[CONSOLE] "))
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-						cmd.replace("[CONSOLE] ", ""));
-		}
-		else Bukkit.dispatchCommand(player, cmd);
-	}
+
 
 }

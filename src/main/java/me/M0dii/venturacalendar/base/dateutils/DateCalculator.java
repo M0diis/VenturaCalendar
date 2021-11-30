@@ -2,16 +2,37 @@ package me.M0dii.venturacalendar.base.dateutils;
 
 import me.M0dii.venturacalendar.VenturaCalendar;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DateCalculator
 {
-	final TimeSystemUtils tsUtils = VenturaCalendar.getInstance().getTimeSystemUtils();
+	private final VenturaCalendar plugin;
+	private final TimeSystemUtils tsUtils;
+	
+	public DateCalculator(VenturaCalendar plugin)
+    {
+        this.plugin = plugin;
+		this.tsUtils = plugin.getTimeSystemUtils();
+    }
 	
 	public Date fromMillis(TimeSystem timeSystem)
 	{
 		long millis = System.currentTimeMillis();
+		
+		if(timeSystem.useTimeZone())
+		{
+			TimeZone timeZone = TimeZone.getTimeZone(timeSystem.getTimeZone());
+			
+			if(timeZone == null)
+			{
+				plugin.getLogger().warning("TimeZone '" + timeSystem.getTimeZone() + "' not found!");
+			}
+			else
+			{
+				millis += timeZone.getRawOffset();
+			}
+		}
 		
 		long ticks = millis / 50 - 22320000;
 		

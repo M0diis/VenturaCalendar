@@ -56,6 +56,16 @@ public class TimeConfig extends Config implements ConfigUtils
 	{
 		String defaultPath = "Time-Systems." + timeSystemName + ".";
 		String worldname = getString(defaultPath + "world-name");
+		
+		String timeZone = getString(defaultPath + "real-time.time-zone");
+		boolean useTimeZone = getBoolean(defaultPath + "real-time.use-time-zone");
+		
+		//   default:
+		//    world-name: 'world'
+		//    real-time:
+		//      use-time-zone: true # If set to false, real-time will use local machine time
+		//      time-zone: 'Europe/Germany'
+		
 		String path;
 		
 		// Tick
@@ -127,7 +137,7 @@ public class TimeConfig extends Config implements ConfigUtils
 		
 		long eraZero = 1;
 		
-		return new TimeSystem(
+		TimeSystem ts = new TimeSystem(
 			   worldname,
 			   timeSystemName,
 			   ticksPerSecond,
@@ -155,6 +165,11 @@ public class TimeConfig extends Config implements ConfigUtils
 			   seasonNames,
 			   eraNames
 		);
+		
+		ts.setTimeZone(timeZone);
+		ts.setUseTimeZone(useTimeZone);
+		
+		return ts;
 	}
 
 	public FileConfiguration reloadConfig()

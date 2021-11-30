@@ -18,6 +18,9 @@
 Time-Systems:
   default:
     world-name: 'world'
+    real-time:
+      use-time-zone: true # If set to false, real-time will use local machine time
+      time-zone: 'Europe/Germany'
     second:
       ticksPerSecond: 20
     minute:

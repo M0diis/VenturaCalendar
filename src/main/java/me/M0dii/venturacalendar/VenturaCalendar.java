@@ -168,48 +168,60 @@ public class VenturaCalendar extends JavaPlugin
             
             if(w != null && w.getTime() >= 0 && w.getTime() <= 200 && !newDay)
             {
+                newDay = true;
+                
                 Date date = getDateCalculator().fromTicks(w.getFullTime(), ts);
-    
+                
                 if(baseConfig.rewardsEnabled())
                     redeemed.clear();
-                
-                if(baseConfig.getNewDayMessage().isEmpty())
-                    return;
-                
-                if(baseConfig.newDayMessageEnabled())
-                {
-                    String base = baseConfig.getNewDayMessage().get();
 
-                    for(Player p : Bukkit.getOnlinePlayers())
+                for(Player p : Bukkit.getOnlinePlayers())
+                {
+                    for(MonthEvent event : this.baseConfig.getEvents())
                     {
+                        if(event.includesDate(date))
+                        {
+                            for(String cmd : event.getCommands())
+                            {
+                                Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
+                            }
+                        }
+                    }
+                    
+                    for(String cmd : baseConfig.getNewDayCommands())
+                    {
+                        Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
+                    }
+                    
+                    if(baseConfig.getNewDayMessage().isPresent() && baseConfig.newDayMessageEnabled())
+                    {
+                        String base = baseConfig.getNewDayMessage().get();
                         String msg = Utils.replacePlaceholder(base, date, p);
                         
                         p.sendMessage(msg);
+                    }
+                    
+                    if(baseConfig.titleEnabled())
+                    {
+                        String title = baseConfig.getMessage(Messages.TITLE_TEXT);
+                        String subtitle = baseConfig.getMessage(Messages.SUBTITLE_TEXT);
     
-                        if(baseConfig.titleEnabled())
+                        int fadein = baseConfig.getInteger("new-day.title.fade-in");
+                        int stay = baseConfig.getInteger("new-day.title.stay");
+                        int fadeout = baseConfig.getInteger("new-day.title.fade-out");
+    
+                        title = Utils.replacePlaceholder(title, date, false);
+                        subtitle = Utils.replacePlaceholder(subtitle, date, false);
+                        
+                        if(papiEnabled)
                         {
-                            String title = baseConfig.getMessage(Messages.TITLE_TEXT);
-                            String subtitle = baseConfig.getMessage(Messages.SUBTITLE_TEXT);
-        
-                            int fadein = baseConfig.getInteger("new-day.title.fade-in");
-                            int stay = baseConfig.getInteger("new-day.title.stay");
-                            int fadeout = baseConfig.getInteger("new-day.title.fade-out");
-        
-                            title = Utils.replacePlaceholder(title, date, false);
-                            subtitle = Utils.replacePlaceholder(subtitle, date, false);
-                            
-                            if(papiEnabled)
-                            {
-                                title = PlaceholderAPI.setPlaceholders(p, title);
-                                subtitle = PlaceholderAPI.setPlaceholders(p, subtitle);
-                            }
-                            
-                            p.sendTitle(title, subtitle, fadein, stay, fadeout);
+                            title = PlaceholderAPI.setPlaceholders(p, title);
+                            subtitle = PlaceholderAPI.setPlaceholders(p, subtitle);
                         }
+                        
+                        p.sendTitle(title, subtitle, fadein, stay, fadeout);
                     }
                 }
-                
-                newDay = true;
             }
             
             if(w != null && w.getTime() > 200)
@@ -235,7 +247,7 @@ public class VenturaCalendar extends JavaPlugin
         timeSystemUtils = new TimeSystemUtils();
         storageUtils = new StorageUtils();
         
-        dateCalculator = new DateCalculator();
+        dateCalculator = new DateCalculator(this);
         
         timeConfig = new TimeConfig(this);
         calendarConfig = new CalendarConfig(this);
@@ -269,7 +281,7 @@ public class VenturaCalendar extends JavaPlugin
     public DateCalculator getDateCalculator()
     {
         if(dateCalculator == null)
-            dateCalculator = new DateCalculator();
+            dateCalculator = new DateCalculator(this);
         
         return dateCalculator;
     }

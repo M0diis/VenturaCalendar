@@ -1,11 +1,14 @@
 package me.M0dii.venturacalendar.base.dateutils;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TimeSystem
 {
 	private final String worldName;
 	private final String name;
+	private Optional<String> timeZone;
+	private boolean useTimeZone = false;
 	
 	// Date parameters.
 	private final long ticksPerSecond;
@@ -120,6 +123,28 @@ public class TimeSystem
 		this.monthNames			= timeSystem.getMonthNames();
 		this.seasonNames	    = timeSystem.getSeasonNames();
 		this.eraNames			= timeSystem.getEraNames();
+		
+		this.timeZone = Optional.empty();
+	}
+	
+	public void setTimeZone(String timeZone)
+	{
+		this.timeZone = Optional.of(timeZone);
+	}
+	
+	public String getTimeZone()
+    {
+        return timeZone.orElse("");
+    }
+	
+	public void setUseTimeZone(boolean useTimeZone)
+    {
+        this.useTimeZone = useTimeZone;
+    }
+	
+	public boolean useTimeZone()
+	{
+		return this.useTimeZone;
 	}
 	
 	public String getName() {

@@ -6,6 +6,7 @@ import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.M0dii.venturacalendar.game.config.Messages;
 import me.M0dii.venturacalendar.VenturaCalendar;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -81,5 +82,29 @@ public class Utils
             PlaceholderAPI.setPlaceholders(p, message);
         
         return message;
+    }
+    
+    public static void sendCommand(Player player, String cmd)
+    {
+        cmd = cmd.replaceAll("%([pP]layer|[pP]layer(_|.*)[nN]ame)%", player.getName());
+        
+        if(plugin.papiEnabled())
+        {
+            cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+        }
+        
+        if(cmd.startsWith("["))
+        {
+            String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 2);
+            
+            cmd = cmd.substring(cmd.indexOf("]") + 2);
+            
+            if(sendAs.equalsIgnoreCase("[PLAYER] "))
+                Bukkit.dispatchCommand(player, cmd);
+            else if(sendAs.equalsIgnoreCase("[CONSOLE] "))
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                        cmd.replace("[CONSOLE] ", ""));
+        }
+        else Bukkit.dispatchCommand(player, cmd);
     }
 }

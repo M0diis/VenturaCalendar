@@ -54,6 +54,9 @@ events:
     description:
       - "&6Happy new year!"
     display-material: RED_STAINED_GLASS_PANE # Will override current days display
+    commands: # Leave empty if you don't want to execute any commands
+      - '[PLAYER] this will be executed by player'
+      - '[CONSOLE] this will be executed by console'
 action-bar:
   enabled: true
   text: '&a%dayName% &2| &a%hour%&2:&a%minute%&2:&a%second%'
@@ -70,6 +73,9 @@ new-day:
     fade-in: 20
     stay: 60
     fade-out: 20
+  commands: # Leave empty if you don't want to execute any commands
+    - '[PLAYER] this will be executed by player'
+    - '[CONSOLE] this will be executed by console'
 messages:
   prefix: "&a&lVenturaCalendar &2» &a"
   redeemed: "&cYou have already redeemed your daily reward."
