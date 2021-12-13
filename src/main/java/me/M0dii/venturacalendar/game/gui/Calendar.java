@@ -75,7 +75,7 @@ public class Calendar implements InventoryHolder
 		ArrayList<ItemStack> dayItems = new ArrayList<>();
 		ArrayList<ItemStack> weekItems = new ArrayList<>();
 		
-		String title = Utils.replacePlaceholder((String) calendarProperties.get(InventoryProperties.HEADER), date, true);
+		String title = Utils.setPlaceholders((String) calendarProperties.get(InventoryProperties.HEADER), date, true);
 		
 		Inventory inventory = Bukkit.createInventory(this, getInventorySize(date, ts), title);
 		
@@ -102,11 +102,11 @@ public class Calendar implements InventoryHolder
 		HashMap<ItemProperties, Object> dayProperties = itemProperties.get(Items.DAY);
 		HashMap<ItemProperties, Object> weekProperties = itemProperties.get(Items.WEEK);
 
-		for(long week = ts.getWeekZero(); week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9)
+		for(long week = 1; week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9)
 		{
 			date.setWeek(weekOfMonth);
 			
-			for(long day = ts.getDayZero(); day <= daysPerWeek; day++, dayOfMonth++, daySlot++)
+			for(long day = 1; day <= daysPerWeek; day++, dayOfMonth++, daySlot++)
 			{
 				date.setDay(dayOfMonth);
 				
@@ -155,7 +155,7 @@ public class Calendar implements InventoryHolder
 				weekItems.add(weekItem);
 			}
 			
-			daySlot = (int) (daySlot + (8 - (daysPerWeek - ts.getDayZero())));
+			daySlot = (int) (daySlot + (8 - (daysPerWeek - 1)));
 		}
 		
 		items.put(Items.DAY, dayItems);
@@ -177,7 +177,7 @@ public class Calendar implements InventoryHolder
 			daysPerWeek = 1;
 		
 		if(date.getWeek() == 0)
-			return daySlot == (daysPerWeek - timeSystem.getDayZero());
+			return daySlot == (daysPerWeek - 1);
 			
 		return false;
 	}
@@ -188,21 +188,21 @@ public class Calendar implements InventoryHolder
 		
 		long daysPerMonth = timeSystem.getDaysPerMonth().get((int) date.getMonth());
 		
-		return date.getDay() == daysPerMonth - timeSystem.getDayZero();
+		return date.getDay() == daysPerMonth - 1;
 	}
 	
 	public ItemStack createItem(HashMap<ItemProperties, Object> itemProperties, Date date, boolean week)
 	{
-		String name = Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.NAME), date, true);
+		String name = Utils.setPlaceholders((String) itemProperties.get(ItemProperties.NAME), date, true);
 		Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
-		int amount = Integer.parseInt(Utils.replacePlaceholder((String) itemProperties.get(ItemProperties.AMOUNT), date, true));
+		int amount = Integer.parseInt(Utils.setPlaceholders((String) itemProperties.get(ItemProperties.AMOUNT), date, true));
 		
 		List<String> lore = new ArrayList<>();
 		
 		if(itemProperties.get(ItemProperties.LORE) != null)
 		{
 			lore = new ArrayList<>((List<String>) itemProperties.get(ItemProperties.LORE))
-					.stream().map(str -> Utils.replacePlaceholder(str, date, true))
+					.stream().map(str -> Utils.setPlaceholders(str, date, true))
 					.collect(Collectors.toList());
 		}
 		

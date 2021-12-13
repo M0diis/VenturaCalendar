@@ -1,5 +1,7 @@
 package me.M0dii.venturacalendar.game.listeners.Commands;
 
+import me.M0dii.venturacalendar.base.dateutils.Month;
+import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.M0dii.venturacalendar.base.utils.Utils;
 import me.M0dii.venturacalendar.game.config.Messages;
 import me.M0dii.venturacalendar.VenturaCalendar;
@@ -32,10 +34,8 @@ public class VenturaCalendarCommand
 			else Utils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
 		}
 		
-		if(args.length >= 3 && sender instanceof Player)
+		if(args.length >= 3 && sender instanceof Player p)
 		{
-			Player p = (Player)sender;
-			
 			if(!sender.hasPermission("venturacalendar.command.changetime"))
 			{
 				Utils.sendMsg(sender, Messages.NO_PERMISSION);
@@ -51,17 +51,82 @@ public class VenturaCalendarCommand
 					{
 						int startYear = Integer.parseInt(args[3]);
 						
-						plugin.getTimeConfig().set("Time-Systems." + args[2] + ".year.zero", startYear);
+						plugin.getTimeConfig().set("time-systems." + args[2] + ".year.zero", startYear);
 						
 						plugin.getTimeConfig().reloadConfig();
 						plugin.getCalendarConfig().reloadConfig();
 						plugin.getBaseConfig().reloadConfig();
 						
-						Utils.sendFormat(p, "&aSuccessfully set starting year to " + startYear);
+						Utils.sendf(p, "&aSuccessfully set starting year to " + startYear);
 					}
 					catch(NumberFormatException ex)
 					{
-						Utils.sendFormat(p, "&aIllegal number format.");
+						Utils.sendf(p, "&aIllegal number format.");
+					}
+				}
+				
+				if(alias(args[1], "date") && args.length == 4)
+				{
+					try
+					{
+						String[] values = args[3].split("/");
+						
+						String year = values[0];
+						String month = values[1];
+						String day = values[2];
+
+						TimeSystem ts = plugin.getTimeConfig().getTimeSystems().get(args[2]);
+						
+						int maxMonth = ts.getMonths().size();
+						
+						int m = 1;
+						
+						try { m = Integer.parseInt(month); }
+						catch(NumberFormatException ex) {
+							Utils.sendf(p, "&cIllegal month number format.");
+						}
+						
+						if(m > maxMonth || m < 0)
+						{
+							Utils.sendf(p, "&cSpecified month does not exist.");
+						
+							return;
+						}
+						
+						Month mn = ts.getMonths().get(m);
+						
+						int maxDays = (int)mn.getDays();
+						
+						int d = 1;
+						
+						try { d = Integer.parseInt(day); }
+						catch(NumberFormatException ex) {
+							Utils.sendf(p, "&cIllegal day number format.");
+						}
+						
+						if(d> maxDays || d <= 0)
+						{
+							Utils.sendf(p, "&cSpecified day in month " + mn.getName() + " does not exist.");
+							
+							return;
+						}
+						
+						plugin.getTimeConfig().set("time-systems." + args[2] + ".starting-year", year);
+						plugin.getTimeConfig().set("time-systems." + args[2] + ".month-offset", m);
+						plugin.getTimeConfig().set("time-systems." + args[2] + ".day-offset", d - 1) ;
+						
+						Utils.sendf(p, "&aDate has been set to " + year + "/" + month + "/" + day);
+						
+						p.getWorld().setFullTime(0);
+
+						plugin.getTimeConfig().reloadConfig();
+						plugin.getCalendarConfig().reloadConfig();
+						plugin.getBaseConfig().reloadConfig();
+						
+					}
+					catch(NumberFormatException ex)
+					{
+						Utils.sendf(p, "&aIllegal number format.");
 					}
 				}
 			}
@@ -111,13 +176,13 @@ public class VenturaCalendarCommand
 			{
 				w.setFullTime(w.getFullTime() + total);
 				
-				Utils.sendFormat(p, "&aFast-forwarded the time by " + amount + (amt.charAt(0) == '1' ? s : s2));
+				Utils.sendf(p, "&aFast-forwarded the time by " + amount + (amt.charAt(0) == '1' ? s : s2));
 			}
-			else Utils.sendFormat(p, "&aWorld time can not go below 0 days.");
+			else Utils.sendf(p, "&aWorld time can not go below 0 days.");
 		}
 		catch(NumberFormatException ex)
 		{
-			Utils.sendFormat(p, "&cProvided amount is not valid.");
+			Utils.sendf(p, "&cProvided amount is not valid.");
 		}
 	}
 	

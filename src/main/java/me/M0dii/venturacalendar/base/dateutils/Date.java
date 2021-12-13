@@ -16,7 +16,6 @@ public class Date
 	private long day;
 	private long week;
 	private long month;
-	private long season;
 	private long year;
 	private long era;
 
@@ -62,22 +61,6 @@ public class Date
 		this.era 	= date.getEra();
 	}
 	
-	public void toNullDate()
-	{
-		Date date = plugin.getDateUtils().getNullDate(timeSystem);
-		this.rootTicks = date.getRootTicks();
-		
-		this.tick = date.getTick();
-		this.second = date.getSecond();
-		this.minute = date.getMinute();
-		this.hour = date.getHour();
-		this.day = date.getDay();
-		this.week = date.getWeek();
-		this.month = date.getMonth();
-		this.year = date.getYear();
-		this.era = date.getEra();
-	}
-
 	public TimeSystem getTimeSystem() {
 		return timeSystem;
 	}
@@ -144,12 +127,12 @@ public class Date
 	
 	public String getMonthName()
 	{
-		return this.getTimeSystem().getMonthNames().get(((int)this.month));
+		return this.getTimeSystem().getMonths().get(((int)this.month)).getName();
 	}
 	
 	public String getSeasonName()
 	{
-		return this.getTimeSystem().getSeasonNames().get(((int)this.month));
+		return this.getTimeSystem().getMonths().get(((int)this.month)).getSeasonName();
 	}
 	
 	public String getDayName()

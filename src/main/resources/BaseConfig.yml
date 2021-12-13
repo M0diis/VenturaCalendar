@@ -54,7 +54,7 @@ events:
     description:
       - "&6Happy new year!"
     display-material: RED_STAINED_GLASS_PANE # Will override current days display
-    commands: # Leave empty if you don't want to execute any commands
+    commands: # Leave empty if you don't want to execute any commands (commands: [])
       - '[PLAYER] this will be executed by player'
       - '[CONSOLE] this will be executed by console'
 action-bar:
@@ -65,7 +65,6 @@ new-day:
     enabled: true
     text:
       - '&aGood morning everyone.'
-      - '&aToday is a new day.'
   title:
     enabled: true
     text: 'A new day arises'
@@ -73,7 +72,7 @@ new-day:
     fade-in: 20
     stay: 60
     fade-out: 20
-  commands: # Leave empty if you don't want to execute any commands
+  commands: # Leave empty if you don't want to execute any commands (commands: [])
     - '[PLAYER] this will be executed by player'
     - '[CONSOLE] this will be executed by console'
 messages:

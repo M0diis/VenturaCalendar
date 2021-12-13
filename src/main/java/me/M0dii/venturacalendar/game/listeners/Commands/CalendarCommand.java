@@ -47,7 +47,7 @@ public class CalendarCommand
 					if(wname.equalsIgnoreCase("current"))
 						world = pl.getWorld();
 					
-					if(wname.equalsIgnoreCase("real-time"))
+					if(timeSystem.isRealTime())
 					{
 						Date date = plugin.getDateCalculator().fromMillis(timeSystem);
 						Date creationDate = plugin.getDateCalculator().fromMillis(timeSystem);
@@ -95,7 +95,7 @@ public class CalendarCommand
 					if(wname.equalsIgnoreCase("current"))
 						world = pl.getWorld();
 					
-					if(wname.equalsIgnoreCase("real-time"))
+					if(timeSystem.isRealTime())
 					{
 						Date date = plugin.getDateCalculator().fromMillis(timeSystem);
 						Date creationDate = plugin.getDateCalculator().fromMillis(timeSystem);

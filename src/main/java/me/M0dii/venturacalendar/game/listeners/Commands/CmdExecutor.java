@@ -59,10 +59,13 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 				completes.add("subtract");
 			}
 			
-			if(args.length == 2)
+			if(args.length == 2 && !args[1].equals("reload"))
 			{
 				if(args[1].equalsIgnoreCase("set"))
+				{
 					completes.add("startyear");
+					completes.add("date");
+				}
 				else
 				{
 					completes.add("seconds");
@@ -76,7 +79,17 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 			if(args.length == 3)
 			{
 				if(args[1].equalsIgnoreCase("set"))
+				{
 					timeSystems.forEach((key, value) -> completes.add(value.getName()));
+				}
+			}
+			
+			if(args.length == 4)
+			{
+				if(args[2].equalsIgnoreCase("date"))
+				{
+					completes.add("YYYY/MM/DD");
+				}
 			}
 		}
 		

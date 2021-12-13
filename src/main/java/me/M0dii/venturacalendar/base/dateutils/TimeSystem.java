@@ -9,6 +9,7 @@ public class TimeSystem
 	private final String name;
 	private Optional<String> timeZone;
 	private boolean useTimeZone = false;
+	private boolean realTime = false;
 	
 	// Date parameters.
 	private final long ticksPerSecond;
@@ -33,9 +34,8 @@ public class TimeSystem
 	private final long eraZero;
 	
 	// Date parameter names.
+	private final List<Month> months;
 	private final List<String> dayNames;
-	private final List<String> monthNames;
-	private final List<String> seasonNames;
 	private final List<String> eraNames;
 	
 	public TimeSystem(String worldname,
@@ -61,8 +61,7 @@ public class TimeSystem
 					  long eraZero,
 					
 					  List<String> dayNames,
-					  List<String> monthNames,
-					  List<String> seasonNames,
+					  List<Month> months,
 					  List<String> eraNames)
 	{
 		this.worldName          = worldname;
@@ -89,8 +88,7 @@ public class TimeSystem
 		this.eraZero 			= eraZero;
 		
 		this.dayNames = dayNames;
-		this.monthNames = monthNames;
-		this.seasonNames = seasonNames;
+		this.months = months;
 		this.eraNames = eraNames;
 	}
 	
@@ -120,11 +118,11 @@ public class TimeSystem
 		this.eraZero 			= timeSystem.getEraZero();
 		
 		this.dayNames 			= timeSystem.getDayNames();
-		this.monthNames			= timeSystem.getMonthNames();
-		this.seasonNames	    = timeSystem.getSeasonNames();
+		this.months			    = timeSystem.getMonths();
 		this.eraNames			= timeSystem.getEraNames();
 		
-		this.timeZone = Optional.empty();
+		this.timeZone = timeSystem.getTimeZoneOptional();
+		this.useTimeZone = timeSystem.useTimeZone();
 	}
 	
 	public void setTimeZone(String timeZone)
@@ -137,10 +135,25 @@ public class TimeSystem
         return timeZone.orElse("");
     }
 	
+	public Optional<String> getTimeZoneOptional()
+	{
+		return timeZone;
+	}
+	
 	public void setUseTimeZone(boolean useTimeZone)
     {
         this.useTimeZone = useTimeZone;
     }
+	
+	public void setRealTime(boolean realTime)
+	{
+		this.realTime = realTime;
+	}
+	
+	public boolean isRealTime()
+	{
+		return realTime;
+	}
 	
 	public boolean useTimeZone()
 	{
@@ -237,14 +250,9 @@ public class TimeSystem
 		return dayNames;
 	}
 	
-	public List<String> getMonthNames()
+	public List<Month> getMonths()
 	{
-		return monthNames;
-	}
-	
-	public List<String> getSeasonNames()
-	{
-		return seasonNames;
+		return months;
 	}
 	
 	public List<String> getEraNames()

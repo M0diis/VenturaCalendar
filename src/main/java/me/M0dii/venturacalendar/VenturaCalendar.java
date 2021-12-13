@@ -80,7 +80,7 @@ public class VenturaCalendar extends JavaPlugin
         
         setupMetrics();
         
-        checkNewDay();
+        newDayCheckTimer();
     
         getLogger().info("VenturaCalendar has been enabled.");
         
@@ -106,17 +106,17 @@ public class VenturaCalendar extends JavaPlugin
             String wname = timeSystem.getWorldName();
             World world = Bukkit.getWorld(wname);
     
-            if(wname.equalsIgnoreCase("real-time"))
+            if(timeSystem.isRealTime())
             {
                 Date date = getDateCalculator().fromMillis(timeSystem);
                 
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.replacePlaceholder(msg, date, p)));
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msg, date, p)));
             }
             else if(world != null)
             {
                 Date date = getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
     
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.replacePlaceholder(msg, date, p)));
+                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msg, date, p)));
             }
             
         }, 0L, 20L);
@@ -158,7 +158,7 @@ public class VenturaCalendar extends JavaPlugin
     
     static boolean newDay = false;
     
-    private void checkNewDay()
+    private void newDayCheckTimer()
     {
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
         {
@@ -196,7 +196,7 @@ public class VenturaCalendar extends JavaPlugin
                     if(baseConfig.getNewDayMessage().isPresent() && baseConfig.newDayMessageEnabled())
                     {
                         String base = baseConfig.getNewDayMessage().get();
-                        String msg = Utils.replacePlaceholder(base, date, p);
+                        String msg = Utils.setPlaceholders(base, date, p);
                         
                         p.sendMessage(msg);
                     }
@@ -210,8 +210,8 @@ public class VenturaCalendar extends JavaPlugin
                         int stay = baseConfig.getInteger("new-day.title.stay");
                         int fadeout = baseConfig.getInteger("new-day.title.fade-out");
     
-                        title = Utils.replacePlaceholder(title, date, false);
-                        subtitle = Utils.replacePlaceholder(subtitle, date, false);
+                        title = Utils.setPlaceholders(title, date, false);
+                        subtitle = Utils.setPlaceholders(subtitle, date, false);
                         
                         if(papiEnabled)
                         {

@@ -1,12 +1,10 @@
 package me.M0dii.venturacalendar.base.configutils;
 
 import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.dateutils.MonthEvent;
+import me.M0dii.venturacalendar.base.dateutils.Month;
 import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.M0dii.venturacalendar.base.utils.Utils;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +38,7 @@ public class TimeConfig extends Config implements ConfigUtils
 	
 	private void reload()
 	{
-		ConfigurationSection timeSystemsName = cfg.getConfigurationSection("Time-Systems");
+		ConfigurationSection timeSystemsName = cfg.getConfigurationSection("time-systems");
 		
 		if(timeSystemsName != null)
 			for(String timeSystemName : timeSystemsName.getKeys(false))
@@ -52,86 +50,78 @@ public class TimeConfig extends Config implements ConfigUtils
 		return timeSystems;
 	}
 	
-	private TimeSystem getTimeSystem(String timeSystemName)
+	private TimeSystem getTimeSystem(String tsName)
 	{
-		String defaultPath = "Time-Systems." + timeSystemName + ".";
-		String worldname = getString(defaultPath + "world-name");
+		String path = "time-systems." + tsName + ".";
+		String worldname = getString(path + "world-name");
 		
-		String timeZone = getString(defaultPath + "real-time.time-zone");
-		boolean useTimeZone = getBoolean(defaultPath + "real-time.use-time-zone");
-		
-		//   default:
-		//    world-name: 'world'
-		//    real-time:
-		//      use-time-zone: true # If set to false, real-time will use local machine time
-		//      time-zone: 'Europe/Germany'
-		
-		String path;
+		String timeZone = getString(path + "real-time.time-zone");
+		boolean useTimeZone = getBoolean(path + "real-time.use-time-zone");
+		boolean realTime = getBoolean(path + "real-time.enabled");
 		
 		// Tick
 		long tickZero	= 0;
 		
 		// Second
-		long ticksPerSecond = getLong(defaultPath + "second.ticksPerSecond");
+		long ticksPerSecond = getLong(path + "ticks-per-second");
 		long secondZero	= 0;
 		
 		// Minute
-		long secondsPerMinute = getLong(defaultPath + "minute.secondsPerMinute");
+		long secondsPerMinute = getLong(path + "seconds-per-minute");
 		long minuteZero = 0;
 		
 		// Hour
-		long minutesPerHour = getLong(defaultPath + "hour.minutesPerHour");
+		long minutesPerHour = getLong(path + "minutes-per-hour");
 		long hourZero = 1;
 		
 		// Day
-		path = defaultPath + "day.";
+		long hoursPerDay = getLong(path + "hours-per-day");
+		long dayZero = getLong(path + "day-offset");
 		
-		long hoursPerDay = getLong(path + "hoursPerDay");
-		long dayZero = 1;
-		
-		ArrayList<String> dayNames = getSection(path + "dayNames", "name").stream()
-				.map(dayNameObject -> (String)dayNameObject)
-				.collect(Collectors.toCollection(ArrayList::new));
+		List<String> dayNames = getListString(path + "days");
 		
 		// Week
-		long daysPerWeek = getLong(defaultPath + "week.daysPerWeek");
-		long weekZero = 1;
+		long daysPerWeek = getLong(path + "days-per-week");
+		long weekZero = getLong(path + "week-offset");
 		
 		// Month
-		path = defaultPath + "month.daysPerMonth";
+		List<Month> months = new ArrayList<>();
+		List<Long> monthDays = new ArrayList<>();
 		
-		ArrayList<Long> daysPerMonth = getSection(path, "days").stream()
-				.map(daysThisMonthObject -> Long.valueOf((String)daysThisMonthObject))
-				.collect(Collectors.toCollection(ArrayList::new));
+		for(String month : getListString(path + "months"))
+		{
+			String[] split = month.split(", ");
+			
+			String monthName = split[0].trim();
+			long monthDaysCount = Long.parseLong(split[1].trim());
+			String seasonName = split[2].trim();
+			
+			Month m = new Month(monthName, monthDaysCount, seasonName);
+			
+			monthDays.add(monthDaysCount);
+			
+			months.add(m);
+			
+		}
 		
-		long monthZero = 1;
-		
-		ArrayList<String> monthNames = getSection(path, "name").stream()
-				.map(monthNameObject -> (String)monthNameObject)
-				.collect(Collectors.toCollection(ArrayList::new));
-		
-		ArrayList<String> seasonNames = getSection(path, "season").stream()
-				.map(seasonNameObject -> (String)seasonNameObject)
-				.collect(Collectors.toCollection(ArrayList::new));
+		long monthZero = getLong(path + "month-offset");
 		
 		// Year
-		path = defaultPath + "year.";
-		
-		long monthsPerYear = getLong(path + "monthsPerYear");
-		long yearZero = getZero(path);
+		long monthsPerYear = getLong(path + "months-per-year");
+		long yearZero = getLong(path + "starting-year");
 		
 		// Era
-		path = defaultPath + "era.";
+		path = path + "eras";
 		
-		ArrayList<Long> erasBegin = getSection(path + "eras", "startYear").stream()
+		ArrayList<Long> erasBegin = getSection(path, "startYear").stream()
 				.map(erasBeginObject -> Long.valueOf((String)erasBeginObject))
 				.collect(Collectors.toCollection(ArrayList::new));
 		
-		ArrayList<Long> erasEnd = getSection(path + "eras", "endYear").stream()
+		ArrayList<Long> erasEnd = getSection(path, "endYear").stream()
 				.map(erasEndObject -> Long.valueOf((String)erasEndObject))
 				.collect(Collectors.toCollection(ArrayList::new));
 		
-		ArrayList<String> eraNames = getSection(path + "eras", "name").stream()
+		ArrayList<String> eraNames = getSection(path, "name").stream()
 				.map(eraNameObject -> (String)eraNameObject)
 				.collect(Collectors.toCollection(ArrayList::new));
 		
@@ -139,13 +129,13 @@ public class TimeConfig extends Config implements ConfigUtils
 		
 		TimeSystem ts = new TimeSystem(
 			   worldname,
-			   timeSystemName,
+			   tsName,
 			   ticksPerSecond,
 			   secondsPerMinute,
 			   minutesPerHour,
 			   hoursPerDay,
 			   daysPerWeek,
-			   daysPerMonth,
+			   monthDays,
 			   monthsPerYear,
 			   erasBegin,
 			   erasEnd,
@@ -161,13 +151,13 @@ public class TimeConfig extends Config implements ConfigUtils
 			   eraZero,
 			   
 			   dayNames,
-			   monthNames,
-			   seasonNames,
+			   months,
 			   eraNames
 		);
-		
+
 		ts.setTimeZone(timeZone);
 		ts.setUseTimeZone(useTimeZone);
+		ts.setRealTime(realTime);
 		
 		return ts;
 	}
@@ -180,12 +170,7 @@ public class TimeConfig extends Config implements ConfigUtils
 		
 		return cfg;
 	}
-	
-	private long getZero(String path)
-	{
-		return getLong(path + "zero");
-	}
-	
+
 	private ArrayList<Object> getSection(String path, String value)
 	{
 		ArrayList<Object> names = new ArrayList<>();

@@ -28,7 +28,7 @@ public class Utils
                 HEX_PATTERN.matcher(text).replaceAll("&x&$1&$2&$3&$4&$5&$6"));
     }
     
-    public static void sendFormat(CommandSender sender, String msg)
+    public static void sendf(CommandSender sender, String msg)
     {
         sender.sendMessage(format(msg));
     }
@@ -38,17 +38,17 @@ public class Utils
         sender.sendMessage(plugin.getBaseConfig().getMessage(msg));
     }
     
-    public static String replacePlaceholder(String message, Date date, boolean papi)
+    public static String setPlaceholders(String message, Date date, boolean papi)
     {
-        return replacePlaceholder(message, date, papi, null);
+        return setPlaceholders(message, date, papi, null);
     }
     
-    public static String replacePlaceholder(String message, Date date, Player p)
+    public static String setPlaceholders(String message, Date date, Player p)
     {
-        return replacePlaceholder(message, date, true, p);
+        return setPlaceholders(message, date, true, p);
     }
     
-    public static String replacePlaceholder(String message, Date date, boolean papi, Player p)
+    public static String setPlaceholders(String message, Date date, boolean papi, Player p)
     {
         DateUtils du = plugin.getDateUtils();
         
@@ -93,17 +93,20 @@ public class Utils
             cmd = PlaceholderAPI.setPlaceholders(player, cmd);
         }
         
+        cmd = format(cmd);
+        
         if(cmd.startsWith("["))
         {
-            String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 2);
+            String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 1);
             
             cmd = cmd.substring(cmd.indexOf("]") + 2);
             
-            if(sendAs.equalsIgnoreCase("[PLAYER] "))
+            if(sendAs.equalsIgnoreCase("[MESSAGE]"))
+                player.sendMessage(cmd);
+            else if(sendAs.equalsIgnoreCase("[PLAYER]"))
                 Bukkit.dispatchCommand(player, cmd);
-            else if(sendAs.equalsIgnoreCase("[CONSOLE] "))
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                        cmd.replace("[CONSOLE] ", ""));
+            else if(sendAs.equalsIgnoreCase("[CONSOLE]"))
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         }
         else Bukkit.dispatchCommand(player, cmd);
     }

@@ -8,31 +8,31 @@ public class TimeSystemUtils
 	public HashMap<TimeSystemEnum, Object> toHashMap(TimeSystem timeSystem)
 	{
 		timeSystem = new TimeSystem(timeSystem);
-			
-		HashMap<TimeSystemEnum, Object> timeSystemMap = new HashMap<>();
 		
-		timeSystemMap.put(TimeSystemEnum.NAME, timeSystem.getName());
+		HashMap<TimeSystemEnum, Object> timeSystems = new HashMap<>();
 		
-		timeSystemMap.put(TimeSystemEnum.ticksPerSecond, timeSystem.getTicksPerSecond());
-		timeSystemMap.put(TimeSystemEnum.secondsPerMinute, timeSystem.getSecondsPerMinute());
-		timeSystemMap.put(TimeSystemEnum.minutesPerHour, timeSystem.getMinutesPerHour());
-		timeSystemMap.put(TimeSystemEnum.hoursPerDay, timeSystem.getHoursPerDay());
-		timeSystemMap.put(TimeSystemEnum.daysPerWeek, timeSystem.getDaysPerWeek());
-		timeSystemMap.put(TimeSystemEnum.daysPerMonth, timeSystem.getDaysPerMonth());
-		timeSystemMap.put(TimeSystemEnum.monthsPerYear, timeSystem.getMonthsPerYear());
-		timeSystemMap.put(TimeSystemEnum.erasBegin, timeSystem.getErasBegin());
-		timeSystemMap.put(TimeSystemEnum.erasEnd, timeSystem.getErasEnd());
+		timeSystems.put(TimeSystemEnum.NAME, timeSystem.getName());
 		
-		timeSystemMap.put(TimeSystemEnum.tickZero, timeSystem.getTickZero());
-		timeSystemMap.put(TimeSystemEnum.secondZero, timeSystem.getSecondZero());
-		timeSystemMap.put(TimeSystemEnum.minuteZero, timeSystem.getMinuteZero());
-		timeSystemMap.put(TimeSystemEnum.hourZero, timeSystem.getHourZero());
-		timeSystemMap.put(TimeSystemEnum.dayZero, timeSystem.getDayZero());
-		timeSystemMap.put(TimeSystemEnum.weekZero, timeSystem.getWeekZero());
-		timeSystemMap.put(TimeSystemEnum.monthZero, timeSystem.getMonthZero());
-		timeSystemMap.put(TimeSystemEnum.eraZero, timeSystem.getEraZero());
+		timeSystems.put(TimeSystemEnum.TICKS_PER_SECOND, timeSystem.getTicksPerSecond());
+		timeSystems.put(TimeSystemEnum.SECONDS_PER_MINUTE, timeSystem.getSecondsPerMinute());
+		timeSystems.put(TimeSystemEnum.MINUTES_PER_HOUR, timeSystem.getMinutesPerHour());
+		timeSystems.put(TimeSystemEnum.HOURS_PER_DAY, timeSystem.getHoursPerDay());
+		timeSystems.put(TimeSystemEnum.DAYS_PER_WEEK, timeSystem.getDaysPerWeek());
+		timeSystems.put(TimeSystemEnum.DAYS_PER_MONTH, timeSystem.getDaysPerMonth());
+		timeSystems.put(TimeSystemEnum.MONTHS_PER_YEARS, timeSystem.getMonthsPerYear());
+		timeSystems.put(TimeSystemEnum.ERAS_BEGIN, timeSystem.getErasBegin());
+		timeSystems.put(TimeSystemEnum.ERAS_END, timeSystem.getErasEnd());
 		
-		return timeSystemMap;
+		timeSystems.put(TimeSystemEnum.TICK_ZERO, timeSystem.getTickZero());
+		timeSystems.put(TimeSystemEnum.SECOND_ZERO, timeSystem.getSecondZero());
+		timeSystems.put(TimeSystemEnum.MINUTE_ZERO, timeSystem.getMinuteZero());
+		timeSystems.put(TimeSystemEnum.HOUR_ZERO, 1);
+		timeSystems.put(TimeSystemEnum.DAY_ZERO, 1);
+		timeSystems.put(TimeSystemEnum.WEEK_ZERO, 1);
+		timeSystems.put(TimeSystemEnum.MONTH_ZERO, timeSystem.getMonthZero());
+		timeSystems.put(TimeSystemEnum.ERA_ZERO, timeSystem.getEraZero());
+		
+		return timeSystems;
 	}
 	
 	public Object getTPU(DateEnum unit, TimeSystem timeSystem)
@@ -52,29 +52,19 @@ public class TimeSystemUtils
 		
 		for(long ticksThisMonth : ticksPerMonth)
 			ticksPerYear = ticksPerYear + ticksThisMonth;
-			
-		switch(unit)
+		
+		return switch(unit)
 		{
-			case TICK:
-				return 1;
-			case SECOND:
-				return ticksPerSecond;
-			case MINUTE:
-				return ticksPerMinute;
-			case HOUR:
-				return ticksPerHour;
-			case DAY:
-				return ticksPerDay;
-			case WEEK:
-				return ticksPerWeek;
-			case MONTH:
-				return ticksPerMonth;
-			case YEAR:
-				return ticksPerYear;
-				
-			default:
-				return 0;
-		}
+			case TICK -> 1;
+			case SECOND -> ticksPerSecond;
+			case MINUTE -> ticksPerMinute;
+			case HOUR -> ticksPerHour;
+			case DAY -> ticksPerDay;
+			case WEEK -> ticksPerWeek;
+			case MONTH -> ticksPerMonth;
+			case YEAR -> ticksPerYear;
+			default -> 0;
+		};
 	}
 
 }

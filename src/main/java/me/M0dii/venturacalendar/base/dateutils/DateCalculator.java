@@ -62,7 +62,22 @@ public class DateCalculator
 		List<Long> ticksPerMonth = (List<Long>) tsUtils.getTPU(DateEnum.MONTH, timeSystem);
 		long ticksPerYear  			  = (long) tsUtils.getTPU(DateEnum.YEAR, timeSystem);
 		long rootTicks                = ticks;
-
+		
+		long dayTicks = 24000;
+		
+		ticks += (timeSystem.getDayZero() * dayTicks)
+				+ (timeSystem.getWeekZero() * (7 * dayTicks));
+		
+		for(int i = 0, m = 0; i < timeSystem.getMonthZero(); i++, m++)
+		{
+			if(m > timeSystem.getMonths().size() - 1)
+			{
+				m = 0;
+			}
+			
+			ticks += (timeSystem.getMonths().get(m).getDays() * dayTicks);
+		}
+		
 		year = ticks / ticksPerYear;
 		ticks = ticks - year * ticksPerYear;
 		
@@ -104,6 +119,7 @@ public class DateCalculator
 				era = index;
 		}
 		
-		return new Date(timeSystem, rootTicks, tick, second, minute, hour, day, week, month, year, era);
+		return new Date(timeSystem, rootTicks,
+				tick, second, minute, hour, day, week, month, year, era);
 	}
 }

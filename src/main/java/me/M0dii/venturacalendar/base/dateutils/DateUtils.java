@@ -53,9 +53,9 @@ public class DateUtils
 		date.setSecond	(date.getSecond() 	+ timeSystem.getSecondZero());
 		date.setMinute	(date.getMinute() 	+ timeSystem.getMinuteZero());
 		date.setHour	(date.getHour() 	+ timeSystem.getHourZero());
-		date.setDay		(date.getDay() 		+ timeSystem.getDayZero());
-		date.setWeek	(date.getWeek() 	+ timeSystem.getWeekZero());
-		date.setMonth	(date.getMonth() 	+ timeSystem.getMonthZero());
+		date.setDay		(date.getDay() 		+ 1);
+		date.setWeek	(date.getWeek() 	+ 1);
+		date.setMonth	(date.getMonth() 	+ 1);
 		date.setYear	(date.getYear() 	+ timeSystem.getYearZero());
 		date.setEra		(date.getEra() 		+ timeSystem.getEraZero());
 		
@@ -72,9 +72,9 @@ public class DateUtils
 		date.setSecond	(date.getSecond() 	- timeSystem.getSecondZero());
 		date.setMinute	(date.getMinute() 	- timeSystem.getMinuteZero());
 		date.setHour	(date.getHour() 	- timeSystem.getHourZero());
-		date.setDay		(date.getDay() 		- timeSystem.getDayZero());
-		date.setWeek	(date.getWeek() 	- timeSystem.getWeekZero());
-		date.setMonth	(date.getMonth() 	- timeSystem.getMonthZero());
+		date.setDay		(date.getDay() 		- 1);
+		date.setWeek	(date.getWeek() 	- 1);
+		date.setMonth	(date.getMonth() 	- 1);
 		date.setYear	(date.getYear() 	- timeSystem.getYearZero());
 		date.setEra		(date.getEra() 		- timeSystem.getEraZero());
 		
@@ -165,9 +165,10 @@ public class DateUtils
 		
 		date = new Date(date);
 		
-		if(!date.getTimeSystem().getWorldName()
-				.equalsIgnoreCase("real-time") && date.getMonth() != 6)
-			date.setDay(date.getDay() + date.getTimeSystem().getDayZero());
+		if(date.getMonth() != 6)
+		{
+			date.setDay(date.getDay() + 1);
+		}
 		
 	    int cc = (int) (date.getYear() / 100);
 	    int yy = (int) (date.getYear() - ((date.getYear() / 100) * 100));
