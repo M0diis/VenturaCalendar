@@ -1,14 +1,13 @@
 package me.M0dii.venturacalendar.base.utils;
 
+import me.M0dii.venturacalendar.VenturaCalendar;
 import me.M0dii.venturacalendar.base.dateutils.Date;
 import me.M0dii.venturacalendar.base.dateutils.DateUtils;
 import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.M0dii.venturacalendar.game.config.Messages;
-import me.M0dii.venturacalendar.VenturaCalendar;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.regex.Pattern;
@@ -26,16 +25,6 @@ public class Utils
         
         return ChatColor.translateAlternateColorCodes('&',
                 HEX_PATTERN.matcher(text).replaceAll("&x&$1&$2&$3&$4&$5&$6"));
-    }
-    
-    public static void sendf(CommandSender sender, String msg)
-    {
-        sender.sendMessage(format(msg));
-    }
-    
-    public static void sendMsg(CommandSender sender, Messages msg)
-    {
-        sender.sendMessage(plugin.getBaseConfig().getMessage(msg));
     }
     
     public static String setPlaceholders(String message, Date date, boolean papi)
@@ -98,15 +87,95 @@ public class Utils
         if(cmd.startsWith("["))
         {
             String sendAs = cmd.substring(cmd.indexOf("["), cmd.indexOf("]") + 1);
-            
+    
             cmd = cmd.substring(cmd.indexOf("]") + 2);
-            
-            if(sendAs.equalsIgnoreCase("[MESSAGE]"))
+    
+            if(sendAs.equalsIgnoreCase("[MESSAGE]") || sendAs.equalsIgnoreCase("[TEXT]"))
+            {
                 player.sendMessage(cmd);
+            }
+            else if(sendAs.equalsIgnoreCase("[TITLE]"))
+            {
+                String[] split = cmd.split(", ");
+    
+                int fadeIn = 20;
+                int stay = 60;
+                int fadeOut = 20;
+                
+                if(split.length == 1)
+                {
+                    String title = split[0];
+                    
+                    player.sendTitle(title, "", fadeIn, stay, fadeOut);
+                    
+                    return;
+                }
+    
+                if(split.length == 4)
+                {
+                    try
+                    {
+                        fadeIn = Integer.parseInt(split[1]);
+                        stay = Integer.parseInt(split[2]);
+                        fadeOut = Integer.parseInt(split[3]);
+                    }
+                    catch(NumberFormatException e)
+                    {
+                        Messenger.log(Messenger.Level.WARN, "Invalid fade-in, stay, or fade-out time for title action.");
+                    }
+        
+                    player.sendTitle(split[0], "", fadeIn, stay, fadeOut);
+        
+                    return;
+                }
+
+                if(split.length == 5)
+                {
+                    String subtitle = split[1];
+                    
+                    try
+                    {
+                        fadeIn = Integer.parseInt(split[2]);
+                        stay = Integer.parseInt(split[3]);
+                        fadeOut = Integer.parseInt(split[4]);
+                    }
+                    catch(NumberFormatException ex)
+                    {
+                        Messenger.log(Messenger.Level.WARN, "Invalid fadeIn, stay, or fadeOut time for title action.");
+                    }
+                    
+                    player.sendTitle(split[0], subtitle, fadeIn, stay, fadeOut);
+                }
+            }
+            else if(sendAs.equalsIgnoreCase("[CHAT]"))
+            {
+                player.chat(cmd);
+            }
+            else if(sendAs.equalsIgnoreCase("[SOUND]"))
+            {
+                String[] split = cmd.split(", ");
+                
+                if(split.length == 2)
+                {
+                    try
+                    {
+                        player.playSound(player.getLocation(), Sound.valueOf(split[0]), Float.parseFloat(split[1]), Float.parseFloat(split[1]));
+                    }
+                    catch (Exception ex)
+                    {
+                        Messenger.log(Messenger.Level.WARN, "Invalid sound format: " + cmd);
+                        Messenger.log(Messenger.Level.DEBUG, ex.getMessage());
+                    }
+                }
+            }
             else if(sendAs.equalsIgnoreCase("[PLAYER]"))
+            {
                 Bukkit.dispatchCommand(player, cmd);
+            }
             else if(sendAs.equalsIgnoreCase("[CONSOLE]"))
+            {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+            }
         }
         else Bukkit.dispatchCommand(player, cmd);
     }

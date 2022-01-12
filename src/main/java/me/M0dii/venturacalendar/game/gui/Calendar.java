@@ -40,7 +40,7 @@ public class Calendar implements InventoryHolder
 		date = new Date(date);
 		creationDate = new Date(creationDate);
 		
-		this.events = plugin.getBaseConfig().getEvents();
+		this.events = plugin.getEventConfig().getEvents();
 		
 		this.date = date;
 		this.creationDate = creationDate;

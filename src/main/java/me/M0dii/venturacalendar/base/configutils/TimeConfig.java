@@ -101,7 +101,6 @@ public class TimeConfig extends Config implements ConfigUtils
 			monthDays.add(monthDaysCount);
 			
 			months.add(m);
-			
 		}
 		
 		long monthZero = getLong(path + "month-offset");
@@ -111,19 +110,23 @@ public class TimeConfig extends Config implements ConfigUtils
 		long yearZero = getLong(path + "starting-year");
 		
 		// Era
-		path = path + "eras";
 		
-		ArrayList<Long> erasBegin = getSection(path, "startYear").stream()
-				.map(erasBeginObject -> Long.valueOf((String)erasBeginObject))
-				.collect(Collectors.toCollection(ArrayList::new));
+		List<String> eraNames = new ArrayList<>();
+		List<Long> erasBegin = new ArrayList<>();
+		List<Long> erasEnd = new ArrayList<>();
 		
-		ArrayList<Long> erasEnd = getSection(path, "endYear").stream()
-				.map(erasEndObject -> Long.valueOf((String)erasEndObject))
-				.collect(Collectors.toCollection(ArrayList::new));
-		
-		ArrayList<String> eraNames = getSection(path, "name").stream()
-				.map(eraNameObject -> (String)eraNameObject)
-				.collect(Collectors.toCollection(ArrayList::new));
+		for(String era : getListString(path + "eras"))
+		{
+			String[] split = era.split(", ");
+			
+			String eraName = split[0].trim();
+			long eraBegin = Long.parseLong(split[1].trim());
+			long eraEnd =  Long.parseLong(split[2].trim());
+			
+			eraNames.add(eraName);
+			erasBegin.add(eraBegin);
+			erasEnd.add(eraEnd);
+		}
 		
 		long eraZero = 1;
 		

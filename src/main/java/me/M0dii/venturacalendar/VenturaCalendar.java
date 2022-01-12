@@ -8,6 +8,7 @@ import me.M0dii.venturacalendar.base.utils.UpdateChecker;
 import me.M0dii.venturacalendar.base.utils.Utils;
 import me.M0dii.venturacalendar.game.config.BaseConfig;
 import me.M0dii.venturacalendar.game.config.CalendarConfig;
+import me.M0dii.venturacalendar.game.config.EventConfig;
 import me.M0dii.venturacalendar.game.config.Messages;
 import me.M0dii.venturacalendar.game.gui.Storage;
 import me.M0dii.venturacalendar.game.gui.StorageUtils;
@@ -52,6 +53,7 @@ public class VenturaCalendar extends JavaPlugin
     
     private TimeConfig timeConfig;
     private CalendarConfig calendarConfig;
+    private EventConfig eventConfig;
     private BaseConfig baseConfig;
     
     private List<UUID> redeemed;
@@ -102,9 +104,8 @@ public class VenturaCalendar extends JavaPlugin
             String msg = getBaseConfig().getActionBarMessage().get();
             
             TimeSystem timeSystem = getTimeConfig().getTimeSystems().get("default");
-    
-            String wname = timeSystem.getWorldName();
-            World world = Bukkit.getWorld(wname);
+
+            World world = Bukkit.getWorld(timeSystem.getWorldName());
     
             if(timeSystem.isRealTime())
             {
@@ -118,7 +119,6 @@ public class VenturaCalendar extends JavaPlugin
     
                 Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msg, date, p)));
             }
-            
         }, 0L, 20L);
     }
     
@@ -177,7 +177,7 @@ public class VenturaCalendar extends JavaPlugin
 
                 for(Player p : Bukkit.getOnlinePlayers())
                 {
-                    for(MonthEvent event : this.baseConfig.getEvents())
+                    for(MonthEvent event : this.eventConfig.getEvents())
                     {
                         if(event.includesDate(date))
                         {
@@ -193,7 +193,7 @@ public class VenturaCalendar extends JavaPlugin
                         Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
                     }
                     
-                    if(baseConfig.getNewDayMessage().isPresent() && baseConfig.newDayMessageEnabled())
+                    if(baseConfig.getNewDayMessage().isPresent())
                     {
                         String base = baseConfig.getNewDayMessage().get();
                         String msg = Utils.setPlaceholders(base, date, p);
@@ -225,7 +225,9 @@ public class VenturaCalendar extends JavaPlugin
             }
             
             if(w != null && w.getTime() > 200)
+            {
                 newDay = false;
+            }
             
         }, 0L, 90L);
     }
@@ -251,6 +253,7 @@ public class VenturaCalendar extends JavaPlugin
         
         timeConfig = new TimeConfig(this);
         calendarConfig = new CalendarConfig(this);
+        eventConfig = new EventConfig(this);
     }
 
     private void registerCommands()
@@ -337,5 +340,13 @@ public class VenturaCalendar extends JavaPlugin
     public boolean papiEnabled()
     {
         return papiEnabled;
+    }
+    
+    public EventConfig getEventConfig()
+    {
+        if(eventConfig == null)
+            eventConfig = new EventConfig(this);
+        
+        return eventConfig;
     }
 }

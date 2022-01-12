@@ -2,7 +2,7 @@ package me.M0dii.venturacalendar.game.listeners.Commands;
 
 import me.M0dii.venturacalendar.base.dateutils.Month;
 import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.M0dii.venturacalendar.base.utils.Utils;
+import me.M0dii.venturacalendar.base.utils.Messenger;
 import me.M0dii.venturacalendar.game.config.Messages;
 import me.M0dii.venturacalendar.VenturaCalendar;
 import org.bukkit.World;
@@ -25,20 +25,20 @@ public class VenturaCalendarCommand
 					plugin.getCalendarConfig().reloadConfig();
 					plugin.getBaseConfig().reloadConfig();
 					
-					Utils.sendMsg(sender, Messages.CONFIG_RELOADED);
+					Messenger.send(sender, Messages.CONFIG_RELOADED);
 					
 					return;
 				}
-				else Utils.sendMsg(sender, Messages.NO_PERMISSION);
+				else Messenger.send(sender, Messages.NO_PERMISSION);
 			}
-			else Utils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
+			else Messenger.send(sender, Messages.UNKNOWN_COMMAND);
 		}
 		
 		if(args.length >= 3 && sender instanceof Player p)
 		{
 			if(!sender.hasPermission("venturacalendar.command.changetime"))
 			{
-				Utils.sendMsg(sender, Messages.NO_PERMISSION);
+				Messenger.send(sender, Messages.NO_PERMISSION);
 				
 				return;
 			}
@@ -57,11 +57,11 @@ public class VenturaCalendarCommand
 						plugin.getCalendarConfig().reloadConfig();
 						plugin.getBaseConfig().reloadConfig();
 						
-						Utils.sendf(p, "&aSuccessfully set starting year to " + startYear);
+						Messenger.send(p, "&aSuccessfully set starting year to " + startYear);
 					}
 					catch(NumberFormatException ex)
 					{
-						Utils.sendf(p, "&aIllegal number format.");
+						Messenger.send(p, "&aIllegal number format.");
 					}
 				}
 				
@@ -83,12 +83,12 @@ public class VenturaCalendarCommand
 						
 						try { m = Integer.parseInt(month); }
 						catch(NumberFormatException ex) {
-							Utils.sendf(p, "&cIllegal month number format.");
+							Messenger.send(p, "&cIllegal month number format.");
 						}
 						
 						if(m > maxMonth || m < 0)
 						{
-							Utils.sendf(p, "&cSpecified month does not exist.");
+							Messenger.send(p, "&cSpecified month does not exist.");
 						
 							return;
 						}
@@ -101,12 +101,12 @@ public class VenturaCalendarCommand
 						
 						try { d = Integer.parseInt(day); }
 						catch(NumberFormatException ex) {
-							Utils.sendf(p, "&cIllegal day number format.");
+							Messenger.send(p, "&cIllegal day number format.");
 						}
 						
 						if(d> maxDays || d <= 0)
 						{
-							Utils.sendf(p, "&cSpecified day in month " + mn.getName() + " does not exist.");
+							Messenger.send(p, "&cSpecified day in month " + mn.getName() + " does not exist.");
 							
 							return;
 						}
@@ -115,7 +115,7 @@ public class VenturaCalendarCommand
 						plugin.getTimeConfig().set("time-systems." + args[2] + ".month-offset", m);
 						plugin.getTimeConfig().set("time-systems." + args[2] + ".day-offset", d - 1) ;
 						
-						Utils.sendf(p, "&aDate has been set to " + year + "/" + month + "/" + day);
+						Messenger.send(p, "&aDate has been set to " + year + "/" + month + "/" + day);
 						
 						p.getWorld().setFullTime(0);
 
@@ -126,7 +126,7 @@ public class VenturaCalendarCommand
 					}
 					catch(NumberFormatException ex)
 					{
-						Utils.sendf(p, "&aIllegal number format.");
+						Messenger.send(p, "&aIllegal number format.");
 					}
 				}
 			}
@@ -151,7 +151,7 @@ public class VenturaCalendarCommand
 					fastForwards(args[2], p, 168000L, " week.", " weeks.", sub);
 			}
 		}
-		else Utils.sendMsg(sender, Messages.UNKNOWN_COMMAND);
+		else Messenger.send(sender, Messages.UNKNOWN_COMMAND);
 	}
 	
 	private void fastForwards(String amt, Player p, long oneAmount, String s, String s2, boolean subtract)
@@ -176,13 +176,13 @@ public class VenturaCalendarCommand
 			{
 				w.setFullTime(w.getFullTime() + total);
 				
-				Utils.sendf(p, "&aFast-forwarded the time by " + amount + (amt.charAt(0) == '1' ? s : s2));
+				Messenger.send(p, "&aFast-forwarded the time by " + amount + (amt.charAt(0) == '1' ? s : s2));
 			}
-			else Utils.sendf(p, "&aWorld time can not go below 0 days.");
+			else Messenger.send(p, "&aWorld time can not go below 0 days.");
 		}
 		catch(NumberFormatException ex)
 		{
-			Utils.sendf(p, "&cProvided amount is not valid.");
+			Messenger.send(p, "&cProvided amount is not valid.");
 		}
 	}
 	

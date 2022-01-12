@@ -1,6 +1,7 @@
 package me.M0dii.venturacalendar.base.dateutils;
 
 import me.M0dii.venturacalendar.VenturaCalendar;
+import me.M0dii.venturacalendar.base.utils.Messenger;
 
 import java.util.List;
 import java.util.TimeZone;
@@ -26,7 +27,7 @@ public class DateCalculator
 			
 			if(timeZone == null)
 			{
-				plugin.getLogger().warning("TimeZone '" + timeSystem.getTimeZone() + "' not found!");
+				Messenger.log(Messenger.Level.WARN, "TimeZone '" + timeSystem.getTimeZone() + "' not found!");
 			}
 			else
 			{

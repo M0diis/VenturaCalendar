@@ -35,7 +35,7 @@ public final class UpdateChecker
             }
             catch(IOException ex)
             {
-                this.plugin.getLogger().warning("Failed to check for updates. ");
+                Messenger.log(Messenger.Level.WARN, "Failed to check for updates.");
             }
         });
     }

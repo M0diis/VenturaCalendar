@@ -43,28 +43,26 @@ rewards:
   commands:
     - '[CONSOLE] give %player% diamond 1'
   #  - '[PLAYER] this will be executed by player'
+  # This will play a sound to the player.
+  # The first argument is the sound, the second is the volume and the third is the pitch.
+  # You can find a list of sounds here: https://www.digminecraft.com/lists/sound_list_pc.php
+  #  - '[SOUND] ENTITY.PLAYER.LEVELUP, 1.0, 1.0'
+  # This will show a title to the player.
+  # The first argument is the title, the second is the subtitle.
+  # The last three are: fade-in, stay and fade-out times.
+  #  - '[TITLE] This is a title, This is a subtitle, 20, 60, 20'
+  # Alternatively you can use opt out the subtitle or the times, or just the subtitle.
+  #  - '[TITLE] This is a title'
+  #  - '[TITLE] This is a title, 20, 60, 20'
   redeemable-months:
     enabled: true
     January: '1-7'
-events:
-  new-year:
-    name: '&a| &2New Year''s day'
-    month: 'January'
-    days: '1-1'
-    description:
-      - "&6Happy new year!"
-    display-material: RED_STAINED_GLASS_PANE # Will override current days display
-    commands: # Leave empty if you don't want to execute any commands (commands: [])
-      - '[PLAYER] this will be executed by player'
-      - '[CONSOLE] this will be executed by console'
 action-bar:
   enabled: true
   text: '&a%dayName% &2| &a%hour%&2:&a%minute%&2:&a%second%'
 new-day:
-  message:
-    enabled: true
-    text:
-      - '&aGood morning everyone.'
+  messages:
+    - '&aGood morning everyone.'
   title:
     enabled: true
     text: 'A new day arises'
@@ -72,9 +70,11 @@ new-day:
     fade-in: 20
     stay: 60
     fade-out: 20
-  commands: # Leave empty if you don't want to execute any commands (commands: [])
-    - '[PLAYER] this will be executed by player'
-    - '[CONSOLE] this will be executed by console'
+  # Remove [] if you want to define commands below.
+  commands: []
+  #  - '[PLAYER] this will be executed by player'
+  #  - '[CONSOLE] this will be executed by console'
+  #  - '[MESSAGE] this will send a message to the player'
 messages:
   prefix: "&a&lVenturaCalendar &2» &a"
   redeemed: "&cYou have already redeemed your daily reward."

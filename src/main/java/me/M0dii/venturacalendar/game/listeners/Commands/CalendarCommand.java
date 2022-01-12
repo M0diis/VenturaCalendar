@@ -2,7 +2,7 @@ package me.M0dii.venturacalendar.game.listeners.Commands;
 
 import java.util.HashMap;
 
-import me.M0dii.venturacalendar.base.utils.Utils;
+import me.M0dii.venturacalendar.base.utils.Messenger;
 import me.M0dii.venturacalendar.VenturaCalendar;
 import me.M0dii.venturacalendar.base.dateutils.Date;
 import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
@@ -17,12 +17,10 @@ import org.bukkit.entity.Player;
 
 public class CalendarCommand
 {
-	final StorageUtils storageUtils;
-	
 	public CalendarCommand(CommandSender sender, Command command,
 						   String label, String[] args, VenturaCalendar plugin)
 	{
-		storageUtils = plugin.getStorageUtils();
+		StorageUtils storageUtils = plugin.getStorageUtils();
 		
 		if(sender instanceof Player pl)
 		{
@@ -32,7 +30,7 @@ public class CalendarCommand
 			{
 				if(!pl.hasPermission("venturacalendar.calendar.default"))
 				{
-					Utils.sendMsg(pl, Messages.NO_PERMISSION);
+					Messenger.send(pl, Messages.NO_PERMISSION);
 					
 					return;
 				}
@@ -67,9 +65,15 @@ public class CalendarCommand
 						
 						pl.openInventory(calendar.getInventory());
 					}
-					else plugin.getLogger().warning("World " + timeSystem.getWorldName() + " was not " +
-							"found.");
-				} else Utils.sendMsg(pl, Messages.UNKNOWN_TIMESYSTEM);
+					else
+					{
+						Messenger.log(Messenger.Level.WARN, "World " + timeSystem.getWorldName() + " was not found.");
+					}
+				}
+				else
+				{
+					Messenger.send(pl, Messages.UNKNOWN_TIMESYSTEM);
+				}
 				
 				return;
 			}
@@ -78,45 +82,57 @@ public class CalendarCommand
 			{
 				if(!pl.hasPermission("venturacalendar.calendar.timesystem"))
 				{
-					Utils.sendMsg(pl, Messages.NO_PERMISSION);
+					Messenger.send(pl, Messages.NO_PERMISSION);
 					
 					return;
 				}
 				
 				String tsName = args[0];
 				
-				if(timeSystems.containsKey(tsName))
+				if(!timeSystems.containsKey(tsName))
 				{
-					TimeSystem timeSystem = timeSystems.get(tsName);
+					Messenger.send(pl, Messages.UNKNOWN_TIMESYSTEM);
 					
-					String wname = timeSystem.getWorldName();
-					World world = Bukkit.getWorld(wname);
+					return;
+				}
+				
+				TimeSystem timeSystem = timeSystems.get(tsName);
+				
+				String wname = timeSystem.getWorldName();
+				World world = Bukkit.getWorld(wname);
+				
+				if(wname.equalsIgnoreCase("current"))
+					world = pl.getWorld();
+				
+				if(timeSystem.isRealTime())
+				{
+					Date date = plugin.getDateCalculator().fromMillis(timeSystem);
+					Date creationDate = plugin.getDateCalculator().fromMillis(timeSystem);
 					
-					if(wname.equalsIgnoreCase("current"))
-						world = pl.getWorld();
+					Calendar calendar = new Calendar(date, creationDate, plugin);
+					storageUtils.storeCalendar(pl, calendar);
 					
-					if(timeSystem.isRealTime())
-					{
-						Date date = plugin.getDateCalculator().fromMillis(timeSystem);
-						Date creationDate = plugin.getDateCalculator().fromMillis(timeSystem);
-						
-						Calendar calendar = new Calendar(date, creationDate, plugin);
-						storageUtils.storeCalendar(pl, calendar);
-						
-						pl.openInventory(calendar.getInventory());
-					}
-					else if(world != null)
-					{
-						Date date = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
-						Date creationDate = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
-						
-						Calendar calendar = new Calendar(date, creationDate, plugin);
-						storageUtils.storeCalendar(pl, calendar);
-						
-						pl.openInventory(calendar.getInventory());
-					}
-				} else Utils.sendMsg(pl, Messages.UNKNOWN_TIMESYSTEM);
-			} else Utils.sendMsg(pl, Messages.UNKNOWN_COMMAND);
-		} else Utils.sendMsg(sender, Messages.NOT_PLAYER);
+					pl.openInventory(calendar.getInventory());
+				}
+				else if(world != null)
+				{
+					Date date = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+					Date creationDate = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+					
+					Calendar calendar = new Calendar(date, creationDate, plugin);
+					storageUtils.storeCalendar(pl, calendar);
+					
+					pl.openInventory(calendar.getInventory());
+				}
+			}
+			else
+			{
+				Messenger.send(pl, Messages.UNKNOWN_COMMAND);
+			}
+		}
+		else
+		{
+			Messenger.send(sender, Messages.NOT_PLAYER);
+		}
 	}
 }

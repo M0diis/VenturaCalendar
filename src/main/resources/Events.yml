@@ -1,0 +1,17 @@
+events:
+  new-year:
+    name: '&a| &2New Year''s day'
+    month: 'January'
+    days:
+      start: 1
+      end: 1
+    # This will appear in the lore of the event day.
+    description:
+      - "&6Happy new year!"
+    # Will override current days display
+    display-material: RED_STAINED_GLASS_PANE
+    # Leave empty if you don't want to execute any commands:
+    # commands: []
+    commands:
+      - '[PLAYER] this will be executed by player'
+      - '[CONSOLE] this will be executed by console'

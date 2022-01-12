@@ -32,7 +32,6 @@
 #    'lore' if you remove this parameter there will be no lore displayed.
 #
 #   You can also add it again. (Don't leave it there with no value it will cause errors)
-#
 title: '%dayName%, %day%. %monthName% - %year%'
 size: 9
 items:
@@ -41,6 +40,10 @@ items:
     name: '&2%day%'
     material: LIME_STAINED_GLASS_PANE
     amount: '%day%'
+    # Example lore:
+    # lore:
+    #   - '&7Today is %dayName%.'
+    #   - '&7It is the %week% week of the %monthName%.'
     lore:
       - '&r%dayName%'
   day:

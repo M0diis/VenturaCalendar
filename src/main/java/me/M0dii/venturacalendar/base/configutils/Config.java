@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import me.M0dii.venturacalendar.VenturaCalendar;
+import me.M0dii.venturacalendar.base.utils.Messenger;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -74,11 +75,11 @@ public class Config
 		{
 			config.load(file);
 			
-			plugin.getLogger().info("Succsessfully loaded " + file.getName() + "!");
+			Messenger.log(Messenger.Level.INFO, "Succsessfully loaded " + file.getName() + "!");
 		}
 		catch (IOException | InvalidConfigurationException ex)
 		{
-			plugin.getLogger().warning("Error while loading " + file.getName() + "!");
+			Messenger.log(Messenger.Level.WARN, "Error while loading " + file.getName() + "!");
 			
 			ex.printStackTrace();
 		}

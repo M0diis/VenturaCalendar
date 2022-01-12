@@ -3,6 +3,7 @@ package me.M0dii.venturacalendar.game.listeners.Inventory;
 import me.M0dii.venturacalendar.base.dateutils.FromTo;
 import me.M0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.M0dii.venturacalendar.base.itemutils.Items;
+import me.M0dii.venturacalendar.base.utils.Messenger;
 import me.M0dii.venturacalendar.base.utils.Utils;
 import me.M0dii.venturacalendar.game.config.BaseConfig;
 import me.M0dii.venturacalendar.game.config.Messages;
@@ -56,6 +57,9 @@ public class Click
 			{
 				FromTo fromTo = redeemableMonths.get(cal.getDate().getMonthName());
 				
+				if(fromTo == null)
+					return;
+				
 				if(fromTo != null)
 				{
 					long day = cal.getDate().getDay() + 1;
@@ -64,8 +68,7 @@ public class Click
 						return;
 				}
 				
-				if(fromTo == null)
-					return;
+
 			}
 			
 			HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =
@@ -86,7 +89,7 @@ public class Click
 						for(String cmd : cc.getListString("rewards.commands"))
 							Utils.sendCommand((Player)e.getWhoClicked(), cmd);
 					}
-					else Utils.sendMsg(e.getWhoClicked(), Messages.REDEEMED);
+					else Messenger.send(e.getWhoClicked(), Messages.REDEEMED);
 				}
 			}
 		}

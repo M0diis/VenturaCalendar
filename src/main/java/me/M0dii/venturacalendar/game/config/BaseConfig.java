@@ -4,14 +4,10 @@ import me.M0dii.venturacalendar.VenturaCalendar;
 import me.M0dii.venturacalendar.base.configutils.Config;
 import me.M0dii.venturacalendar.base.configutils.ConfigUtils;
 import me.M0dii.venturacalendar.base.dateutils.FromTo;
-import me.M0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.M0dii.venturacalendar.base.utils.Utils;
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +19,6 @@ public class BaseConfig extends Config implements ConfigUtils
 	
 	final HashMap<String, FromTo> redeemableMonths = new HashMap<>();
 	final HashMap<Messages, String> messages = new HashMap<>();
-	
-	public boolean newDayMessageEnabled()
-	{
-		return getBoolean("new-day.message.enabled");
-	}
 	
 	public boolean rewardsEnabled()
 	{
@@ -55,10 +46,21 @@ public class BaseConfig extends Config implements ConfigUtils
 	
 	public Optional<String> getNewDayMessage()
 	{
-		if(!getBoolean("new-day.message.enabled"))
-			return Optional.empty();
+		List<String> msg = getListString("new-day.messages");
 		
-		return Optional.of(getListString("new-day.message.text").stream()
+		if(msg.size() == 0)
+		{
+			return Optional.empty();
+		}
+		
+		boolean allEmpty = msg.stream().allMatch(String::isEmpty);
+		
+		if(allEmpty)
+		{
+			return Optional.empty();
+		}
+		
+		return Optional.of(msg.stream()
 				.map(m -> Utils.format(m) + "\n")
 				.collect(Collectors.joining()).trim());
 	}
@@ -76,49 +78,9 @@ public class BaseConfig extends Config implements ConfigUtils
 		return cfg.getBoolean("rewards.redeemable-months.enabled");
 	}
 	
-	public List<MonthEvent> getEvents()
-	{
-		ConfigurationSection sec = cfg.
-				getConfigurationSection("events");
-		
-		List<MonthEvent> events = new ArrayList<>();
-		
-		if(sec != null)
-		{
-			sec.getValues(false).forEach((k, v) ->
-			{
-				ConfigurationSection eventSection = sec.getConfigurationSection(k);
-				
-				if(eventSection != null)
-				{
-					String eventName = Utils.format(eventSection.getString("name"));
-					
-					FromTo fromTo = new FromTo(eventSection.getString("days"));
-					
-					List<String> description = eventSection.getStringList("description").stream()
-							.map(Utils::format)
-							.collect(Collectors.toList());
-					
-					Material m = Material.getMaterial(eventSection.getString("material", "RED_STAINED_GLASS_PANE"));
-					
-					String month = eventSection.getString("month");
-					
-					List<String> commands = eventSection.getStringList("commands");
-					
-					MonthEvent event = new MonthEvent(eventName, month, m, fromTo, description, commands);
-					
-					events.add(event);
-				}
-			});
-		}
-		
-		return events;
-	}
-	
 	public HashMap<String, FromTo> getRedeemableMonths()
 	{
-		ConfigurationSection sec = cfg.
-				getConfigurationSection("rewards.redeemable-months");
+		ConfigurationSection sec = cfg.getConfigurationSection("rewards.redeemable-months");
 		
 		if(sec != null)
 		{

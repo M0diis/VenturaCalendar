@@ -11,9 +11,9 @@
 # make sure the months and their days are equal to real life ones
 # set the starting year to 1970
 #
-# ticksPerSecond: 20
-# secondsPerMinute: 60
-# minutesPerHour: 60
+# ticks-per-econd: 20
+# seconds-per-minute: 60
+# minutes-per-hour: 60
 time-systems:
   default:
     world-name: 'world'
@@ -64,11 +64,7 @@ time-systems:
       - 'December, 31, Autumn'
       - 'January, 30, Winter'
     eras:
-      '1':
-        name: 'Bronze Age'
-        startYear: -3000
-        endYear: -1050
-      '2':
-        name: 'Iron Age'
-        startYear: -1049
-        endYear: -500
+    # The values are split by ', '
+    # - 'Era Name, Start Year, End Year'
+      - 'Bronze Age, -3000, -1050'
+      - 'Iron Age, -1049, -500'
