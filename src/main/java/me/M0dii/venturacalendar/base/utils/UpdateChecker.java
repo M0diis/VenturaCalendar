@@ -1,6 +1,6 @@
-package me.M0dii.venturacalendar.base.utils;
+package me.m0dii.venturacalendar.base.utils;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.VenturaCalendar;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
@@ -36,6 +36,7 @@ public final class UpdateChecker
             catch(IOException ex)
             {
                 Messenger.log(Messenger.Level.WARN, "Failed to check for updates.");
+                Messenger.log(Messenger.Level.DEBUG, ex.getMessage());
             }
         });
     }

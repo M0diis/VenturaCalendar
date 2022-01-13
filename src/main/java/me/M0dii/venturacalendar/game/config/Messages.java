@@ -1,4 +1,4 @@
-package me.M0dii.venturacalendar.game.config;
+package me.m0dii.venturacalendar.game.config;
 
 public enum Messages
 {

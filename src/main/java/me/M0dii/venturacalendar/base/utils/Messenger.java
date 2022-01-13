@@ -1,14 +1,16 @@
-package me.M0dii.venturacalendar.base.utils;
+package me.m0dii.venturacalendar.base.utils;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.game.config.Messages;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.game.config.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class Messenger
 {
-    public enum Level {
-        INFO, WARN,
+    public enum Level
+    {
+        INFO,
+        WARN,
         ERROR,
         DEBUG
     }
@@ -33,6 +35,19 @@ public class Messenger
             case WARN -> plugin.getLogger().warning(msg);
             case ERROR -> plugin.getLogger().severe(msg);
             case DEBUG -> Bukkit.getConsoleSender().sendMessage("[DEBUG] " + msg);
+        }
+    }
+    
+    public static void log(Level level, Exception ex)
+    {
+        if(!VenturaCalendar.debug)
+        {
+            return;
+        }
+        
+        if(level == Level.DEBUG)
+        {
+            ex.printStackTrace();
         }
     }
 }

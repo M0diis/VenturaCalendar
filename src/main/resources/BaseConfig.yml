@@ -23,7 +23,8 @@
 #    - %month%      - displays the current month.
 #    - %year%       - displays the current year.
 #    - %era%        - displays the current era.
-#  
+#
+#    - %eventName%  - displays the name of the current event.
 #    - %dayName%    - displays the name of the day.
 #    - %monthName%  - displays the current season name.
 #    - %seasonName% - displays the current month name.
@@ -78,8 +79,11 @@ new-day:
 messages:
   prefix: "&a&lVenturaCalendar &2» &a"
   redeemed: "&cYou have already redeemed your daily reward."
-  unknown-command: '&4Unknown command! Try /calendar &c<timesystem>'
+  unknown-command: '&4Unknown command! Try /calendar.'
   player-only: 'Calendar cannot be opened in the console.'
   no-permission: '&4You do not have permission to do that!'
   unknown-timesystem: '&4Unknown timesystem!'
   config-reloaded: '&aConfig reloaded.'
+
+debug: false
+update-check: true

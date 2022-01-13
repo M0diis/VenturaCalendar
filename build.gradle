@@ -4,10 +4,10 @@ plugins {
 }
 
 group 'me.M0dii'
-version '2.0.0'
+version '1.1.0'
 
 shadowJar {
-    relocate 'org.bstats', 'me.M0dii.venturacalendar'
+    relocate 'org.bstats', 'me.m0dii.venturacalendar'
 
     minimize()
 

@@ -17,6 +17,7 @@
 #    - %year%       - displays the current year.
 #    - %era%        - displays the current era.
 #
+#    - %eventName%  - displays the name of the current event.
 #    - %dayName%    - displays the name of the day.
 #    - %monthName%  - displays the current season name.
 #    - %seasonName% - displays the current month name.
@@ -35,9 +36,10 @@
 title: '%dayName%, %day%. %monthName% - %year%'
 size: 9
 items:
+  # Item display for current day.
   today:
     toggle: true
-    name: '&2%day%'
+    name: '&2%day% %eventName%'
     material: LIME_STAINED_GLASS_PANE
     amount: '%day%'
     # Example lore:
@@ -46,9 +48,16 @@ items:
     #   - '&7It is the %week% week of the %monthName%.'
     lore:
       - '&r%dayName%'
-  day:
+  passed:
     toggle: true
-    name: '&2%day%'
+    name: '&2%day% %eventName%'
+    material: WHITE_STAINED_GLASS_PANE
+    amount: '%day%'
+    lore:
+      - '&r%dayName%'
+  future:
+    toggle: true
+    name: '&2%day% %eventName%'
     material: WHITE_STAINED_GLASS_PANE
     amount: '%day%'
     lore:

@@ -1,8 +1,8 @@
-package me.M0dii.venturacalendar.game.gui;
+package me.m0dii.venturacalendar.game.gui;
 
 import java.util.HashMap;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.VenturaCalendar;
 import org.bukkit.entity.Player;
 
 public class StorageUtils

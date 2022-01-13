@@ -1,4 +1,4 @@
-package me.M0dii.venturacalendar.base.dateutils;
+package me.m0dii.venturacalendar.base.dateutils;
 
 import java.util.List;
 import java.util.Optional;

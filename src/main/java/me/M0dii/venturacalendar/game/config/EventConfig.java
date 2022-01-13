@@ -1,11 +1,12 @@
-package me.M0dii.venturacalendar.game.config;
+package me.m0dii.venturacalendar.game.config;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.configutils.Config;
-import me.M0dii.venturacalendar.base.configutils.ConfigUtils;
-import me.M0dii.venturacalendar.base.dateutils.FromTo;
-import me.M0dii.venturacalendar.base.dateutils.MonthEvent;
-import me.M0dii.venturacalendar.base.utils.Utils;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.configutils.Config;
+import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
+import me.m0dii.venturacalendar.base.dateutils.FromTo;
+import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
+import me.m0dii.venturacalendar.base.utils.Messenger;
+import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,19 +44,28 @@ public class EventConfig extends Config implements ConfigUtils
 				{
 					String eventName = Utils.format(eventSection.getString("name"));
 					
-					FromTo fromTo = new FromTo(eventSection.getInt("days.from"), eventSection.getInt("days.to"));
+					FromTo fromTo = new FromTo(eventSection.getInt("days.start"), eventSection.getInt("days.end"));
 					
 					List<String> description = eventSection.getStringList("description").stream()
 							.map(Utils::format)
 							.collect(Collectors.toList());
 					
-					Material m = Material.getMaterial(eventSection.getString("material", "RED_STAINED_GLASS_PANE"));
+					Material matCurr = Material.getMaterial(
+							eventSection.getString("display-material.current", "RED_STAINED_GLASS_PANE"));
+					Material matPassed = Material.getMaterial(
+							eventSection.getString("display-material.passed", "RED_STAINED_GLASS_PANE"));
+					Material matFuture = Material.getMaterial(
+							eventSection.getString("display-material.future", "RED_STAINED_GLASS_PANE"));
 					
 					String month = eventSection.getString("month");
 					
 					List<String> commands = eventSection.getStringList("commands");
+
+					MonthEvent event = new MonthEvent(eventName, month, fromTo, description, commands);
 					
-					MonthEvent event = new MonthEvent(eventName, month, m, fromTo, description, commands);
+					event.putDisplay(MonthEvent.DisplayType.CURRENT, matCurr);
+					event.putDisplay(MonthEvent.DisplayType.PASSED, matPassed);
+					event.putDisplay(MonthEvent.DisplayType.FUTURE, matFuture);
 					
 					events.add(event);
 				}

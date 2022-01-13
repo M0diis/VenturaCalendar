@@ -1,9 +1,9 @@
-package me.M0dii.venturacalendar.base.configutils;
+package me.m0dii.venturacalendar.base.configutils;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.dateutils.Month;
-import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.M0dii.venturacalendar.base.utils.Utils;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.dateutils.Month;
+import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
+import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;

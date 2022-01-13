@@ -1,12 +1,12 @@
-package me.M0dii.venturacalendar.game.config;
+package me.m0dii.venturacalendar.game.config;
 
-import me.M0dii.venturacalendar.base.utils.Utils;
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.configutils.Config;
-import me.M0dii.venturacalendar.base.configutils.ConfigUtils;
-import me.M0dii.venturacalendar.base.itemutils.ItemProperties;
-import me.M0dii.venturacalendar.base.itemutils.Items;
-import me.M0dii.venturacalendar.game.gui.InventoryProperties;
+import me.m0dii.venturacalendar.base.utils.Utils;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.configutils.Config;
+import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
+import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
+import me.m0dii.venturacalendar.base.itemutils.Items;
+import me.m0dii.venturacalendar.game.gui.InventoryProperties;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -62,9 +62,17 @@ public class CalendarConfig extends Config implements ConfigUtils
 		path = defaultPath + "today.";
 		items.put(Items.TODAY, getItemProperties(path));
 		
-		//Day
+		// Day
 		path = defaultPath + "day.";
 		items.put(Items.DAY, getItemProperties(path));
+		
+		// Future
+		path = defaultPath + "future.";
+		items.put(Items.FUTURE, getItemProperties(path));
+		
+		// Passed
+		path = defaultPath + "passed.";
+		items.put(Items.PASSED, getItemProperties(path));
 		
 		//Week
 		path = defaultPath + "week.";

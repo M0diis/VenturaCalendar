@@ -1,10 +1,10 @@
-package me.M0dii.venturacalendar.base.configutils;
+package me.m0dii.venturacalendar.base.configutils;
 
 import java.io.File;
 import java.io.IOException;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.utils.Messenger;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.utils.Messenger;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -43,7 +43,7 @@ public class Config
 		}
 		catch (IOException ex)
 		{
-			ex.printStackTrace();
+			Messenger.log(Messenger.Level.DEBUG, ex);
 		}
 	}
 
@@ -75,13 +75,12 @@ public class Config
 		{
 			config.load(file);
 			
-			Messenger.log(Messenger.Level.INFO, "Succsessfully loaded " + file.getName() + "!");
+			Messenger.log(Messenger.Level.INFO, "Successfully loaded " + file.getName() + ".");
 		}
 		catch (IOException | InvalidConfigurationException ex)
 		{
-			Messenger.log(Messenger.Level.WARN, "Error while loading " + file.getName() + "!");
-			
-			ex.printStackTrace();
+			Messenger.log(Messenger.Level.WARN, "Error while loading " + file.getName() + ".");
+			Messenger.log(Messenger.Level.DEBUG, ex);
 		}
 
 		return config;

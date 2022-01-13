@@ -9,7 +9,10 @@ events:
     description:
       - "&6Happy new year!"
     # Will override current days display
-    display-material: RED_STAINED_GLASS_PANE
+    display-material:
+      current: GREEN_STAINED_GLASS_PANE
+      passed: RED_STAINED_GLASS_PANE
+      future: YELLOW_STAINED_GLASS_PANE
     # Leave empty if you don't want to execute any commands:
     # commands: []
     commands:

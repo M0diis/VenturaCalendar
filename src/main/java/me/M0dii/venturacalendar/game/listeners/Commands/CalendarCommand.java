@@ -1,14 +1,14 @@
-package me.M0dii.venturacalendar.game.listeners.Commands;
+package me.m0dii.venturacalendar.game.listeners.Commands;
 
 import java.util.HashMap;
 
-import me.M0dii.venturacalendar.base.utils.Messenger;
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.dateutils.Date;
-import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.M0dii.venturacalendar.game.config.Messages;
-import me.M0dii.venturacalendar.game.gui.Calendar;
-import me.M0dii.venturacalendar.game.gui.StorageUtils;
+import me.m0dii.venturacalendar.base.utils.Messenger;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.dateutils.Date;
+import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
+import me.m0dii.venturacalendar.game.config.Messages;
+import me.m0dii.venturacalendar.game.gui.Calendar;
+import me.m0dii.venturacalendar.game.gui.StorageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;

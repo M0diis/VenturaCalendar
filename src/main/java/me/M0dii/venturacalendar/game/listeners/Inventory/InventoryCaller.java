@@ -1,6 +1,6 @@
-package me.M0dii.venturacalendar.game.listeners.Inventory;
+package me.m0dii.venturacalendar.game.listeners.Inventory;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.VenturaCalendar;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;

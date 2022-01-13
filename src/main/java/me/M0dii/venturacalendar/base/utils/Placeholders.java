@@ -1,15 +1,14 @@
-package me.M0dii.venturacalendar.base.utils;
+package me.m0dii.venturacalendar.base.utils;
 
-import me.M0dii.venturacalendar.base.dateutils.Date;
-import me.M0dii.venturacalendar.base.dateutils.DateCalculator;
-import me.M0dii.venturacalendar.base.dateutils.DateUtils;
-import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.M0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.dateutils.*;
+import me.m0dii.venturacalendar.VenturaCalendar;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public class Placeholders extends PlaceholderExpansion {
     
@@ -54,16 +53,18 @@ public class Placeholders extends PlaceholderExpansion {
         
         World w = Bukkit.getWorld(worldName);
         
-        if(!worldName.equalsIgnoreCase("real-time") && w == null)
+        if(w == null)
+        {
             return "";
+        }
         
         Date date = null;
     
         DateCalculator dateCalc = plugin.getDateCalculator();
         
-        if(worldName.equalsIgnoreCase("real-time"))
+        if(ts.isRealTime())
             date = dateCalc.fromMillis(ts);
-        else if (w != null)
+        else
             date = dateCalc.fromTicks(w.getFullTime(), ts);
         
         long dow = du.getDayOfWeek(date);
@@ -71,10 +72,68 @@ public class Placeholders extends PlaceholderExpansion {
         date = du.addZeroPoints(date);
         
         if(date == null)
-            return "";
-    
-        switch(id.toLowerCase())
         {
+            return "";
+        }
+        
+        id = id.toLowerCase();
+        
+        if(id.startsWith("month_") )
+        {
+            if(id.endsWith("_season"))
+            {
+                String month = id.split("_")[1];
+    
+                for(Month m : ts.getMonths())
+                {
+                    if(m.getName().equalsIgnoreCase(month))
+                    {
+                        return m.getSeasonName();
+                    }
+                }
+            }
+    
+            if(id.endsWith("_days"))
+            {
+                String month = id.split("_")[1];
+        
+                for(Month m : ts.getMonths())
+                {
+                    if(m.getName().equalsIgnoreCase(month))
+                    {
+                        return String.valueOf(m.getDays());
+                    }
+                }
+            }
+        }
+
+        switch(id)
+        {
+            case "newday_message":
+                return plugin.getBaseConfig().getNewDayMessage().orElse("");
+            case "actionbar_message":
+                return plugin.getBaseConfig().getActionBarMessage().orElse("");
+            case "date_event_name":
+                date = du.removeZeroPoints(date);
+                for(MonthEvent event : this.plugin.getEventConfig().getEvents())
+                {
+                    Messenger.log(Messenger.Level.INFO, event.getMonth() + " " + date.getMonthName());
+                    if(event.includesDate(date))
+                    {
+                        return event.getName();
+                    }
+                }
+                return "";
+            case "date_event_description":
+                date = du.removeZeroPoints(date);
+                for(MonthEvent event : this.plugin.getEventConfig().getEvents())
+                {
+                    if(event.includesDate(date))
+                    {
+                        return String.join("\n", event.getDescription());
+                    }
+                }
+                return "";
             case "date_tick":
                 return String.valueOf(date.getTick());
             case "date_second":

@@ -1,19 +1,19 @@
-package me.M0dii.venturacalendar;
+package me.m0dii.venturacalendar;
 
-import me.M0dii.venturacalendar.base.configutils.TimeConfig;
-import me.M0dii.venturacalendar.base.dateutils.Date;
-import me.M0dii.venturacalendar.base.dateutils.*;
-import me.M0dii.venturacalendar.base.utils.Placeholders;
-import me.M0dii.venturacalendar.base.utils.UpdateChecker;
-import me.M0dii.venturacalendar.base.utils.Utils;
-import me.M0dii.venturacalendar.game.config.BaseConfig;
-import me.M0dii.venturacalendar.game.config.CalendarConfig;
-import me.M0dii.venturacalendar.game.config.EventConfig;
-import me.M0dii.venturacalendar.game.config.Messages;
-import me.M0dii.venturacalendar.game.gui.Storage;
-import me.M0dii.venturacalendar.game.gui.StorageUtils;
-import me.M0dii.venturacalendar.game.listeners.Commands.CmdExecutor;
-import me.M0dii.venturacalendar.game.listeners.Inventory.InventoryCaller;
+import me.m0dii.venturacalendar.base.configutils.TimeConfig;
+import me.m0dii.venturacalendar.base.dateutils.Date;
+import me.m0dii.venturacalendar.base.dateutils.*;
+import me.m0dii.venturacalendar.base.utils.Placeholders;
+import me.m0dii.venturacalendar.base.utils.UpdateChecker;
+import me.m0dii.venturacalendar.base.utils.Utils;
+import me.m0dii.venturacalendar.game.config.BaseConfig;
+import me.m0dii.venturacalendar.game.config.CalendarConfig;
+import me.m0dii.venturacalendar.game.config.EventConfig;
+import me.m0dii.venturacalendar.game.config.Messages;
+import me.m0dii.venturacalendar.game.gui.Storage;
+import me.m0dii.venturacalendar.game.gui.StorageUtils;
+import me.m0dii.venturacalendar.game.listeners.Commands.CmdExecutor;
+import me.m0dii.venturacalendar.game.listeners.Inventory.InventoryCaller;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
@@ -36,9 +36,11 @@ public class VenturaCalendar extends JavaPlugin
         return instance;
     }
     
+    public static boolean debug = false;
+    
     public String getSpigotLink()
     {
-        return "https://www.spigotmc.org/resources/94096/";
+        return "https://www.spigotmc.org/resources/99128/";
     }
     
     public static HashMap<Player, Storage> storages = new HashMap<>();
@@ -86,9 +88,13 @@ public class VenturaCalendar extends JavaPlugin
     
         getLogger().info("VenturaCalendar has been enabled.");
         
-        checkForUpdates();
-    
         actionbar();
+    
+        if(baseConfig.updateCheck())
+        {
+            checkForUpdates();
+        }
+    
     }
     
     private void actionbar()
@@ -124,12 +130,11 @@ public class VenturaCalendar extends JavaPlugin
     
     private void checkForUpdates()
     {
-        new UpdateChecker(this, 94096).getVersion(ver ->
+        new UpdateChecker(this, 99128).getVersion(ver ->
         {
             String curr = this.getDescription().getVersion();
             
-            if (!curr.equalsIgnoreCase(
-                    ver.replace("v", "")))
+            if (!curr.equalsIgnoreCase(ver))
             {
                 getLogger().info("You are running an outdated version of VenturaCalendar.");
                 getLogger().info("Latest version: " + ver + ", you are using: " + curr);

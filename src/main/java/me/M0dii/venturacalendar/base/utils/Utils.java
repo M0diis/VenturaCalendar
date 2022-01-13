@@ -1,10 +1,11 @@
-package me.M0dii.venturacalendar.base.utils;
+package me.m0dii.venturacalendar.base.utils;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.dateutils.Date;
-import me.M0dii.venturacalendar.base.dateutils.DateUtils;
-import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.dateutils.Date;
+import me.m0dii.venturacalendar.base.dateutils.DateUtils;
+import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
+import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -46,20 +47,33 @@ public class Utils
         date = du.addZeroPoints(date);
         
         message = message
-            .replaceAll("%[tT]ick%", String.valueOf(date.getTick()))
-            .replaceAll("%[sS]econd%", String.valueOf(date.getSecond()))
-            .replaceAll("%[mM]inute%", String.valueOf(date.getMinute()))
-            .replaceAll("%[hH]our%", String.valueOf(date.getHour()))
-            .replaceAll("%[dD]ay%", String.valueOf(date.getDay()))
-            .replaceAll("%[wW]eek%", String.valueOf(date.getWeek()))
-            .replaceAll("%[mM]onth%", String.valueOf(date.getMonth()))
-            .replaceAll("%[yY]ear%", String.valueOf(date.getYear()))
-            .replaceAll("%[eE]ra%", String.valueOf(date.getEra()));
+            .replaceAll("%[tT]ick(|s)%", String.valueOf(date.getTick()))
+            .replaceAll("%[sS]econd(|s)%", String.valueOf(date.getSecond()))
+            .replaceAll("%[mM]inute(|s)%", String.valueOf(date.getMinute()))
+            .replaceAll("%[hH]our(|s)%", String.valueOf(date.getHour()))
+            .replaceAll("%[dD]ay(|s)%", String.valueOf(date.getDay()))
+            .replaceAll("%[wW]eek(|s)%", String.valueOf(date.getWeek()))
+            .replaceAll("%[mM]onth(|s)%", String.valueOf(date.getMonth()))
+            .replaceAll("%[yY]ear(|s)%", String.valueOf(date.getYear()))
+            .replaceAll("%[eE]ra(|s)%", String.valueOf(date.getEra()));
         
         date = du.removeZeroPoints(date);
+    
+        String eventName = "", eventDesc = "";
+        
+        for(MonthEvent event : plugin.getEventConfig().getEvents())
+        {
+            if(event.includesDate(date))
+            {
+                eventName = event.getName();
+                eventDesc = String.join("\n", event.getDescription());
+            }
+        }
         
         message = message
             .replaceAll("%[dD]ay(_|)[nN]ame%", date.getDayName())
+            .replaceAll("%[eE]vent(_|)[nN]ame%", eventName)
+            .replaceAll("%[eE]vent(_|)[dD]escription%", eventDesc)
             .replaceAll("%[mM]onth(_|)[nN]ame%", date.getMonthName())
             .replaceAll("%[sS]eason(_|)[nN]ame%", date.getSeasonName())
             .replaceAll("%[eE]ra(_|)[nN]ame%", date.getEraName())
@@ -111,6 +125,16 @@ public class Utils
                     return;
                 }
     
+                if(split.length == 2)
+                {
+                    String title = split[0];
+                    String subtitle = split[1];
+        
+                    player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+        
+                    return;
+                }
+                
                 if(split.length == 4)
                 {
                     try
@@ -119,9 +143,10 @@ public class Utils
                         stay = Integer.parseInt(split[2]);
                         fadeOut = Integer.parseInt(split[3]);
                     }
-                    catch(NumberFormatException e)
+                    catch(NumberFormatException ex)
                     {
                         Messenger.log(Messenger.Level.WARN, "Invalid fade-in, stay, or fade-out time for title action.");
+                        Messenger.log(Messenger.Level.DEBUG, ex.getMessage());
                     }
         
                     player.sendTitle(split[0], "", fadeIn, stay, fadeOut);
@@ -142,6 +167,7 @@ public class Utils
                     catch(NumberFormatException ex)
                     {
                         Messenger.log(Messenger.Level.WARN, "Invalid fadeIn, stay, or fadeOut time for title action.");
+                        Messenger.log(Messenger.Level.DEBUG, ex.getMessage());
                     }
                     
                     player.sendTitle(split[0], subtitle, fadeIn, stay, fadeOut);

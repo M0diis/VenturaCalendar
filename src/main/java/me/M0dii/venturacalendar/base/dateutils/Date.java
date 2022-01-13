@@ -1,6 +1,6 @@
-package me.M0dii.venturacalendar.base.dateutils;
+package me.m0dii.venturacalendar.base.dateutils;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.VenturaCalendar;
 
 public class Date
 {

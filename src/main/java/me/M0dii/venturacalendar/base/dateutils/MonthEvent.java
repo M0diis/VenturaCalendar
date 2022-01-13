@@ -1,27 +1,41 @@
-package me.M0dii.venturacalendar.base.dateutils;
+package me.m0dii.venturacalendar.base.dateutils;
 
 import org.bukkit.Material;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MonthEvent
 {
+    public enum DisplayType
+    {
+        PASSED,
+        CURRENT,
+        FUTURE
+    }
+    
     private final String eventName;
     private final String monthName;
     private final List<String> description;
     private final FromTo eventDays;
-    private final Material display;
+    private final Map<DisplayType, Material> display;
     private final List<String> commands;
     
-    public MonthEvent(String eventName, String monthName, Material disp, FromTo eventDays, List<String> description, List<String> commands)
+    public MonthEvent(String eventName, String monthName, FromTo eventDays, List<String> description, List<String> commands)
     {
         this.eventName = eventName;
         this.monthName = monthName;
         this.eventDays = eventDays;
         this.description = description;
-        this.display = disp;
         this.commands = commands;
+        
+        this.display = new HashMap<>();
+    }
+    
+    public void putDisplay(DisplayType type, Material material)
+    {
+        this.display.put(type, material);
     }
     
     public boolean includesDate(Date date)
@@ -39,9 +53,9 @@ public class MonthEvent
         return eventDays.includes(day);
     }
     
-    public Material getDisplay()
+    public Material getDisplay(DisplayType type)
     {
-        return display;
+        return this.display.get(type);
     }
     
     public List<String> getCommands()

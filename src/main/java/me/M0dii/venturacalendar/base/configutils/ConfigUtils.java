@@ -1,4 +1,4 @@
-package me.M0dii.venturacalendar.base.configutils;
+package me.m0dii.venturacalendar.base.configutils;
 
 import java.util.List;
 

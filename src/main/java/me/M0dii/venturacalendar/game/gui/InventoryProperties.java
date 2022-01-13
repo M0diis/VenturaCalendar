@@ -1,4 +1,4 @@
-package me.M0dii.venturacalendar.game.gui;
+package me.m0dii.venturacalendar.game.gui;
 
 public enum InventoryProperties {
 	HOLDER,

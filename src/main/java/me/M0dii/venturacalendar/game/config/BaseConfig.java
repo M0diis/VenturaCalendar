@@ -1,10 +1,10 @@
-package me.M0dii.venturacalendar.game.config;
+package me.m0dii.venturacalendar.game.config;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.base.configutils.Config;
-import me.M0dii.venturacalendar.base.configutils.ConfigUtils;
-import me.M0dii.venturacalendar.base.dateutils.FromTo;
-import me.M0dii.venturacalendar.base.utils.Utils;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.configutils.Config;
+import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
+import me.m0dii.venturacalendar.base.dateutils.FromTo;
+import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,6 +19,18 @@ public class BaseConfig extends Config implements ConfigUtils
 	
 	final HashMap<String, FromTo> redeemableMonths = new HashMap<>();
 	final HashMap<Messages, String> messages = new HashMap<>();
+	
+	public boolean debug()
+	{
+		VenturaCalendar.debug = getBoolean("debug");
+		
+		return VenturaCalendar.debug;
+	}
+	
+	public boolean updateCheck()
+	{
+		return getBoolean("update-check");
+	}
 	
 	public boolean rewardsEnabled()
 	{
@@ -37,6 +49,8 @@ public class BaseConfig extends Config implements ConfigUtils
 		cfg = super.loadConfig();
 		
 		VenturaCalendar.PREFIX = getString("messages.prefix");
+		
+		debug();
 	}
 	
 	public List<String> getNewDayCommands()

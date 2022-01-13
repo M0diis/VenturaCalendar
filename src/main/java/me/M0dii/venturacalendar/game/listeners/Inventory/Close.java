@@ -1,7 +1,7 @@
-package me.M0dii.venturacalendar.game.listeners.Inventory;
+package me.m0dii.venturacalendar.game.listeners.Inventory;
 
-import me.M0dii.venturacalendar.VenturaCalendar;
-import me.M0dii.venturacalendar.game.gui.Storage;
+import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.game.gui.Storage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;

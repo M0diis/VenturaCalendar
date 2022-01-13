@@ -1,4 +1,4 @@
-package me.M0dii.venturacalendar.base.itemutils;
+package me.m0dii.venturacalendar.base.itemutils;
 
 public enum ItemProperties
 {

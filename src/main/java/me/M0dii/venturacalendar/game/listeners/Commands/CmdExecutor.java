@@ -1,7 +1,7 @@
-package me.M0dii.venturacalendar.game.listeners.Commands;
+package me.m0dii.venturacalendar.game.listeners.Commands;
 
-import me.M0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.M0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
+import me.m0dii.venturacalendar.VenturaCalendar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -48,7 +48,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 		
 		String name = command.getName().toLowerCase(Locale.ROOT);
 		
-		if(name.equals("venturacalendar"))
+		if(name.equals("venturacalendar") || name.equals("vc"))
 		{
 			if(args.length == 1)
 			{
