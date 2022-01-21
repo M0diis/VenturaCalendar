@@ -1,4 +1,4 @@
-package me.m0dii.venturacalendar.game.listeners.Commands;
+package me.m0dii.venturacalendar.game.listeners.commands;
 
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.m0dii.venturacalendar.VenturaCalendar;
