@@ -30,12 +30,16 @@ Clone the repository or download the source code from releases.
 Run `gradlew shadowjar` to build the jar.  
 The jar will be found created in `/build/libs/` folder. 
 
-##### Example
+**Building**
 ```
 git clone https://github.com/M0diis/VenturaCalendar.git
 cd VenturaCalendar
 gradlew shadowjar
 ```
+
+### API
+
+You can find the API documentation in the [wiki](https://github.com/M0diis/VenturaCalendar/wiki/API).
 
 ### Dev-builds
 
