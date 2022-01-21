@@ -29,11 +29,6 @@ public class CalendarConfig extends Config implements ConfigUtils
 		
 		this.cfg = super.loadConfig();
 		
-		reload();
-	}
-	
-	private void reload()
-	{
 		getCalendarProperties(true);
 	}
 	
@@ -43,40 +38,35 @@ public class CalendarConfig extends Config implements ConfigUtils
 	public HashMap<InventoryProperties, Object> getCalendarProperties(boolean reload)
 	{
 		if(!reload)
+		{
 			return calendar;
+		}
 		
 		String title;
 		int size;
 		
-		String defaultPath;
-		String path;
+		String path = "items.";
 		
 		// Calendar
 		title = getString("title");
 		size = getInteger("size");
 		
 		// Items
-		defaultPath = "items.";
 		
 		// Today
-		path = defaultPath + "today.";
-		items.put(Items.TODAY, getItemProperties(path));
+		items.put(Items.TODAY, getItemProperties(path + "today."));
 		
 		// Day
-		path = defaultPath + "day.";
-		items.put(Items.DAY, getItemProperties(path));
+		items.put(Items.DAY, getItemProperties(path + "day."));
 		
 		// Future
-		path = defaultPath + "future.";
-		items.put(Items.FUTURE, getItemProperties(path));
+		items.put(Items.FUTURE, getItemProperties(path + "future."));
 		
 		// Passed
-		path = defaultPath + "passed.";
-		items.put(Items.PASSED, getItemProperties(path));
+		items.put(Items.PASSED, getItemProperties(path + "passed."));
 		
 		//Week
-		path = defaultPath + "week.";
-		items.put(Items.WEEK, getItemProperties(path));
+		items.put(Items.WEEK, getItemProperties(path + "week."));
 		
 		calendar.put(InventoryProperties.HOLDER, null);
 		calendar.put(InventoryProperties.HEADER, title);
@@ -92,7 +82,21 @@ public class CalendarConfig extends Config implements ConfigUtils
 		
 		itemProperties.put(ItemProperties.TOGGLE, getBoolean(path + "toggle"));
 		itemProperties.put(ItemProperties.NAME, getString(path + "name"));
-		itemProperties.put(ItemProperties.MATERIAL, Material.getMaterial(cfg.getString(path + "material", "WHITE_STAINED_GLASS_PANE")));
+		
+		String matName = cfg.getString(path + "material", "WHITE_STAINED_GLASS_PANE");
+		
+		if(matName.contains("player_skull="))
+		{
+			String uuid = matName.replace("player_skull=", "");
+			
+			itemProperties.put(ItemProperties.MATERIAL, Material.PLAYER_HEAD);
+			itemProperties.put(ItemProperties.META_SKULL_OWNER, uuid);
+		}
+		else
+		{
+			itemProperties.put(ItemProperties.MATERIAL, Material.getMaterial(matName));
+		}
+		
 		itemProperties.put(ItemProperties.AMOUNT, cfg.getString(path + "amount"));
 		itemProperties.put(ItemProperties.LORE, getListString(path + "lore"));
 		
@@ -103,7 +107,7 @@ public class CalendarConfig extends Config implements ConfigUtils
 	{
 		cfg = super.reloadConfig();
 		
-		this.reload();
+		getCalendarProperties(true);
 		
 		return cfg;
 	}

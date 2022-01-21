@@ -63,11 +63,24 @@ public class Utils
         
         for(MonthEvent event : plugin.getEventConfig().getEvents())
         {
-            if(event.includesDate(date))
+            if(event.hasFromTo())
             {
-                eventName = event.getName();
-                eventDesc = String.join("\n", event.getDescription());
+                if(event.includesDate(date))
+                {
+                    eventName = event.getDisplayName();
+                    eventDesc = String.join("\n", event.getDescription());
+                }
             }
+            
+            if(event.hasDayNames())
+            {
+                if(event.includesDayName(date))
+                {
+                    eventName = event.getDisplayName();
+                    eventDesc = String.join("\n", event.getDescription());
+                }
+            }
+
         }
         
         message = message
@@ -204,5 +217,30 @@ public class Utils
             }
         }
         else Bukkit.dispatchCommand(player, cmd);
+    }
+
+    public static int getTicksFromTime(String time)
+    {
+        int value = 0;
+        
+        try
+        {
+            value = Integer.parseInt(time.substring(0, time.length() - 1));
+        }
+        catch(NumberFormatException ex)
+        {
+            Messenger.log(Messenger.Level.DEBUG, "Invalid time format: " + time);
+        }
+        
+        int ticksPerSecond = (int)plugin.getTimeConfig().getTimeSystem().getTicksPerSecond();
+    
+        return switch(time.charAt(time.length() - 1))
+        {
+            case 's' -> value * ticksPerSecond;
+            case 'm' -> value * 60 * ticksPerSecond;
+            case 'h' -> value * 3600 * ticksPerSecond;
+            case 'd' -> value * 86400 * ticksPerSecond;
+            default -> value;
+        };
     }
 }

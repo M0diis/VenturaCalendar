@@ -40,7 +40,6 @@
 # The defined days are inclusive.
 rewards:
   enabled: true
-  timesystem: "default"
   commands:
     - '[CONSOLE] give %player% diamond 1'
   #  - '[PLAYER] this will be executed by player'
@@ -82,7 +81,6 @@ messages:
   unknown-command: '&4Unknown command! Try /calendar.'
   player-only: 'Calendar cannot be opened in the console.'
   no-permission: '&4You do not have permission to do that!'
-  unknown-timesystem: '&4Unknown timesystem!'
   config-reloaded: '&aConfig reloaded.'
 
 debug: false

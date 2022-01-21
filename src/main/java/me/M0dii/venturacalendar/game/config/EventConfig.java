@@ -4,8 +4,8 @@ import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.configutils.Config;
 import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
 import me.m0dii.venturacalendar.base.dateutils.FromTo;
+import me.m0dii.venturacalendar.base.dateutils.Month;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
-import me.m0dii.venturacalendar.base.utils.Messenger;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,67 +17,139 @@ import java.util.stream.Collectors;
 
 public class EventConfig extends Config implements ConfigUtils
 {
-	FileConfiguration cfg;
+	private final List<MonthEvent> events;
+	private final VenturaCalendar plugin;
+	private FileConfiguration cfg;
 	
 	public EventConfig(VenturaCalendar plugin)
 	{
 		super(plugin.getDataFolder(), "Events.yml", plugin);
 		
-		cfg = super.loadConfig();
+		this.plugin = plugin;
+		
+		this.cfg = super.loadConfig();
+		
+		this.events = new ArrayList<>();
+		
+		loadEvents();
 		
 		VenturaCalendar.PREFIX = getString("messages.prefix");
 	}
 	
 	public List<MonthEvent> getEvents()
 	{
+		return this.events;
+	}
+	
+	public MonthEvent getEvent(String name)
+	{
+		return this.events.stream().filter(event -> event.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+	}
+	
+	public void loadEvents()
+	{
 		ConfigurationSection sec = cfg.getConfigurationSection("events");
 		
-		List<MonthEvent> events = new ArrayList<>();
-		
+		this.events.clear();
+
 		if(sec != null)
 		{
 			sec.getValues(false).forEach((k, v) ->
 			{
 				ConfigurationSection eventSection = sec.getConfigurationSection(k);
 				
-				if(eventSection != null)
+				if(eventSection == null)
 				{
-					String eventName = Utils.format(eventSection.getString("name"));
-					
-					FromTo fromTo = new FromTo(eventSection.getInt("days.start"), eventSection.getInt("days.end"));
-					
-					List<String> description = eventSection.getStringList("description").stream()
-							.map(Utils::format)
-							.collect(Collectors.toList());
-					
-					Material matCurr = Material.getMaterial(
-							eventSection.getString("display-material.current", "RED_STAINED_GLASS_PANE"));
-					Material matPassed = Material.getMaterial(
-							eventSection.getString("display-material.passed", "RED_STAINED_GLASS_PANE"));
-					Material matFuture = Material.getMaterial(
-							eventSection.getString("display-material.future", "RED_STAINED_GLASS_PANE"));
-					
-					String month = eventSection.getString("month");
-					
-					List<String> commands = eventSection.getStringList("commands");
-
-					MonthEvent event = new MonthEvent(eventName, month, fromTo, description, commands);
-					
-					event.putDisplay(MonthEvent.DisplayType.CURRENT, matCurr);
-					event.putDisplay(MonthEvent.DisplayType.PASSED, matPassed);
-					event.putDisplay(MonthEvent.DisplayType.FUTURE, matFuture);
-					
-					events.add(event);
+					return;
+				}
+				
+				String monthName = eventSection.getString("month");
+				
+				if(monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all"))
+				{
+					for(Month month : plugin.getTimeConfig().getTimeSystem().getMonths())
+					{
+						createEvent(k, eventSection, month.getName());
+					}
+				}
+				else
+				{
+					createEvent(k, eventSection, monthName);
 				}
 			});
 		}
+	}
+	
+	private void createEvent(String eventName, ConfigurationSection eventSection, String month)
+	{
+		FromTo fromTo = null;
 		
-		return events;
+		String eventDisplayName = Utils.format(eventSection.getString("name"));
+		
+		if(eventSection.contains("days"))
+		{
+			fromTo = new FromTo(eventSection.getInt("days.start"), eventSection.getInt("days.end"));
+		}
+		else if(eventSection.contains("day"))
+		{
+			fromTo = new FromTo(eventSection.getInt("day"), eventSection.getInt("day"));
+		}
+		
+		List<String> description = eventSection.getStringList("description").stream()
+				.map(Utils::format)
+				.collect(Collectors.toList());
+		
+		String disp = "display-material.";
+		
+		Material matCurr = null, matPassed = null, matFuture = null;
+		
+		if(eventSection.contains(disp + "current")
+		&& eventSection.contains(disp + "passed")
+		&& eventSection.contains(disp + "future"))
+		{
+			matCurr = Material.getMaterial(
+					eventSection.getString("display-material.current", "GREEN_STAINED_GLASS_PANE"));
+			matPassed = Material.getMaterial(
+					eventSection.getString("display-material.passed", "RED_STAINED_GLASS_PANE"));
+			matFuture = Material.getMaterial(
+					eventSection.getString("display-material.future", "YELLOW_STAINED_GLASS_PANE"));
+		}
+		else
+		{
+			matCurr = Material.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
+			matPassed = Material.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
+			matFuture = Material.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
+		}
+		
+		List<String> commands = eventSection.getStringList("commands");
+		
+		MonthEvent event = new MonthEvent(eventDisplayName, month, eventName, fromTo, description, commands);
+		
+		event.putDisplay(MonthEvent.DisplayType.CURRENT, matCurr);
+		event.putDisplay(MonthEvent.DisplayType.PASSED, matPassed);
+		event.putDisplay(MonthEvent.DisplayType.FUTURE, matFuture);
+		
+		if(eventSection.contains("day-name"))
+		{
+			event.addDayName(eventSection.getString("day-name"));
+		}
+		
+		if(eventSection.contains("day-names"))
+		{
+			for(String dayName : eventSection.getStringList("day-names"))
+			{
+				event.addDayName(dayName);
+			}
+		}
+		
+		this.events.add(event);
 	}
 	
 	public FileConfiguration reloadConfig()
 	{
-		cfg = super.reloadConfig();
+		cfg = super.loadConfig();
+		
+		loadEvents();
 		
 		return cfg;
 	}

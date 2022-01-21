@@ -255,6 +255,17 @@ public class TimeSystem
 		return months;
 	}
 	
+	public Month getMonth(String name)
+	{
+		for(Month month : months)
+		{
+			if(month.getName().equals(name))
+				return month;
+		}
+		
+		return null;
+	}
+	
 	public List<String> getEraNames()
 	{
 		return eraNames;

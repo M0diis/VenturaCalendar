@@ -4,6 +4,7 @@ public enum ItemProperties
 {
 	TOGGLE,
 	NAME,
+	META_SKULL_OWNER,
 	LORE,
 	MATERIAL,
 	AMOUNT

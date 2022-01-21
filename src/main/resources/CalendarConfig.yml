@@ -40,6 +40,8 @@ items:
   today:
     toggle: true
     name: '&2%day% %eventName%'
+    # If you want to display a player head you can use this format:
+    # 'player_head=SKULL_UUID'
     material: LIME_STAINED_GLASS_PANE
     amount: '%day%'
     # Example lore:

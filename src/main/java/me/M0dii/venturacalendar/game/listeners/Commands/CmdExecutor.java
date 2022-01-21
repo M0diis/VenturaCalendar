@@ -9,14 +9,11 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class CmdExecutor implements CommandExecutor, TabCompleter
 {
-	final HashMap<String, TimeSystem> timeSystems;
+	final TimeSystem timeSystem;
 	
 	final VenturaCalendar plugin;
 	
@@ -24,7 +21,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 	{
 		this.plugin = plugin;
 		
-		this.timeSystems = plugin.getTimeConfig().getTimeSystems();
+		this.timeSystem = plugin.getTimeConfig().getTimeSystem();
 	}
 	
 	@Override
@@ -35,7 +32,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 			new CalendarCommand(sender, command, label, args, plugin);
 
 		if(command.getName().equalsIgnoreCase("venturacalendar"))
-			new VenturaCalendarCommand(sender, command, label, args, plugin);
+			new VenturaCalendarCommand(sender, args, plugin);
 
 		return true;
 	}
@@ -46,7 +43,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 	{
 		List<String> completes = new ArrayList<>();
 		
-		String name = command.getName().toLowerCase(Locale.ROOT);
+		String name = command.getName().toLowerCase();
 		
 		if(name.equals("venturacalendar") || name.equals("vc"))
 		{
@@ -57,11 +54,24 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 				
 				completes.add("add");
 				completes.add("subtract");
+				completes.add("fastforward");
+				completes.add("rewind");
 			}
 			
-			if(args.length == 2 && !args[1].equals("reload"))
+			if(args.length == 2 && args[0].equals("reload"))
 			{
-				if(args[1].equalsIgnoreCase("set"))
+				return completes;
+			}
+			
+			if(args.length == 2 && args[0].equals("fastforward") || args[0].equals("ff")
+			|| args[0].equals("rewind") || args[0].equals("rew"))
+			{
+				return Collections.emptyList();
+			}
+			
+			if(args.length == 2)
+			{
+				if(args[0].equalsIgnoreCase("set"))
 				{
 					completes.add("startyear");
 					completes.add("date");
@@ -78,25 +88,11 @@ public class CmdExecutor implements CommandExecutor, TabCompleter
 			
 			if(args.length == 3)
 			{
-				if(args[1].equalsIgnoreCase("set"))
-				{
-					timeSystems.forEach((key, value) -> completes.add(value.getName()));
-				}
-			}
-			
-			if(args.length == 4)
-			{
 				if(args[2].equalsIgnoreCase("date"))
 				{
 					completes.add("YYYY/MM/DD");
 				}
 			}
-		}
-		
-		if(name.equals("calendar"))
-		{
-			if(sender.hasPermission("venturacalendar.command.timesystem"))
-				timeSystems.forEach((key, value) -> completes.add(value.getName()));
 		}
 		
 		return completes;

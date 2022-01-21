@@ -36,24 +36,27 @@ public class TimeConfig extends Config implements ConfigUtils
 	
 	final HashMap<String, TimeSystem> timeSystems = new HashMap<>();
 	
+	public TimeSystem getTimeSystem()
+	{
+		if(timeSystems.containsKey("main-time-system"))
+		{
+			return timeSystems.get("main-time-system");
+		}
+		
+		reload();
+		
+		return timeSystems.get("main-time-system");
+	}
+	
 	private void reload()
 	{
-		ConfigurationSection timeSystemsName = cfg.getConfigurationSection("time-systems");
-		
-		if(timeSystemsName != null)
-			for(String timeSystemName : timeSystemsName.getKeys(false))
-				timeSystems.put(timeSystemName, getTimeSystem(timeSystemName));
+		timeSystems.put("main-time-system", loadTimeSystem());
 	}
-	
-	public HashMap<String, TimeSystem> getTimeSystems()
+
+	private TimeSystem loadTimeSystem()
 	{
-		return timeSystems;
-	}
-	
-	private TimeSystem getTimeSystem(String tsName)
-	{
-		String path = "time-systems." + tsName + ".";
-		String worldname = getString(path + "world-name");
+		String path = "main-time-system.";
+		String worldName = getString(path + "world-name");
 		
 		String timeZone = getString(path + "real-time.time-zone");
 		boolean useTimeZone = getBoolean(path + "real-time.use-time-zone");
@@ -131,8 +134,7 @@ public class TimeConfig extends Config implements ConfigUtils
 		long eraZero = 1;
 		
 		TimeSystem ts = new TimeSystem(
-			   worldname,
-			   tsName,
+			   worldName, "main-time-system",
 			   ticksPerSecond,
 			   secondsPerMinute,
 			   minutesPerHour,

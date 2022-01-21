@@ -1,5 +1,6 @@
 package me.m0dii.venturacalendar;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.base.configutils.TimeConfig;
 import me.m0dii.venturacalendar.base.dateutils.Date;
 import me.m0dii.venturacalendar.base.dateutils.*;
@@ -14,7 +15,6 @@ import me.m0dii.venturacalendar.game.gui.Storage;
 import me.m0dii.venturacalendar.game.gui.StorageUtils;
 import me.m0dii.venturacalendar.game.listeners.Commands.CmdExecutor;
 import me.m0dii.venturacalendar.game.listeners.Inventory.InventoryCaller;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
 import org.bstats.charts.MultiLineChart;
@@ -22,12 +22,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-public class VenturaCalendar extends JavaPlugin
+public class VenturaCalendar extends JavaPlugin implements Listener
 {
     private static VenturaCalendar instance;
     
@@ -94,22 +95,25 @@ public class VenturaCalendar extends JavaPlugin
         {
             checkForUpdates();
         }
-    
     }
     
     private void actionbar()
     {
         if(getBaseConfig().getActionBarMessage().isEmpty())
+        {
             return;
+        }
     
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
-    
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
+        {
             if(getBaseConfig().getActionBarMessage().isEmpty())
+            {
                 return;
+            }
             
             String msg = getBaseConfig().getActionBarMessage().get();
             
-            TimeSystem timeSystem = getTimeConfig().getTimeSystems().get("default");
+            TimeSystem timeSystem = getTimeConfig().getTimeSystem();
 
             World world = Bukkit.getWorld(timeSystem.getWorldName());
     
@@ -167,7 +171,7 @@ public class VenturaCalendar extends JavaPlugin
     {
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
         {
-            TimeSystem ts = getTimeConfig().getTimeSystems().get("default");
+            TimeSystem ts = getTimeConfig().getTimeSystem();
 
             World w = Bukkit.getWorld(ts.getWorldName());
             
@@ -184,13 +188,27 @@ public class VenturaCalendar extends JavaPlugin
                 {
                     for(MonthEvent event : this.eventConfig.getEvents())
                     {
-                        if(event.includesDate(date))
+                        if(event.hasFromTo())
                         {
-                            for(String cmd : event.getCommands())
+                            if(event.includesDate(date))
                             {
-                                Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
+                                for(String cmd : event.getCommands())
+                                {
+                                    Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
+                                }
                             }
                         }
+                        else if(event.hasDayNames())
+                        {
+                            if(event.includesDayName(date))
+                            {
+                                for(String cmd : event.getCommands())
+                                {
+                                    Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
+                                }
+                            }
+                        }
+                        
                     }
                     
                     for(String cmd : baseConfig.getNewDayCommands())

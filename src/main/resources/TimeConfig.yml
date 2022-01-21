@@ -14,57 +14,56 @@
 # ticks-per-econd: 20
 # seconds-per-minute: 60
 # minutes-per-hour: 60
-time-systems:
-  default:
-    world-name: 'world'
-    real-time:
-      enabled: false
-      # If set to false, real-time will use local machine time
-      use-time-zone: false
-      time-zone: 'Europe/Germany'
-    ticks-per-second: 20
-    seconds-per-minute: 5
-    minutes-per-hour: 10
-    hours-per-day: 24
-    days-per-week: 7
-    months-per-year: 12
-    # You can set the time offsets here.
-    # Example:
-    # If the world is new (time = 0), you can off-set the month by 1
-    # and the calendar will start from the second month as if one month has passed.
-    month-offset: 0
-    week-offset: 0
-    day-offset: 0
-    # If the world is not set to real-time, it will use this starting year.
-    # When the world is new, or you use /minecraft:time set 0,
-    # it will use this value as starting year.
-    starting-year: 0
-    days:
-      - 'Monday'
-      - 'Tuesday'
-      - 'Wednesday'
-      - 'Thursday'
-      - 'Friday'
-      - 'Saturday'
-      - 'Sunday'
-    months:
-    # The values are split by ', '
-    # - 'Month Name, Days, Season Name'
-      - 'January, 31, Winter'
-      - 'February, 28, Winter'
-      - 'March, 31, Winter'
-      - 'April, 30, Spring'
-      - 'May, 31, Spring'
-      - 'June, 30, Spring'
-      - 'July, 31, Summer'
-      - 'August, 31, Summer'
-      - 'September, 30, Summer'
-      - 'October, 31, Autumn'
-      - 'November, 30, Autumn'
-      - 'December, 31, Autumn'
-      - 'January, 30, Winter'
-    eras:
-    # The values are split by ', '
-    # - 'Era Name, Start Year, End Year'
-      - 'Bronze Age, -3000, -1050'
-      - 'Iron Age, -1049, -500'
+main-time-system:
+  world-name: 'world'
+  real-time:
+    enabled: false
+    # If set to false, real-time will use local machine time
+    use-time-zone: false
+    time-zone: 'Europe/Germany'
+  ticks-per-second: 20
+  seconds-per-minute: 5
+  minutes-per-hour: 10
+  hours-per-day: 24
+  days-per-week: 7
+  months-per-year: 12
+  # You can set the time offsets here.
+  # Example:
+  # If the world is new (time = 0), you can off-set the month by 1
+  # and the calendar will start from the second month as if one month has passed.
+  month-offset: 0
+  week-offset: 0
+  day-offset: 0
+  # If the world is not set to real-time, it will use this starting year.
+  # When the world is new, or you use /minecraft:time set 0,
+  # it will use this value as starting year.
+  starting-year: 0
+  days:
+    - 'Monday'
+    - 'Tuesday'
+    - 'Wednesday'
+    - 'Thursday'
+    - 'Friday'
+    - 'Saturday'
+    - 'Sunday'
+  months:
+  # The values are split by ', '
+  # - 'Month Name, Days, Season Name'
+    - 'January, 31, Winter'
+    - 'February, 28, Winter'
+    - 'March, 31, Winter'
+    - 'April, 30, Spring'
+    - 'May, 31, Spring'
+    - 'June, 30, Spring'
+    - 'July, 31, Summer'
+    - 'August, 31, Summer'
+    - 'September, 30, Summer'
+    - 'October, 31, Autumn'
+    - 'November, 30, Autumn'
+    - 'December, 31, Autumn'
+    - 'January, 30, Winter'
+  eras:
+  # The values are split by ', '
+  # - 'Era Name, Start Year, End Year'
+    - 'Bronze Age, -3000, -1050'
+    - 'Iron Age, -1049, -500'

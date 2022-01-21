@@ -8,8 +8,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 public class Placeholders extends PlaceholderExpansion {
     
     final VenturaCalendar plugin;
@@ -47,7 +45,7 @@ public class Placeholders extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, @NotNull String id)
     {
         DateUtils du = plugin.getDateUtils();
-        TimeSystem ts = plugin.getTimeConfig().getTimeSystems().get("default");
+        TimeSystem ts = plugin.getTimeConfig().getTimeSystem();
         
         String worldName = ts.getWorldName();
         
@@ -78,32 +76,53 @@ public class Placeholders extends PlaceholderExpansion {
         
         id = id.toLowerCase();
         
+        if(id.startsWith("event_"))
+        {
+            String eventName = id.split("_")[1];
+            
+            MonthEvent event = plugin.getEventConfig().getEvent(eventName);
+            
+            if(event == null)
+            {
+                return "";
+            }
+            
+
+            
+            if(id.endsWith("_start"))
+            {
+                return String.valueOf(event.getStartDay());
+            }
+            
+            if(id.endsWith("_end"))
+            {
+                return String.valueOf(event.getEndDay());
+            }
+            
+            if(id.endsWith("_description"))
+            {
+                return String.join("\n", event.getDescription());
+            }
+        }
+        
         if(id.startsWith("month_") )
         {
             if(id.endsWith("_season"))
             {
                 String month = id.split("_")[1];
     
-                for(Month m : ts.getMonths())
-                {
-                    if(m.getName().equalsIgnoreCase(month))
-                    {
-                        return m.getSeasonName();
-                    }
-                }
+                Month m = ts.getMonth(month);
+                
+                return m.getSeasonName() == null ? "" : m.getSeasonName();
             }
     
             if(id.endsWith("_days"))
             {
                 String month = id.split("_")[1];
-        
-                for(Month m : ts.getMonths())
-                {
-                    if(m.getName().equalsIgnoreCase(month))
-                    {
-                        return String.valueOf(m.getDays());
-                    }
-                }
+                
+                Month m = ts.getMonth(month);
+                
+                return m == null ? "" : String.valueOf(m.getDays());
             }
         }
 
@@ -120,7 +139,7 @@ public class Placeholders extends PlaceholderExpansion {
                     Messenger.log(Messenger.Level.INFO, event.getMonth() + " " + date.getMonthName());
                     if(event.includesDate(date))
                     {
-                        return event.getName();
+                        return event.getDisplayName();
                     }
                 }
                 return "";

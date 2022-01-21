@@ -47,8 +47,7 @@ public class Click
 			
 			HashMap<String, FromTo> redeemableMonths = cc.getRedeemableMonths();
 			
-			if(cal.getDate() != null && !cal.getDate().getTimeSystem().getName()
-					.equalsIgnoreCase(cc.getString("rewards.timesystem")))
+			if(cal.getDate() != null)
 				return;
 
 			if(cal.getDate() != null && cc.redeemWhitelistEnabled())
@@ -58,15 +57,10 @@ public class Click
 				if(fromTo == null)
 					return;
 				
-				if(fromTo != null)
-				{
-					long day = cal.getDate().getDay() + 1;
-
-					if(!fromTo.includes((int)day))
-						return;
-				}
+				long day = cal.getDate().getDay() + 1;
 				
-
+				if(!fromTo.includes((int)day))
+					return;
 			}
 			
 			HashMap<Items, HashMap<ItemProperties, Object>> itemProperties =

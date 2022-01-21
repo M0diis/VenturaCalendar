@@ -1,10 +1,9 @@
 events:
   new-year:
+    # This will appear in the name of the display item.
     name: '&a| &2New Year''s day'
     month: 'January'
-    days:
-      start: 1
-      end: 1
+    day: 1
     # This will appear in the lore of the event day.
     description:
       - "&6Happy new year!"
@@ -18,3 +17,15 @@ events:
     commands:
       - '[PLAYER] this will be executed by player'
       - '[CONSOLE] this will be executed by console'
+  my-event:
+    name: '&a| &2Weekend'
+    month: 'Any'
+    # Event will be displayed on these specific days, on January
+    day-names:
+      - 'Friday'
+      - 'Saturday'
+      - 'Sunday'
+    description:
+      - "&6Weekend is here!"
+    display-material: LIGHT_BLUE_STAINED_GLASS_PANE
+    commands: []

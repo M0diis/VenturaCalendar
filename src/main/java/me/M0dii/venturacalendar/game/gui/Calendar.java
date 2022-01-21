@@ -223,22 +223,45 @@ public class Calendar implements InventoryHolder
 					.collect(Collectors.toList());
 		}
 		
+		String skullOwner = (String)itemProperties.getOrDefault(ItemProperties.META_SKULL_OWNER, null);
+		
 		if(!week)
 		{
 			for(MonthEvent event : events)
 			{
-				if(event.includesDate(date))
+				if(event.hasFromTo())
 				{
-					material = event.getDisplay(type);
-					
-					lore.add("");
-					lore.addAll(event.getDescription());
+					if(event.includesDate(date))
+					{
+						material = event.getDisplay(type);
+						
+						lore.add("");
+						lore.addAll(event.getDescription());
+					}
 				}
+				
+				if(event.hasDayNames())
+				{
+					if(event.includesDayName(date))
+					{
+						material = event.getDisplay(type);
+						
+						lore.add("");
+						lore.addAll(event.getDescription());
+					}
+				}
+				
+
 			}
 		}
 		
 		if((boolean) itemProperties.get(ItemProperties.TOGGLE))
-			return new ItemCreator(material, amount, name, lore).getItem();
+		{
+			if(skullOwner == null)
+				return new ItemCreator(material, amount, name, lore).getItem();
+			else
+				return new ItemCreator(material, amount, name, lore, skullOwner).getItem();
+		}
 		
 		return null;
 	}
