@@ -8,12 +8,10 @@ import java.util.TimeZone;
 
 public class DateCalculator
 {
-	private final VenturaCalendar plugin;
 	private final TimeSystemUtils tsUtils;
 	
 	public DateCalculator(VenturaCalendar plugin)
     {
-        this.plugin = plugin;
 		this.tsUtils = plugin.getTimeSystemUtils();
     }
 	

@@ -6,25 +6,22 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class CalendarClickEvent extends Event implements Cancellable
+public class CalendarOpenEvent extends Event implements Cancellable
 {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
     
     private final Inventory inv;
     private final Calendar calendar;
-    private final ItemStack item;
     private final Player player;
     
-    public CalendarClickEvent(Calendar cal, Inventory inv, Player p, ItemStack item)
+    public CalendarOpenEvent(Calendar cal, Inventory inv, Player p)
     {
         this.calendar = cal;
-        this.player = p;
         this.inv = inv;
-        this.item = item;
+        this.player = p;
     }
     
     public static HandlerList getHandlerList()
@@ -58,11 +55,6 @@ public class CalendarClickEvent extends Event implements Cancellable
     public Player getPlayer()
     {
         return player;
-    }
-    
-    public ItemStack getItem()
-    {
-        return item;
     }
     
     public Inventory getInventory()

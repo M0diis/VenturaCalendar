@@ -1,7 +1,6 @@
-package me.m0dii.venturacalendar.game.listeners.Commands;
+package me.m0dii.venturacalendar.game.listeners.commands;
 
-import java.util.HashMap;
-
+import me.m0dii.venturacalendar.base.events.CalendarOpenEvent;
 import me.m0dii.venturacalendar.base.utils.Messenger;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Date;
@@ -35,11 +34,13 @@ public class CalendarCommand
 					return;
 				}
 				
-				String wname = timeSystem.getWorldName();
-				World world = Bukkit.getWorld(wname);
+				String worldName = timeSystem.getWorldName();
+				World world = Bukkit.getWorld(worldName);
 				
-				if(wname.equalsIgnoreCase("current"))
+				if(worldName.equalsIgnoreCase("current"))
+				{
 					world = pl.getWorld();
+				}
 				
 				if(timeSystem.isRealTime())
 				{
@@ -50,6 +51,8 @@ public class CalendarCommand
 					storageUtils.storeCalendar(pl, calendar);
 					
 					pl.openInventory(calendar.getInventory());
+					
+					Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
 				}
 				else if(world != null)
 				{
@@ -60,6 +63,8 @@ public class CalendarCommand
 					storageUtils.storeCalendar(pl, calendar);
 					
 					pl.openInventory(calendar.getInventory());
+					
+					Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
 				}
 				else
 				{

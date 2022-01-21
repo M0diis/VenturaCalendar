@@ -140,7 +140,6 @@ public class Placeholders extends PlaceholderExpansion {
                 date = du.removeZeroPoints(date);
                 for(MonthEvent event : this.plugin.getEventConfig().getEvents())
                 {
-                    Messenger.log(Messenger.Level.INFO, event.getMonth() + " " + date.getMonthName());
                     if(event.includesDate(date))
                     {
                         return event.getDisplayName();

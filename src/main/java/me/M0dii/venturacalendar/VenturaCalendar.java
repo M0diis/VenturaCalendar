@@ -1,6 +1,5 @@
 package me.m0dii.venturacalendar;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.base.configutils.TimeConfig;
 import me.m0dii.venturacalendar.base.dateutils.Date;
 import me.m0dii.venturacalendar.base.dateutils.*;
@@ -11,13 +10,13 @@ import me.m0dii.venturacalendar.base.utils.Utils;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
 import me.m0dii.venturacalendar.game.config.CalendarConfig;
 import me.m0dii.venturacalendar.game.config.EventConfig;
-import me.m0dii.venturacalendar.game.config.Messages;
 import me.m0dii.venturacalendar.game.gui.Storage;
 import me.m0dii.venturacalendar.game.gui.StorageUtils;
-import me.m0dii.venturacalendar.game.listeners.CalendarClickListener;
-import me.m0dii.venturacalendar.game.listeners.Commands.CmdExecutor;
+import me.m0dii.venturacalendar.game.listeners.inventory.CalendarClickListener;
+import me.m0dii.venturacalendar.game.listeners.inventory.CalendarCloseListener;
+import me.m0dii.venturacalendar.game.listeners.commands.CmdExecutor;
 import me.m0dii.venturacalendar.game.listeners.EventDayListener;
-import me.m0dii.venturacalendar.game.listeners.Inventory.InventoryCaller;
+import me.m0dii.venturacalendar.game.listeners.inventory.InventoryListener;
 import me.m0dii.venturacalendar.game.listeners.NewDayListener;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
@@ -171,7 +170,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener
                 newDay = true;
                 
                 Bukkit.getScheduler().runTask(this, () -> {
-                    Bukkit.getServer().getPluginManager().callEvent(new NewDayEvent(ts));
+                    Bukkit.getPluginManager().callEvent(new NewDayEvent(ts));
                 });
             }
             
@@ -222,7 +221,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener
 
     private void registerEvents()
     {
-        Bukkit.getPluginManager().registerEvents(new InventoryCaller(this), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
     }
     
     private void registerListeners()
@@ -230,6 +229,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(new NewDayListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EventDayListener(this), this);
         Bukkit.getPluginManager().registerEvents(new CalendarClickListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new CalendarCloseListener(), this);
     }
     
     public void onDisable()

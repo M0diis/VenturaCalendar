@@ -1,4 +1,4 @@
-package me.m0dii.venturacalendar.game.listeners.Commands;
+package me.m0dii.venturacalendar.game.listeners.commands;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Month;
@@ -152,9 +152,7 @@ public class VenturaCalendarCommand
 						Messenger.log(Messenger.Level.DEBUG, ex);
 					}
 				}
-	
-				//     0    1      2      | 3 length
-				// vc set date 2020/01/01
+				
 				if(alias(args[1], "date") && args.length == 3)
 				{
 					try

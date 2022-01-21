@@ -1,4 +1,4 @@
-package me.m0dii.venturacalendar.game.listeners;
+package me.m0dii.venturacalendar.game.listeners.inventory;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.FromTo;
@@ -11,6 +11,7 @@ import me.m0dii.venturacalendar.game.config.BaseConfig;
 import me.m0dii.venturacalendar.game.config.Messages;
 import me.m0dii.venturacalendar.game.gui.Calendar;
 import me.m0dii.venturacalendar.game.gui.InventoryProperties;
+import me.m0dii.venturacalendar.game.listeners.NewDayListener;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
