@@ -4,6 +4,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.base.configutils.TimeConfig;
 import me.m0dii.venturacalendar.base.dateutils.Date;
 import me.m0dii.venturacalendar.base.dateutils.*;
+import me.m0dii.venturacalendar.base.events.NewDayEvent;
 import me.m0dii.venturacalendar.base.utils.Placeholders;
 import me.m0dii.venturacalendar.base.utils.UpdateChecker;
 import me.m0dii.venturacalendar.base.utils.Utils;
@@ -13,8 +14,11 @@ import me.m0dii.venturacalendar.game.config.EventConfig;
 import me.m0dii.venturacalendar.game.config.Messages;
 import me.m0dii.venturacalendar.game.gui.Storage;
 import me.m0dii.venturacalendar.game.gui.StorageUtils;
+import me.m0dii.venturacalendar.game.listeners.CalendarClickListener;
 import me.m0dii.venturacalendar.game.listeners.Commands.CmdExecutor;
+import me.m0dii.venturacalendar.game.listeners.EventDayListener;
 import me.m0dii.venturacalendar.game.listeners.Inventory.InventoryCaller;
+import me.m0dii.venturacalendar.game.listeners.NewDayListener;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
 import org.bstats.charts.MultiLineChart;
@@ -59,29 +63,16 @@ public class VenturaCalendar extends JavaPlugin implements Listener
     private EventConfig eventConfig;
     private BaseConfig baseConfig;
     
-    private List<UUID> redeemed;
-    
     private boolean papiEnabled = false;
-    
-    public boolean redeem(UUID uuid)
-    {
-        if(redeemed.contains(uuid))
-            return false;
-        
-        redeemed.add(uuid);
-        
-        return true;
-    }
     
     public void onEnable()
     {
         instance = this;
         
-        redeemed = new ArrayList<>();
-        
         registerObjects();
         registerCommands();
         registerEvents();
+        registerListeners();
         
         setupMetrics();
         
@@ -179,72 +170,9 @@ public class VenturaCalendar extends JavaPlugin implements Listener
             {
                 newDay = true;
                 
-                Date date = getDateCalculator().fromTicks(w.getFullTime(), ts);
-                
-                if(baseConfig.rewardsEnabled())
-                    redeemed.clear();
-
-                for(Player p : Bukkit.getOnlinePlayers())
-                {
-                    for(MonthEvent event : this.eventConfig.getEvents())
-                    {
-                        if(event.hasFromTo())
-                        {
-                            if(event.includesDate(date))
-                            {
-                                for(String cmd : event.getCommands())
-                                {
-                                    Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
-                                }
-                            }
-                        }
-                        else if(event.hasDayNames())
-                        {
-                            if(event.includesDayName(date))
-                            {
-                                for(String cmd : event.getCommands())
-                                {
-                                    Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
-                                }
-                            }
-                        }
-                        
-                    }
-                    
-                    for(String cmd : baseConfig.getNewDayCommands())
-                    {
-                        Bukkit.getScheduler().runTask(this, () -> Utils.sendCommand(p, cmd));
-                    }
-                    
-                    if(baseConfig.getNewDayMessage().isPresent())
-                    {
-                        String base = baseConfig.getNewDayMessage().get();
-                        String msg = Utils.setPlaceholders(base, date, p);
-                        
-                        p.sendMessage(msg);
-                    }
-                    
-                    if(baseConfig.titleEnabled())
-                    {
-                        String title = baseConfig.getMessage(Messages.TITLE_TEXT);
-                        String subtitle = baseConfig.getMessage(Messages.SUBTITLE_TEXT);
-    
-                        int fadein = baseConfig.getInteger("new-day.title.fade-in");
-                        int stay = baseConfig.getInteger("new-day.title.stay");
-                        int fadeout = baseConfig.getInteger("new-day.title.fade-out");
-    
-                        title = Utils.setPlaceholders(title, date, false);
-                        subtitle = Utils.setPlaceholders(subtitle, date, false);
-                        
-                        if(papiEnabled)
-                        {
-                            title = PlaceholderAPI.setPlaceholders(p, title);
-                            subtitle = PlaceholderAPI.setPlaceholders(p, subtitle);
-                        }
-                        
-                        p.sendTitle(title, subtitle, fadein, stay, fadeout);
-                    }
-                }
+                Bukkit.getScheduler().runTask(this, () -> {
+                    Bukkit.getServer().getPluginManager().callEvent(new NewDayEvent(ts));
+                });
             }
             
             if(w != null && w.getTime() > 200)
@@ -295,6 +223,13 @@ public class VenturaCalendar extends JavaPlugin implements Listener
     private void registerEvents()
     {
         Bukkit.getPluginManager().registerEvents(new InventoryCaller(this), this);
+    }
+    
+    private void registerListeners()
+    {
+        Bukkit.getPluginManager().registerEvents(new NewDayListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new EventDayListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new CalendarClickListener(this), this);
     }
     
     public void onDisable()

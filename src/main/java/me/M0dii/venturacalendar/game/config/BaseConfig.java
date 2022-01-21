@@ -123,8 +123,6 @@ public class BaseConfig extends Config implements ConfigUtils
 				getString(path + "player-only"));
 		messages.put(Messages.UNKNOWN_COMMAND, VenturaCalendar.PREFIX +
 				getString(path + "unknown-command"));
-		messages.put(Messages.UNKNOWN_TIMESYSTEM, VenturaCalendar.PREFIX +
-				getString(path + "unknown-timesystem"));
 		messages.put(Messages.CONFIG_RELOADED, VenturaCalendar.PREFIX +
 				getString(path + "config-reloaded"));
 		messages.put(Messages.REDEEMED, VenturaCalendar.PREFIX +

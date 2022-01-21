@@ -63,18 +63,28 @@ public class EventConfig extends Config implements ConfigUtils
 					return;
 				}
 				
-				String monthName = eventSection.getString("month");
-				
-				if(monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all"))
+				if(eventSection.contains("months"))
 				{
-					for(Month month : plugin.getTimeConfig().getTimeSystem().getMonths())
+					for(String month : eventSection.getStringList("months"))
 					{
-						createEvent(k, eventSection, month.getName());
+						createEvent(k, eventSection, month);
 					}
 				}
 				else
 				{
-					createEvent(k, eventSection, monthName);
+					String monthName = eventSection.getString("month");
+					
+					if(monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all"))
+					{
+						for(Month month : plugin.getTimeConfig().getTimeSystem().getMonths())
+						{
+							createEvent(k, eventSection, month.getName());
+						}
+					}
+					else
+					{
+						createEvent(k, eventSection, monthName);
+					}
 				}
 			});
 		}

@@ -20,6 +20,10 @@ events:
   my-event:
     name: '&a| &2Weekend'
     month: 'Any'
+    # Or you can define multiple months:
+    # months:
+    # - 'January'
+    # - 'February'
     # Event will be displayed on these specific days, on January
     day-names:
       - 'Friday'

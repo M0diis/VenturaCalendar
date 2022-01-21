@@ -18,7 +18,7 @@ public final class InventoryCaller implements Listener
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e)
 	{
-		new Click(e, plugin);
+		new Click(e);
 	}
 	
 	@EventHandler

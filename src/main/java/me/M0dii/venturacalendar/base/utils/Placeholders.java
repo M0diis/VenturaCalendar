@@ -87,16 +87,20 @@ public class Placeholders extends PlaceholderExpansion {
                 return "";
             }
             
-
-            
             if(id.endsWith("_start"))
             {
-                return String.valueOf(event.getStartDay());
+                if(event.hasFromTo())
+                {
+                    return String.valueOf(event.getStartDay());
+                }
             }
             
             if(id.endsWith("_end"))
             {
-                return String.valueOf(event.getEndDay());
+                if(event.hasFromTo())
+                {
+                    return String.valueOf(event.getEndDay());
+                }
             }
             
             if(id.endsWith("_description"))
