@@ -1,7 +1,7 @@
 name: VenturaCalendar
 main: me.m0dii.venturacalendar.VenturaCalendar
 description: VenturaCalendar by M0dii
-version: 1.3.0
+version: ${version}
 api-version: 1.13
 author: M0dii
 softdepend: [PlaceholderAPI]
@@ -15,16 +15,15 @@ commands:
     description: Calendar command
     permission: venturacalendar.command.calendar
     usage: /<command>
+    aliases: [cal]
 permissions:
   venturacalendar.command.venturacalendar:
-    description: Permission to use base command
+    description: Permission to use base command.
     default: op
   venturacalendar.command.changetime:
-    description: Permission to add/subtract time, set starting year
+    description: Permission to add/subtract time, set starting year.
   venturacalendar.command.reload:
-    description: Permission to reload the plugin
+    description: Permission to reload the plugin.
     default: op
   venturacalendar.command.calendar:
-    description: Permission to use the calendar
-  venturacalendar.command.timesystem:
-    description: Permission to use different timesystems
+    description: Permission to use the calendar command.

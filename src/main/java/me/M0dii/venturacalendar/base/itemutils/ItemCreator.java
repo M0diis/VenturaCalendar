@@ -1,6 +1,6 @@
 package me.m0dii.venturacalendar.base.itemutils;
 
-import me.m0dii.venturacalendar.VenturaCalendar;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -14,10 +14,17 @@ public class ItemCreator
 {
 	final ItemStack item;
 
-	public ItemCreator(Material material,  int amount, String name, List<String> lore)
+	public ItemCreator(Material material, int amount, String name, List<String> lore)
 	{
 		if(material == null)
-			material = Material.WHITE_STAINED_GLASS_PANE;
+		{
+			material = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
+		}
+		
+		if(material == null)
+		{
+			material = Material.GLASS_PANE;
+		}
 		
 		item = new ItemStack(material, amount);
 		
@@ -33,7 +40,14 @@ public class ItemCreator
 	public ItemCreator(Material material, int amount, String name, List<String> lore, String skullOwner)
 	{
 		if(material == null)
-			material = Material.WHITE_STAINED_GLASS_PANE;
+		{
+			material = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
+		}
+		
+		if(material == null)
+		{
+			material = Material.GLASS_PANE;
+		}
 		
 		item = new ItemStack(material, amount);
 		
@@ -45,7 +59,7 @@ public class ItemCreator
 		
 		item.setItemMeta(itemMeta);
 		
-		if(material.equals(Material.PLAYER_HEAD))
+		if(material.equals(XMaterial.PLAYER_HEAD.parseMaterial()))
 		{
 			SkullMeta skullMeta = (SkullMeta) itemMeta;
 			

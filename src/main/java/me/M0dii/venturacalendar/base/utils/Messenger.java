@@ -31,10 +31,19 @@ public class Messenger
     {
         switch(level)
         {
-            case INFO -> plugin.getLogger().info(msg);
-            case WARN -> plugin.getLogger().warning(msg);
-            case ERROR -> plugin.getLogger().severe(msg);
-            case DEBUG -> Bukkit.getConsoleSender().sendMessage("[DEBUG] " + msg);
+            case INFO:
+                plugin.getLogger().info(msg);
+            break;
+            case WARN:
+                plugin.getLogger().warning(msg);
+            break;
+            case ERROR:
+                plugin.getLogger().severe(msg);
+            break;
+                case DEBUG: Bukkit.getConsoleSender().sendMessage("[DEBUG] " + msg);
+            break;
+            default:
+                break;
         }
     }
     

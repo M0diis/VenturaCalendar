@@ -1,5 +1,6 @@
 package me.m0dii.venturacalendar.game.config;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.configutils.Config;
 import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
@@ -117,18 +118,16 @@ public class EventConfig extends Config implements ConfigUtils
 		&& eventSection.contains(disp + "passed")
 		&& eventSection.contains(disp + "future"))
 		{
-			matCurr = Material.getMaterial(
-					eventSection.getString("display-material.current", "GREEN_STAINED_GLASS_PANE"));
-			matPassed = Material.getMaterial(
-					eventSection.getString("display-material.passed", "RED_STAINED_GLASS_PANE"));
-			matFuture = Material.getMaterial(
-					eventSection.getString("display-material.future", "YELLOW_STAINED_GLASS_PANE"));
+			matCurr = Utils.getMaterial(eventSection.getString("display-material.current", "GLASS_PANE"));
+			matPassed = Utils.getMaterial(eventSection.getString("display-material.passed", "GLASS_PANE"));
+			matFuture = Utils.getMaterial(eventSection.getString("display-material.future", "GLASS_PANE"));
+			
 		}
 		else
 		{
-			matCurr = Material.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
-			matPassed = Material.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
-			matFuture = Material.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
+			matCurr = Utils.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
+			matPassed = Utils.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
+			matFuture = Utils.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
 		}
 		
 		List<String> commands = eventSection.getStringList("commands");

@@ -21,8 +21,10 @@ public class CalendarCommand
 	{
 		StorageUtils storageUtils = plugin.getStorageUtils();
 		
-		if(sender instanceof Player pl)
+		if(sender instanceof Player)
 		{
+			Player pl = (Player) sender;
+			
 			TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 			
 			if(args.length == 0)

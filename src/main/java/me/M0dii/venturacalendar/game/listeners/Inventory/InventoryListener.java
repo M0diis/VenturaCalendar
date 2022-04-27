@@ -31,10 +31,12 @@ public final class InventoryListener implements Listener
 			Storage storage = VenturaCalendar.storages.get(player);
 		}
 		
-		if(inv == null || !(inv.getHolder() instanceof Calendar cal))
+		if(inv == null || !(inv.getHolder() instanceof Calendar))
 		{
 			return;
 		}
+		
+		Calendar cal = (Calendar) inv.getHolder();
 		
 		e.setCancelled(true);
 		
@@ -46,11 +48,15 @@ public final class InventoryListener implements Listener
 	{
 		Inventory inventory = e.getInventory();
 		
-		if(e.getPlayer() instanceof Player p)
+		if(e.getPlayer() instanceof Player)
 		{
-			if(inventory instanceof Calendar cal)
+			Player player = (Player) e.getPlayer();
+			
+			if(inventory instanceof Calendar)
 			{
-				Bukkit.getPluginManager().callEvent(new CalendarCloseEvent(cal, inventory, p));
+				Calendar cal = (Calendar) inventory;
+				
+				Bukkit.getPluginManager().callEvent(new CalendarCloseEvent(cal, inventory, player));
 			}
 		}
 	}

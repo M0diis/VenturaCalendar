@@ -4,9 +4,7 @@ import me.m0dii.venturacalendar.base.configutils.TimeConfig;
 import me.m0dii.venturacalendar.base.dateutils.Date;
 import me.m0dii.venturacalendar.base.dateutils.*;
 import me.m0dii.venturacalendar.base.events.NewDayEvent;
-import me.m0dii.venturacalendar.base.utils.Placeholders;
-import me.m0dii.venturacalendar.base.utils.UpdateChecker;
-import me.m0dii.venturacalendar.base.utils.Utils;
+import me.m0dii.venturacalendar.base.utils.*;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
 import me.m0dii.venturacalendar.game.config.CalendarConfig;
 import me.m0dii.venturacalendar.game.config.EventConfig;
@@ -29,6 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class VenturaCalendar extends JavaPlugin implements Listener
@@ -70,14 +69,13 @@ public class VenturaCalendar extends JavaPlugin implements Listener
         
         registerObjects();
         registerCommands();
-        registerEvents();
         registerListeners();
         
         setupMetrics();
         
         newDayCheckTimer();
     
-        getLogger().info("VenturaCalendar has been enabled.");
+        Messenger.log(Messenger.Level.INFO, "VenturaCalendar has been successfully enabled!");
         
         actionbar();
     
@@ -89,14 +87,24 @@ public class VenturaCalendar extends JavaPlugin implements Listener
     
     private void actionbar()
     {
-        if(getBaseConfig().getActionBarMessage().isEmpty())
+        if(!getBaseConfig().getActionBarMessage().isPresent())
+        {
+            return;
+        }
+    
+        if(Version.serverIsOlderThan(Version.v1_11_R1))
         {
             return;
         }
     
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
         {
-            if(getBaseConfig().getActionBarMessage().isEmpty())
+            if(!getBaseConfig().getActionBarMessage().isPresent())
+            {
+                return;
+            }
+    
+            if(Version.serverIsOlderThan(Version.v1_11_R1))
             {
                 return;
             }
@@ -106,19 +114,21 @@ public class VenturaCalendar extends JavaPlugin implements Listener
             TimeSystem timeSystem = getTimeConfig().getTimeSystem();
 
             World world = Bukkit.getWorld(timeSystem.getWorldName());
+            
+            Date date = null;
     
             if(timeSystem.isRealTime())
             {
-                Date date = getDateCalculator().fromMillis(timeSystem);
-                
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msg, date, p)));
+                date = getDateCalculator().fromMillis(timeSystem);
             }
             else if(world != null)
             {
-                Date date = getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
-    
-                Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msg, date, p)));
+                date = getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
             }
+    
+            Date finalDate = date;
+            
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msg, finalDate, p)));
         }, 0L, 20L);
     }
     
@@ -219,13 +229,9 @@ public class VenturaCalendar extends JavaPlugin implements Listener
         }
     }
 
-    private void registerEvents()
-    {
-        Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
-    }
-    
     private void registerListeners()
     {
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new NewDayListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EventDayListener(this), this);
         Bukkit.getPluginManager().registerEvents(new CalendarClickListener(this), this);

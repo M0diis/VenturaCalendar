@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.M0dii'
-version '1.3.0'
+version '1.4.0'
 
 shadowJar {
     relocate 'org.bstats', 'me.m0dii.venturacalendar'
@@ -12,6 +12,14 @@ shadowJar {
     minimize()
 
     archiveFileName = "VenturaCalendar-${version}.jar"
+}
+
+processResources {
+    eachFile {
+        if (file.name.endsWith(".yml")) {
+            expand version: version
+        }
+    }
 }
 
 repositories {
@@ -49,10 +57,12 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.10.10'
 
     implementation 'org.bstats:bstats-bukkit:2.2.1'
+    implementation 'com.github.cryptomorin:XSeries:8.6.1'
 
     // https://github.com/PlaceholderAPI/PlaceholderAPI
 }
 
 compileJava.options.encoding = 'UTF-8'
 
-sourceCompatibility = '16'
+sourceCompatibility = '8'
+targetCompatibility = '8'

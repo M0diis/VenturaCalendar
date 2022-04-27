@@ -1,5 +1,6 @@
 package me.m0dii.venturacalendar.game.config;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.configutils.Config;
@@ -89,12 +90,12 @@ public class CalendarConfig extends Config implements ConfigUtils
 		{
 			String uuid = matName.replace("player_skull=", "");
 			
-			itemProperties.put(ItemProperties.MATERIAL, Material.PLAYER_HEAD);
-			itemProperties.put(ItemProperties.META_SKULL_OWNER, uuid);
+//			itemProperties.put(ItemProperties.MATERIAL, Material.PLAYER_HEAD);
+//			itemProperties.put(ItemProperties.META_SKULL_OWNER, uuid);
 		}
 		else
 		{
-			itemProperties.put(ItemProperties.MATERIAL, Material.getMaterial(matName));
+			itemProperties.put(ItemProperties.MATERIAL, Utils.getMaterial(matName));
 		}
 		
 		itemProperties.put(ItemProperties.AMOUNT, cfg.getString(path + "amount"));

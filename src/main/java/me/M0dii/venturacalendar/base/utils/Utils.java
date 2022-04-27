@@ -1,5 +1,6 @@
 package me.m0dii.venturacalendar.base.utils;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Date;
@@ -8,9 +9,11 @@ import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class Utils
@@ -26,6 +29,43 @@ public class Utils
         
         return ChatColor.translateAlternateColorCodes('&',
                 HEX_PATTERN.matcher(text).replaceAll("&x&$1&$2&$3&$4&$5&$6"));
+    }
+    
+    public static Material getMaterial(String mat)
+    {
+        Material m = Material.getMaterial(mat);
+    
+        if(mat.contains(":"))
+        {
+            String[] split = mat.split(":");
+        
+            if(split.length == 2)
+            {
+                Optional<XMaterial> xm = XMaterial.matchXMaterial(Integer.parseInt(split[0]), Byte.parseByte(split[1]));
+                
+                if(xm.isPresent())
+                {
+                    m = xm.get().parseMaterial();
+                }
+            }
+        }
+        
+        if(m == null)
+        {
+            Optional<XMaterial> xm = XMaterial.matchXMaterial(mat);
+            
+            if(xm.isPresent())
+            {
+                m = xm.get().parseMaterial();
+            }
+        }
+        
+        if(m == null)
+        {
+            m = Material.getMaterial(mat, true);
+        }
+        
+        return m;
     }
     
     public static String setPlaceholders(String message, Date date, boolean papi)
@@ -234,13 +274,18 @@ public class Utils
         
         int ticksPerSecond = (int)plugin.getTimeConfig().getTimeSystem().getTicksPerSecond();
     
-        return switch(time.charAt(time.length() - 1))
+        switch(time.charAt(time.length() - 1))
         {
-            case 's' -> value * ticksPerSecond;
-            case 'm' -> value * 60 * ticksPerSecond;
-            case 'h' -> value * 3600 * ticksPerSecond;
-            case 'd' -> value * 86400 * ticksPerSecond;
-            default -> value;
-        };
+            case 's':
+                return value * ticksPerSecond;
+            case 'm':
+                return value * 60 * ticksPerSecond;
+            case 'h':
+                return value * 3600 * ticksPerSecond;
+            case 'd':
+                return value * 86400 * ticksPerSecond;
+            default:
+                return value;
+        }
     }
 }

@@ -46,8 +46,10 @@ public class VenturaCalendarCommand
 			}
 		}
 		
-		if(args.length > 1 && sender instanceof Player p)
+		if(args.length > 1 && sender instanceof Player)
 		{
+			Player p = (Player) sender;
+			
 			if(!sender.hasPermission("venturacalendar.command.fastforward"))
 			{
 				Messenger.send(sender, Messages.NO_PERMISSION);
@@ -122,8 +124,10 @@ public class VenturaCalendarCommand
 			}
 		}
 		
-		if(args.length >= 3 && sender instanceof Player p)
+		if(args.length >= 3 && sender instanceof Player)
 		{
+			Player p = (Player) sender;
+			
 			if(!sender.hasPermission("venturacalendar.command.changetime"))
 			{
 				Messenger.send(sender, Messages.NO_PERMISSION);

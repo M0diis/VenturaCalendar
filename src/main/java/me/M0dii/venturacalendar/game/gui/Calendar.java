@@ -237,6 +237,8 @@ public class Calendar implements InventoryHolder
 						
 						lore.add("");
 						lore.addAll(event.getDescription());
+						
+						continue;
 					}
 				}
 				

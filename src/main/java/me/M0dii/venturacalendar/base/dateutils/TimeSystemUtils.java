@@ -53,18 +53,27 @@ public class TimeSystemUtils
 		for(long ticksThisMonth : ticksPerMonth)
 			ticksPerYear = ticksPerYear + ticksThisMonth;
 		
-		return switch(unit)
+		switch(unit)
 		{
-			case TICK -> 1;
-			case SECOND -> ticksPerSecond;
-			case MINUTE -> ticksPerMinute;
-			case HOUR -> ticksPerHour;
-			case DAY -> ticksPerDay;
-			case WEEK -> ticksPerWeek;
-			case MONTH -> ticksPerMonth;
-			case YEAR -> ticksPerYear;
-			default -> 0;
-		};
+			case TICK:
+				return 1;
+			case SECOND:
+				return ticksPerSecond;
+			case MINUTE:
+				return ticksPerMinute;
+			case HOUR:
+				return ticksPerHour;
+			case DAY:
+				return ticksPerDay;
+			case WEEK:
+				return ticksPerWeek;
+			case MONTH:
+				return ticksPerMonth;
+			case YEAR:
+				return ticksPerYear;
+			default:
+				return 0;
+		}
 	}
 
 }
