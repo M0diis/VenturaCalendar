@@ -71,7 +71,7 @@ public class Calendar implements InventoryHolder
 		
 		TimeSystem ts = new TimeSystem(date.getTimeSystem());
 		
-		HashMap<InventoryProperties, Object> calendarProperties = calConf.getCalendarProperties(false);
+		Map<InventoryProperties, Object> calendarProperties = calConf.getCalendarProperties(false);
 
 		List<ItemStack> dayItems = new ArrayList<>();
 		List<ItemStack> passedDayItems = new ArrayList<>();
@@ -101,7 +101,6 @@ public class Calendar implements InventoryHolder
 				calendarProperties.get(InventoryProperties.ITEMS);
 		
 		Map<ItemProperties, Object> todayProps = itemProperties.get(Items.TODAY);
-
 		Map<ItemProperties, Object> passedDayProps = itemProperties.get(Items.PASSED);
 		Map<ItemProperties, Object> futureDayProps = itemProperties.get(Items.FUTURE);
 		Map<ItemProperties, Object> weekProps = itemProperties.get(Items.WEEK);
@@ -212,7 +211,7 @@ public class Calendar implements InventoryHolder
 	{
 		String name = Utils.setPlaceholders((String) itemProperties.get(ItemProperties.NAME), date, true);
 		Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
-		int amount = Integer.parseInt(Utils.setPlaceholders((String) itemProperties.get(ItemProperties.AMOUNT), date, true));
+		int amount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(itemProperties.get(ItemProperties.AMOUNT)), date, true));
 		
 		List<String> lore = new ArrayList<>();
 		
@@ -252,8 +251,6 @@ public class Calendar implements InventoryHolder
 						lore.addAll(event.getDescription());
 					}
 				}
-				
-
 			}
 		}
 		

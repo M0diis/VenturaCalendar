@@ -92,7 +92,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener
             return;
         }
     
-        if(Version.serverIsOlderThan(Version.v1_11_R1))
+        if(!Version.serverIsNewerThan(Version.v1_11_R1))
         {
             return;
         }
@@ -103,13 +103,19 @@ public class VenturaCalendar extends JavaPlugin implements Listener
             {
                 return;
             }
-    
-            if(Version.serverIsOlderThan(Version.v1_11_R1))
+
+            if(!Version.serverIsNewerThan(Version.v1_11_R1))
             {
                 return;
             }
             
-            String msg = getBaseConfig().getActionBarMessage().get();
+            Optional<String> msgOpt = getBaseConfig().getActionBarMessage();
+
+            if(!msgOpt.isPresent()) {
+                Messenger.log(Messenger.Level.DEBUG, "Action bar message is empty.");
+
+                return;
+            }
             
             TimeSystem timeSystem = getTimeConfig().getTimeSystem();
 
@@ -127,8 +133,13 @@ public class VenturaCalendar extends JavaPlugin implements Listener
             }
     
             Date finalDate = date;
+
+            if(finalDate == null)
+            {
+                return;
+            }
             
-            Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msg, finalDate, p)));
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), finalDate, p)));
         }, 0L, 20L);
     }
     

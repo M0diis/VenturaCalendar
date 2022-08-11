@@ -85,6 +85,11 @@ public class Utils
         date = new Date(date);
         TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
         date = du.addZeroPoints(date);
+
+        if(message == null || message.isEmpty()) {
+            Messenger.log(Messenger.Level.DEBUG, "Message is empty when setting placeholders, skipping.");
+            return "";
+        }
         
         message = message
             .replaceAll("%[tT]ick(|s)%", String.valueOf(date.getTick()))

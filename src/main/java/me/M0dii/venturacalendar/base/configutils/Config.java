@@ -11,10 +11,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config
 {
-	final VenturaCalendar plugin;
-	
-	final File file;
-	FileConfiguration config;
+	protected final VenturaCalendar plugin;
+	private final File file;
+	protected FileConfiguration config;
 	
 	protected Config(File parentFile, String configName, VenturaCalendar plugin)
 	{

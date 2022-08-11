@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.M0dii'
-version '1.4.0'
+version '1.4.4'
 
 shadowJar {
     relocate 'org.bstats', 'me.m0dii.venturacalendar'

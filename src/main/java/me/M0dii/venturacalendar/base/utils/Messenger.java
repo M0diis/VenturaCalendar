@@ -40,7 +40,11 @@ public class Messenger
             case ERROR:
                 plugin.getLogger().severe(msg);
             break;
-                case DEBUG: Bukkit.getConsoleSender().sendMessage("[DEBUG] " + msg);
+                case DEBUG: {
+                    if(plugin.getBaseConfig().debug()) {
+                        Bukkit.getConsoleSender().sendMessage("[DEBUG] " + msg);
+                    }
+                }
             break;
             default:
                 break;

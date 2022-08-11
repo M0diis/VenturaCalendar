@@ -1,42 +1,36 @@
 package me.m0dii.venturacalendar.game.config;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.m0dii.venturacalendar.base.utils.Utils;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.configutils.Config;
 import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
 import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.m0dii.venturacalendar.base.itemutils.Items;
+import me.m0dii.venturacalendar.base.utils.Utils;
 import me.m0dii.venturacalendar.game.gui.InventoryProperties;
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CalendarConfig extends Config implements ConfigUtils
 {
-	private final VenturaCalendar plugin;
-	FileConfiguration cfg;
-	
 	public CalendarConfig(VenturaCalendar plugin)
 	{
 		super(plugin.getDataFolder(), "CalendarConfig.yml", plugin);
 		
-		this.plugin = plugin;
-		
-		this.cfg = super.loadConfig();
+		super.loadConfig();
 		
 		getCalendarProperties(true);
 	}
 	
-	final HashMap<InventoryProperties, Object> calendar = new HashMap<>();
-	final HashMap<Items, HashMap<ItemProperties, Object>> items = new HashMap<>();
+	final Map<InventoryProperties, Object> calendar = new HashMap<>();
+	final Map<Items, Map<ItemProperties, Object>> items = new HashMap<>();
 	
-	public HashMap<InventoryProperties, Object> getCalendarProperties(boolean reload)
+	public Map<InventoryProperties, Object> getCalendarProperties(boolean reload)
 	{
 		if(!reload)
 		{
@@ -77,14 +71,14 @@ public class CalendarConfig extends Config implements ConfigUtils
 		return calendar;
 	}
 	
-	private HashMap<ItemProperties, Object> getItemProperties(String path)
+	private Map<ItemProperties, Object> getItemProperties(String path)
 	{
-		HashMap<ItemProperties, Object> itemProperties = new HashMap<>();
+		Map<ItemProperties, Object> itemProperties = new HashMap<>();
 		
 		itemProperties.put(ItemProperties.TOGGLE, getBoolean(path + "toggle"));
 		itemProperties.put(ItemProperties.NAME, getString(path + "name"));
 		
-		String matName = cfg.getString(path + "material", "WHITE_STAINED_GLASS_PANE");
+		String matName = config.getString(path + "material", "WHITE_STAINED_GLASS_PANE");
 		
 		if(matName.contains("player_skull="))
 		{
@@ -98,7 +92,7 @@ public class CalendarConfig extends Config implements ConfigUtils
 			itemProperties.put(ItemProperties.MATERIAL, Utils.getMaterial(matName));
 		}
 		
-		itemProperties.put(ItemProperties.AMOUNT, cfg.getString(path + "amount"));
+		itemProperties.put(ItemProperties.AMOUNT, config.getString(path + "amount"));
 		itemProperties.put(ItemProperties.LORE, getListString(path + "lore"));
 		
 		return itemProperties;
@@ -106,11 +100,11 @@ public class CalendarConfig extends Config implements ConfigUtils
 	
 	public FileConfiguration reloadConfig()
 	{
-		cfg = super.reloadConfig();
+		config = super.reloadConfig();
 		
 		getCalendarProperties(true);
 		
-		return cfg;
+		return config;
 	}
 	
 	@Override
@@ -119,7 +113,7 @@ public class CalendarConfig extends Config implements ConfigUtils
 		if(path == null)
 			return "";
 		
-		String str = cfg.getString(path);
+		String str = config.getString(path);
 		
 		if(str == null || str.isEmpty())
 			return "";
@@ -130,24 +124,24 @@ public class CalendarConfig extends Config implements ConfigUtils
 	@Override
 	public Integer getInteger(String path)
 	{
-		return cfg.getInt(path);
+		return config.getInt(path);
 	}
 	
 	@Override
 	public Long getLong(String path) {
-		return Long.valueOf(cfg.getString(path, "0"));
+		return Long.valueOf(config.getString(path, "0"));
 	}
 	
 	@Override
 	public Boolean getBoolean(String path)
 	{
-		return cfg.getBoolean(path);
+		return config.getBoolean(path);
 	}
 
 	@Override
 	public List<String> getListString(String path)
 	{
-		Stream<String> list = cfg.getStringList(path).stream().map(Utils::format);
+		Stream<String> list = config.getStringList(path).stream().map(Utils::format);
 		
 		if(plugin.papiEnabled())
 		{

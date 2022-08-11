@@ -3,6 +3,7 @@ package me.m0dii.venturacalendar.base.configutils;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Month;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
+import me.m0dii.venturacalendar.base.utils.Messenger;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -41,6 +42,10 @@ public class TimeConfig extends Config implements ConfigUtils
 		if(timeSystems.containsKey("main-time-system"))
 		{
 			return timeSystems.get("main-time-system");
+		}
+		else
+		{
+			Messenger.log(Messenger.Level.ERROR, "Timesystem 'main-time-system' was not found in the config.");
 		}
 		
 		reload();

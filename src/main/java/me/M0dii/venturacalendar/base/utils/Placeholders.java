@@ -87,20 +87,14 @@ public class Placeholders extends PlaceholderExpansion {
                 return "";
             }
             
-            if(id.endsWith("_start"))
+            if(id.endsWith("_start") && event.hasFromTo())
             {
-                if(event.hasFromTo())
-                {
-                    return String.valueOf(event.getStartDay());
-                }
+                return String.valueOf(event.getStartDay());
             }
             
-            if(id.endsWith("_end"))
+            if(id.endsWith("_end") && event.hasFromTo())
             {
-                if(event.hasFromTo())
-                {
-                    return String.valueOf(event.getEndDay());
-                }
+                return String.valueOf(event.getEndDay());
             }
             
             if(id.endsWith("_description"))
@@ -188,8 +182,8 @@ public class Placeholders extends PlaceholderExpansion {
                 return String.valueOf(date.getEraName());
             case "date_day_of_week":
                 return String.valueOf(dow);
+            default:
+                return "";
         }
-        
-        return "";
     }
 }

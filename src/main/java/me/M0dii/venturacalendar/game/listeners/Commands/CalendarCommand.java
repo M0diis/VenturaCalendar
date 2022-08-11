@@ -39,13 +39,11 @@ public class CalendarCommand
 				String worldName = timeSystem.getWorldName();
 				World world = Bukkit.getWorld(worldName);
 				
-				if(worldName.equalsIgnoreCase("current"))
-				{
+				if(worldName.equalsIgnoreCase("current")) {
 					world = pl.getWorld();
 				}
 				
-				if(timeSystem.isRealTime())
-				{
+				if(timeSystem.isRealTime()) {
 					Date date = plugin.getDateCalculator().fromMillis(timeSystem);
 					Date creationDate = plugin.getDateCalculator().fromMillis(timeSystem);
 					
@@ -55,24 +53,32 @@ public class CalendarCommand
 					pl.openInventory(calendar.getInventory());
 					
 					Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
+
+					return;
 				}
-				else if(world != null)
-				{
-					Date date = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
-					Date creationDate = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
-					
-					Calendar calendar = new Calendar(date, creationDate, plugin);
-					storageUtils.storeCalendar(pl, calendar);
-					
-					pl.openInventory(calendar.getInventory());
-					
-					Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
+				else if (world == null) {
+					Messenger.log(Messenger.Level.WARN, "World '" + timeSystem.getWorldName() + "' was not found.");
+					Messenger.log(Messenger.Level.WARN, "Falling back to world name 'world'.");
+
+					world = Bukkit.getWorld("world");
+
+					if(world == null) {
+						Messenger.log(Messenger.Level.WARN, "Fall-back world named 'world' was not found.");
+
+						return;
+					}
 				}
-				else
-				{
-					Messenger.log(Messenger.Level.WARN, "World " + timeSystem.getWorldName() + " was not found.");
-				}
-				
+
+				Date date = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+				Date creationDate = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+
+				Calendar calendar = new Calendar(date, creationDate, plugin);
+				storageUtils.storeCalendar(pl, calendar);
+
+				pl.openInventory(calendar.getInventory());
+
+				Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
+
 				return;
 			}
 
