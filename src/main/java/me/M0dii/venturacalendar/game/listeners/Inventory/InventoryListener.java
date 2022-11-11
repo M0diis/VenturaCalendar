@@ -3,7 +3,10 @@ package me.m0dii.venturacalendar.game.listeners.inventory;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.events.CalendarClickEvent;
 import me.m0dii.venturacalendar.base.events.CalendarCloseEvent;
+import me.m0dii.venturacalendar.base.events.RealTimeCalendarClickEvent;
+import me.m0dii.venturacalendar.base.events.RealTimeCalendarCloseEvent;
 import me.m0dii.venturacalendar.game.gui.Calendar;
+import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
 import me.m0dii.venturacalendar.game.gui.Storage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,50 +17,72 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public final class InventoryListener implements Listener
-{
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e)
-	{
-		Player player = (Player) e.getWhoClicked();
-		
-		Inventory inv = e.getClickedInventory();
-		ItemStack item = e.getCurrentItem();
-		
-		if(VenturaCalendar.storages.containsKey(player))
-		{
-			e.setCancelled(true);
-			
-			Storage storage = VenturaCalendar.storages.get(player);
-		}
-		
-		if(inv == null || !(inv.getHolder() instanceof Calendar))
-		{
-			return;
-		}
-		
-		Calendar cal = (Calendar) inv.getHolder();
-		
-		e.setCancelled(true);
-		
-		Bukkit.getPluginManager().callEvent(new CalendarClickEvent(cal, inv, player, item));
-	}
-	
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent e)
-	{
-		Inventory inventory = e.getInventory();
-		
-		if(e.getPlayer() instanceof Player)
-		{
-			Player player = (Player) e.getPlayer();
-			
-			if(inventory instanceof Calendar)
-			{
-				Calendar cal = (Calendar) inventory;
-				
-				Bukkit.getPluginManager().callEvent(new CalendarCloseEvent(cal, inventory, player));
-			}
-		}
-	}
+public final class InventoryListener implements Listener {
+    @EventHandler
+    public void onInventoryClick(final InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
+
+        Inventory inv = e.getClickedInventory();
+        ItemStack item = e.getCurrentItem();
+
+        if (VenturaCalendar.storages.containsKey(player)) {
+            e.setCancelled(true);
+
+            Storage storage = VenturaCalendar.storages.get(player);
+        }
+
+        if (inv == null || !(inv.getHolder() instanceof Calendar cal)) {
+            return;
+        }
+
+        e.setCancelled(true);
+
+        Bukkit.getPluginManager().callEvent(new CalendarClickEvent(cal, inv, player, item));
+    }
+
+    @EventHandler
+    public void onInventoryClickRealTimeCalendar(final InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
+
+        Inventory inv = e.getClickedInventory();
+        ItemStack item = e.getCurrentItem();
+
+        if (VenturaCalendar.storages.containsKey(player)) {
+            e.setCancelled(true);
+
+            Storage storage = VenturaCalendar.storages.get(player);
+        }
+
+        if (inv == null || !(inv.getHolder() instanceof RealTimeCalendar cal)) {
+            return;
+        }
+
+        e.setCancelled(true);
+
+        Bukkit.getPluginManager().callEvent(new RealTimeCalendarClickEvent(cal, inv, player, item));
+    }
+
+    @EventHandler
+    public void onInventoryCloseCalendar(final InventoryCloseEvent e) {
+        Inventory inventory = e.getInventory();
+
+        if (e.getPlayer() instanceof Player player) {
+
+            if (inventory instanceof Calendar cal) {
+                Bukkit.getPluginManager().callEvent(new CalendarCloseEvent(cal, inventory, player));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryCloseRealTimeCalendar(final InventoryCloseEvent e) {
+        Inventory inventory = e.getInventory();
+
+        if (e.getPlayer() instanceof Player player) {
+
+            if (inventory instanceof RealTimeCalendar cal) {
+                Bukkit.getPluginManager().callEvent(new RealTimeCalendarCloseEvent(cal, inventory, player));
+            }
+        }
+    }
 }

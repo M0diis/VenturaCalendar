@@ -10,69 +10,60 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemCreator
-{
-	final ItemStack item;
+public class ItemCreator {
+    final ItemStack item;
 
-	public ItemCreator(Material material, int amount, String name, List<String> lore)
-	{
-		if(material == null)
-		{
-			material = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
-		}
-		
-		if(material == null)
-		{
-			material = Material.GLASS_PANE;
-		}
-		
-		item = new ItemStack(material, amount);
-		
-		ItemMeta itemMeta = item.getItemMeta();
-		
-		itemMeta.setDisplayName(name);
-		
-		itemMeta.setLore(lore);
-		
-		item.setItemMeta(itemMeta);
-	}
-	
-	public ItemCreator(Material material, int amount, String name, List<String> lore, String skullOwner)
-	{
-		if(material == null)
-		{
-			material = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
-		}
-		
-		if(material == null)
-		{
-			material = Material.GLASS_PANE;
-		}
-		
-		item = new ItemStack(material, amount);
-		
-		ItemMeta itemMeta = item.getItemMeta();
-		
-		itemMeta.setDisplayName(name);
-		
-		itemMeta.setLore(lore);
-		
-		item.setItemMeta(itemMeta);
-		
-		if(material.equals(XMaterial.PLAYER_HEAD.parseMaterial()))
-		{
-			SkullMeta skullMeta = (SkullMeta) itemMeta;
-			
-			UUID uuid = UUID.fromString(skullOwner);
+    public ItemCreator(Material material, int amount, String name, List<String> lore) {
+        if (material == null) {
+            material = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
+        }
 
-			skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
-			
-			item.setItemMeta(skullMeta);
-		}
-	}
-	
-	public ItemStack getItem()
-	{
-		return item;
-	}
+        if (material == null) {
+            material = Material.GLASS_PANE;
+        }
+
+        item = new ItemStack(material, amount);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(name);
+
+        itemMeta.setLore(lore);
+
+        item.setItemMeta(itemMeta);
+    }
+
+    public ItemCreator(Material material, int amount, String name, List<String> lore, String skullOwner) {
+        if (material == null) {
+            material = XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial();
+        }
+
+        if (material == null) {
+            material = Material.GLASS_PANE;
+        }
+
+        item = new ItemStack(material, amount);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(name);
+
+        itemMeta.setLore(lore);
+
+        item.setItemMeta(itemMeta);
+
+        if (material.equals(XMaterial.PLAYER_HEAD.parseMaterial())) {
+            SkullMeta skullMeta = (SkullMeta) itemMeta;
+
+            UUID uuid = UUID.fromString(skullOwner);
+
+            skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+
+            item.setItemMeta(skullMeta);
+        }
+    }
+
+    public ItemStack getItem() {
+        return item;
+    }
 }

@@ -1,6 +1,7 @@
 package me.m0dii.venturacalendar.base.events;
 
 import me.m0dii.venturacalendar.game.gui.Calendar;
+import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -8,15 +9,15 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class CalendarOpenEvent extends Event implements Cancellable {
+public class RealTimeCalendarCloseEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
 
     private final Inventory inv;
-    private final Calendar calendar;
+    private final RealTimeCalendar calendar;
     private final Player player;
 
-    public CalendarOpenEvent(Calendar cal, Inventory inv, Player p) {
+    public RealTimeCalendarCloseEvent(RealTimeCalendar cal, Inventory inv, Player p) {
         this.calendar = cal;
         this.inv = inv;
         this.player = p;
@@ -41,7 +42,7 @@ public class CalendarOpenEvent extends Event implements Cancellable {
         return HANDLERS_LIST;
     }
 
-    public Calendar getCalendar() {
+    public RealTimeCalendar getCalendar() {
         return calendar;
     }
 

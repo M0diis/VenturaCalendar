@@ -83,5 +83,41 @@ messages:
   no-permission: '&4You do not have permission to do that!'
   config-reloaded: '&aConfig reloaded.'
 
+translations:
+  # These are translations for the real-time calendar.
+  real-time:
+    # Day names must be exactly from Monday to Sunday and
+    # in the same order.
+    # Same goes for month names. Names must be from January to December in the exact order.
+    day-names:
+      - 'Monday'
+      - 'Tuesday'
+      - 'Wednesday'
+      - 'Thursday'
+      - 'Friday'
+      - 'Saturday'
+      - 'Sunday'
+    month-names:
+      - 'January'
+      - 'February'
+      - 'March'
+      - 'April'
+      - 'May'
+      - 'June'
+      - 'July'
+      - 'August'
+      - 'September'
+      - 'October'
+      - 'November'
+      - 'December'
+    # These are the names for seasons.
+    # From January to March is Winter, from April to June is Spring,
+    # from July to September is Summer and from October to December is Autumn.
+    season-names:
+      - 'Spring'
+      - 'Summer'
+      - 'Autumn'
+      - 'Winter'
+
 debug: false
 update-check: true

@@ -1,10 +1,10 @@
 package me.m0dii.venturacalendar.base.utils;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 public enum Version implements Comparable<Version> {
+    v1_19_R1(18),
     v1_18_R2(17),
     v1_18_R1(16),
     v1_17_R1(15),
@@ -25,6 +25,8 @@ public enum Version implements Comparable<Version> {
     v1_8_R1(0),
     UNKNOWN(-1);
 
+    private boolean notified = false;
+
     private final int value;
 
     Version(int value) {
@@ -41,8 +43,6 @@ public enum Version implements Comparable<Version> {
      * @throws IllegalArgumentException if server is null
      */
     public static Version getServerVersion(Server server) {
-        Validate.notNull(server, "Server cannot be null");
-
         String packageName = server.getClass().getPackage().getName();
         String version = packageName.substring(packageName.lastIndexOf('.') + 1);
 
@@ -92,7 +92,7 @@ public enum Version implements Comparable<Version> {
      * @throws IllegalArgumentException if this version or the given version, is the version UNKNOWN
      */
     public boolean isNewerOrSameThan(Version version) {
-        if(checkUnknown(version)) {
+        if (checkUnknown(version)) {
             return true;
         }
 
@@ -116,16 +116,20 @@ public enum Version implements Comparable<Version> {
     }
 
     private boolean checkUnknown(Version version) {
-        if (version == UNKNOWN) {
+        if (version == UNKNOWN && !notified) {
             Messenger.log(Messenger.Level.WARN, "Provided version is UNKNOWN. Some features may not work correctly.");
             Messenger.log(Messenger.Level.WARN, "Assuming using the latest version.");
+
+            notified = true;
 
             return true;
         }
 
-        if (this == UNKNOWN) {
+        if (this == UNKNOWN && !notified) {
             Messenger.log(Messenger.Level.WARN, "Server version is UNKNOWN. Some features may not work correctly.");
             Messenger.log(Messenger.Level.WARN, "Assuming using the latest version.");
+
+            notified = true;
 
             return true;
         }

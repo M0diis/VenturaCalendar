@@ -8,57 +8,48 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class CalendarCloseEvent extends Event implements Cancellable
-{
+public class CalendarCloseEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
-    
+
     private final Inventory inv;
     private final Calendar calendar;
     private final Player player;
-    
-    public CalendarCloseEvent(Calendar cal, Inventory inv, Player p)
-    {
+
+    public CalendarCloseEvent(Calendar cal, Inventory inv, Player p) {
         this.calendar = cal;
         this.inv = inv;
         this.player = p;
     }
-    
-    public static HandlerList getHandlerList()
-    {
+
+    public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
-    
+
     @Override
-    public boolean isCancelled()
-    {
+    public boolean isCancelled() {
         return isCancelled;
     }
-    
+
     @Override
-    public void setCancelled(boolean cancel)
-    {
+    public void setCancelled(boolean cancel) {
         this.isCancelled = cancel;
     }
-    
+
     @Override
-    public @NotNull HandlerList getHandlers()
-    {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
-    
-    public Calendar getCalendar()
-    {
+
+    public Calendar getCalendar() {
         return calendar;
     }
-    
-    public Player getPlayer()
-    {
+
+    public Player getPlayer() {
         return player;
     }
-    
-    public Inventory getInventory()
-    {
+
+    public Inventory getInventory() {
         return inv;
     }
 }

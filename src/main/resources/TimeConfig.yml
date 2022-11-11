@@ -1,26 +1,32 @@
 ## VenturaCalendar
 ## by M0dii
 #
-# Here you can set up different time-systems.
-#
-# The time-system time will be used by specified world name.
-# If set to "current" it will use the current world the player is in.
-#
-# If you want to use real-life calendar:
-#
-# make sure the months and their days are equal to real life ones
-# set the starting year to 1970
-#
-# ticks-per-econd: 20
-# seconds-per-minute: 60
-# minutes-per-hour: 60
+# Here you can set up your time-system.
 main-time-system:
+  # This world name will be used for the time-system.
+  # If set to "current" it will use the current world the player is in.
+  # If you don't want players with '/time set 0' command to accidentally
+  # reset the time - create a new world and set its name here.
   world-name: 'world'
+  # If you enable real-time calendar, non-real-time options, such as
+  # "ticks-per-second", "ticks-per-minute" will be ignored.
   real-time:
     enabled: false
-    # If set to false, real-time will use local machine time
-    use-time-zone: false
-    time-zone: 'Europe/Germany'
+    second-offset: 0
+    minute-offset: 0
+    hour-offset: 0
+    day-offset: 0
+    week-offset: 0
+    month-offset: 0
+    year-offset: 0
+    # If set to true, first day in calendar will show up as "Sunday".
+    first-day-sunday: false
+    # If sync is enabled, in-game time will be synced with real-time.
+    # This means if it's noon, it will be noon in-game.
+    # This will also set DO_DAYLIGHT_CYCLE gamerule to false in all worlds.
+    # It regulates the world time ticks (which you can find with '/time query daytime')
+    # with equation 'ticks = (24000 - currentHour * 1000 + currentMinutes * 1000 / 60)'.
+    sync: true
   ticks-per-second: 20
   seconds-per-minute: 5
   minutes-per-hour: 10
@@ -28,8 +34,8 @@ main-time-system:
   days-per-week: 7
   months-per-year: 12
   # You can set the time offsets here.
-  # Example:
-  # If the world is new (time = 0), you can off-set the month by 1
+  # For example:
+  # If the world is new (world time = 0), you can off-set the month by 1
   # and the calendar will start from the second month as if one month has passed.
   month-offset: 0
   week-offset: 0

@@ -3,6 +3,7 @@ package me.m0dii.venturacalendar.game.listeners.inventory;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.FromTo;
 import me.m0dii.venturacalendar.base.events.CalendarClickEvent;
+import me.m0dii.venturacalendar.base.events.RealTimeCalendarClickEvent;
 import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.m0dii.venturacalendar.base.itemutils.Items;
 import me.m0dii.venturacalendar.base.utils.Messenger;
@@ -11,6 +12,7 @@ import me.m0dii.venturacalendar.game.config.BaseConfig;
 import me.m0dii.venturacalendar.game.config.Messages;
 import me.m0dii.venturacalendar.game.gui.Calendar;
 import me.m0dii.venturacalendar.game.gui.InventoryProperties;
+import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
 import me.m0dii.venturacalendar.game.listeners.NewDayListener;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,22 +23,22 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CalendarClickListener implements Listener {
+public class RealTimeCalendarClickListener implements Listener {
     private final VenturaCalendar plugin;
     private final BaseConfig baseConfig;
 
-    public CalendarClickListener(VenturaCalendar plugin) {
+    public RealTimeCalendarClickListener(VenturaCalendar plugin) {
         this.plugin = plugin;
         this.baseConfig = plugin.getBaseConfig();
     }
 
     @EventHandler
-    public void onNewDay(final CalendarClickEvent e) {
+    public void onNewDay(final RealTimeCalendarClickEvent e) {
         if (e.isCancelled()) {
             return;
         }
 
-        Calendar cal = e.getCalendar();
+        RealTimeCalendar cal = e.getCalendar();
 
         if (cal.getDate() != null) {
             return;
@@ -45,7 +47,7 @@ public class CalendarClickListener implements Listener {
         HashMap<String, FromTo> redeemableMonths = baseConfig.getRedeemableMonths();
 
         if (cal.getDate() != null && baseConfig.redeemWhitelistEnabled()) {
-            FromTo fromTo = redeemableMonths.get(cal.getDate().getMonthName());
+            FromTo fromTo = redeemableMonths.get(cal.getDate().getLocalDateTime().getMonth().name());
 
             if (fromTo == null) {
                 return;

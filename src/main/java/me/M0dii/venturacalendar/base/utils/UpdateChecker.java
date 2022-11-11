@@ -9,32 +9,26 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public final class UpdateChecker
-{
+public final class UpdateChecker {
     private final VenturaCalendar plugin;
     private final int resourceId;
-    
-    public UpdateChecker(VenturaCalendar plugin, int resourceId)
-    {
+
+    public UpdateChecker(VenturaCalendar plugin, int resourceId) {
         this.plugin = plugin;
         this.resourceId = resourceId;
     }
-    
-    public void getVersion(final Consumer<String> consumer)
-    {
+
+    public void getVersion(final Consumer<String> consumer) {
         Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            try(InputStream inputStream =
-                        new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream();
-            
-                Scanner scanner = new Scanner(inputStream))
-            {
-                if(scanner.hasNext())
-                {
+            try (InputStream inputStream =
+                         new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream();
+
+                 Scanner scanner = new Scanner(inputStream)) {
+                if (scanner.hasNext()) {
                     consumer.accept(scanner.next());
                 }
             }
-            catch(IOException ex)
-            {
+            catch (IOException ex) {
                 Messenger.log(Messenger.Level.WARN, "Failed to check for updates.");
                 Messenger.log(Messenger.Level.DEBUG, ex.getMessage());
             }

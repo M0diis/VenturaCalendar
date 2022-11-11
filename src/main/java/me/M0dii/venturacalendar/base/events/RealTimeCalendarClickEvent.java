@@ -1,25 +1,30 @@
 package me.m0dii.venturacalendar.base.events;
 
+import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeCalculator;
 import me.m0dii.venturacalendar.game.gui.Calendar;
+import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class CalendarOpenEvent extends Event implements Cancellable {
+public class RealTimeCalendarClickEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
 
     private final Inventory inv;
-    private final Calendar calendar;
+    private final RealTimeCalendar calendar;
+    private final ItemStack item;
     private final Player player;
 
-    public CalendarOpenEvent(Calendar cal, Inventory inv, Player p) {
+    public RealTimeCalendarClickEvent(RealTimeCalendar cal, Inventory inv, Player p, ItemStack item) {
         this.calendar = cal;
-        this.inv = inv;
         this.player = p;
+        this.inv = inv;
+        this.item = item;
     }
 
     public static HandlerList getHandlerList() {
@@ -41,12 +46,16 @@ public class CalendarOpenEvent extends Event implements Cancellable {
         return HANDLERS_LIST;
     }
 
-    public Calendar getCalendar() {
+    public RealTimeCalendar getCalendar() {
         return calendar;
     }
 
     public Player getPlayer() {
         return player;
+    }
+
+    public ItemStack getItem() {
+        return item;
     }
 
     public Inventory getInventory() {

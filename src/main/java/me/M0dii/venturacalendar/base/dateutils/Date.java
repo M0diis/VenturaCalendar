@@ -2,170 +2,157 @@ package me.m0dii.venturacalendar.base.dateutils;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 
-public class Date
-{
-	private final VenturaCalendar plugin = VenturaCalendar.getInstance();
-	
-	private final TimeSystem timeSystem;
-	long rootTicks;
-	
-	private long tick;
-	private long second;
-	private long minute;
-	private long hour;
-	private long day;
-	private long week;
-	private long month;
-	private long year;
-	private long era;
+public class Date {
+    private final VenturaCalendar plugin = VenturaCalendar.getInstance();
 
-	public Date(TimeSystem timeSystem,
-			long rootTicks,
-			long tick,
-			long second,
-			long minute,
-			long hour,
-			long day,
-			long week,
-			long month,
-			long year,
-			long era)
-	{
-		this.timeSystem = timeSystem;
-		this.rootTicks  = rootTicks;
-		
-		this.tick 	 	= tick;
-		this.second  	= second;
-		this.minute  	= minute;
-		this.hour 	 	= hour;
-		this.day		= day;
-		this.week		= week;
-		this.month 	 	= month;
-		this.year 	 	= year;
-		this.era 	 	= era;
-	}
-	
-	public Date(Date date)
-	{
-		this.timeSystem = date.getTimeSystem();
-		this.rootTicks 	= date.getRootTicks();
-		
-		this.tick 	= date.getTick();
-		this.second = date.getSecond();
-		this.minute = date.getMinute();
-		this.hour 	= date.getHour();
-		this.day	= date.getDay();
-		this.week	= date.getWeek();
-		this.month 	= date.getMonth();
-		this.year 	= date.getYear();
-		this.era 	= date.getEra();
-	}
-	
-	public TimeSystem getTimeSystem() {
-		return timeSystem;
-	}
-	
-	public long getRootTicks() {
-		return rootTicks;
-	}
-	
-	public long getTick() {
-		return tick;
-	}
+    private final TimeSystem timeSystem;
+    long rootTicks;
 
-	public void setTick(long tick) {
-		this.tick = tick;
-	}
+    private long tick;
+    private long second;
+    private long minute;
+    private long hour;
+    private long day;
+    private long week;
+    private long month;
+    private long year;
+    private long era;
 
-	public long getSecond() {
-		return second;
-	}
+    public Date(TimeSystem timeSystem,
+                long rootTicks,
+                long tick,
+                long second,
+                long minute,
+                long hour,
+                long day,
+                long week,
+                long month,
+                long year,
+                long era) {
+        this.timeSystem = timeSystem;
+        this.rootTicks = rootTicks;
 
-	public void setSecond(long second) {
-		this.second = second;
-	}
+        this.tick = tick;
+        this.second = second;
+        this.minute = minute;
+        this.hour = hour;
+        this.day = day;
+        this.week = week;
+        this.month = month;
+        this.year = year;
+        this.era = era;
+    }
 
-	public long getMinute() {
-		return minute;
-	}
+    public Date(Date date) {
+        this.timeSystem = date.getTimeSystem();
+        this.rootTicks = date.getRootTicks();
 
-	public void setMinute(long minute) {
-		this.minute = minute;
-	}
+        this.tick = date.getTick();
+        this.second = date.getSecond();
+        this.minute = date.getMinute();
+        this.hour = date.getHour();
+        this.day = date.getDay();
+        this.week = date.getWeek();
+        this.month = date.getMonth();
+        this.year = date.getYear();
+        this.era = date.getEra();
+    }
 
-	public long getHour() {
-		return hour;
-	}
+    public TimeSystem getTimeSystem() {
+        return timeSystem;
+    }
 
-	public void setHour(long hour) {
-		this.hour = hour;
-	}
+    public long getRootTicks() {
+        return rootTicks;
+    }
 
-	public long getDay() {
-		return day;
-	}
+    public long getTick() {
+        return tick;
+    }
 
-	public void setDay(long day)
-	{
-		this.day = day;
-	}
+    public void setTick(long tick) {
+        this.tick = tick;
+    }
 
-	public long getWeek()
-	{
-		return week;
-	}
+    public long getSecond() {
+        return second;
+    }
 
-	public void setWeek(long week)
-	{
-		this.week = week;
-	}
+    public void setSecond(long second) {
+        this.second = second;
+    }
 
-	public long getMonth()
-	{
-		return month;
-	}
-	
-	public String getMonthName()
-	{
-		return this.getTimeSystem().getMonths().get(((int)this.month)).getName();
-	}
-	
-	public String getSeasonName()
-	{
-		return this.getTimeSystem().getMonths().get(((int)this.month)).getSeasonName();
-	}
-	
-	public String getDayName()
-	{
-		long dow = plugin.getDateUtils().getDayOfWeek(this);
-		
-		return this.getTimeSystem().getDayNames().get((int)dow);
-	}
-	
-	public String getEraName()
-	{
-		return this.getTimeSystem().getEraNames().get((int)this.era);
-	}
+    public long getMinute() {
+        return minute;
+    }
 
-	public void setMonth(long month) {
-		this.month = month;
-	}
+    public void setMinute(long minute) {
+        this.minute = minute;
+    }
 
-	public long getYear()
-	{
-		return year;
-	}
+    public long getHour() {
+        return hour;
+    }
 
-	public void setYear(long year) {
-		this.year = year;
-	}
+    public void setHour(long hour) {
+        this.hour = hour;
+    }
 
-	public long getEra() {
-		return era;
-	}
+    public long getDay() {
+        return day;
+    }
 
-	public void setEra(long era) {
-		this.era = era;
-	}
-	
+    public void setDay(long day) {
+        this.day = day;
+    }
+
+    public long getWeek() {
+        return week;
+    }
+
+    public void setWeek(long week) {
+        this.week = week;
+    }
+
+    public long getMonth() {
+        return month;
+    }
+
+    public String getMonthName() {
+        return this.getTimeSystem().getMonths().get(((int) this.month)).getName();
+    }
+
+    public String getSeasonName() {
+        return this.getTimeSystem().getMonths().get(((int) this.month)).getSeasonName();
+    }
+
+    public String getDayName() {
+        long dow = plugin.getDateUtils().getDayOfWeek(this);
+
+        return this.getTimeSystem().getDayNames().get((int) dow);
+    }
+
+    public String getEraName() {
+        return this.getTimeSystem().getEraNames().get((int) this.era);
+    }
+
+    public void setMonth(long month) {
+        this.month = month;
+    }
+
+    public long getYear() {
+        return year;
+    }
+
+    public void setYear(long year) {
+        this.year = year;
+    }
+
+    public long getEra() {
+        return era;
+    }
+
+    public void setEra(long era) {
+        this.era = era;
+    }
 }
