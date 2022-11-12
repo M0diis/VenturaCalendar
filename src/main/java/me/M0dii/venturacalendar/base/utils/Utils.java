@@ -330,17 +330,12 @@ public class Utils {
 
         int ticksPerSecond = (int) plugin.getTimeConfig().getTimeSystem().getTicksPerSecond();
 
-        switch (time.charAt(time.length() - 1)) {
-            case 's':
-                return value * ticksPerSecond;
-            case 'm':
-                return value * 60 * ticksPerSecond;
-            case 'h':
-                return value * 3600 * ticksPerSecond;
-            case 'd':
-                return value * 86400 * ticksPerSecond;
-            default:
-                return value;
-        }
+        return switch (time.charAt(time.length() - 1)) {
+            case 's' -> value * ticksPerSecond;
+            case 'm' -> value * 60 * ticksPerSecond;
+            case 'h' -> value * 3600 * ticksPerSecond;
+            case 'd' -> value * 86400 * ticksPerSecond;
+            default -> value;
+        };
     }
 }

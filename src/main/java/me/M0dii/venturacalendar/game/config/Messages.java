@@ -8,5 +8,6 @@ public enum Messages {
     REDEEMED,
     TITLE_TEXT,
     SUBTITLE_TEXT,
-    REAL_TIME_SET
+    REAL_TIME_SET,
+    HELP
 }

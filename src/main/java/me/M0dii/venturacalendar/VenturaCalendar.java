@@ -83,13 +83,23 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
     }
 
     private void syncDaylight() {
+        TimeSystem timeSystem = getTimeConfig().getTimeSystem();
+
+        if(!timeSystem.isRealTime()) {
+            return;
+        }
+
         if(getTimeConfig().getBoolean("main-tyme-system.real-time.sync")) {
-            for (World world : Bukkit.getWorlds()) {
-                world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            World w = Bukkit.getWorld(timeSystem.getWorldName());
+
+            if(w != null) {
+                w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
             }
         } else {
-            for (World world : Bukkit.getWorlds()) {
-                world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+            World w = Bukkit.getWorld(timeSystem.getWorldName());
+
+            if(w != null) {
+                w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
             }
         }
 

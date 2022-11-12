@@ -35,6 +35,17 @@ public class VenturaCalendarCommand {
 
                 return;
             }
+            else if(alias(args[0], "help, info")) {
+                if (!sender.hasPermission("venturacalendar.command.help")) {
+                    Messenger.send(sender, Messages.NO_PERMISSION);
+
+                    return;
+                }
+
+                Messenger.send(sender, Messages.HELP);
+
+                return;
+            }
             else {
                 Messenger.send(sender, Messages.UNKNOWN_COMMAND);
             }
@@ -304,19 +315,19 @@ public class VenturaCalendarCommand {
 
                 boolean sub = args[0].equalsIgnoreCase("subtract");
 
-                if (args[1].equalsIgnoreCase("seconds"))
+                if (alias(args[1], "s, sec, second, seconds"))
                     fastForwards(args[2], p, 20L, " second.", " hours.", sub);
 
-                if (args[1].equalsIgnoreCase("minutes"))
+                if (alias(args[1], "m, min, minute, minutes"))
                     fastForwards(args[2], p, 1200L, " second.", " hours.", sub);
 
-                if (args[1].equalsIgnoreCase("hours"))
+                if (alias(args[1], "h, hour, hours"))
                     fastForwards(args[2], p, 1000L, " hour.", " hours.", sub);
 
-                if (args[1].equalsIgnoreCase("days"))
+                if (alias(args[1], "d, day, days"))
                     fastForwards(args[2], p, 24000L, " day.", " days.", sub);
 
-                if (args[1].equalsIgnoreCase("weeks"))
+                if (alias(args[1], "w, week, weeks"))
                     fastForwards(args[2], p, 168000L, " week.", " weeks.", sub);
             }
         }
