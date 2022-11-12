@@ -12,13 +12,14 @@ main-time-system:
   # "ticks-per-second", "ticks-per-minute" will be ignored.
   real-time:
     enabled: false
-    second-offset: 0
-    minute-offset: 0
-    hour-offset: 0
-    day-offset: 0
-    week-offset: 0
-    month-offset: 0
-    year-offset: 0
+    offsets:
+      second: 0
+      minute: 0
+      hour: 0
+      day: 0
+      week: 0
+      month: 0
+      year: 0
     # If set to true, first day in calendar will show up as "Sunday".
     first-day-sunday: false
     # If sync is enabled, in-game time will be synced with real-time.

@@ -1,4 +1,4 @@
-package me.m0dii.venturacalendar.base.dateutils.realtime;
+package me.m0dii.venturacalendar.base.dateutils;
 
 import java.time.LocalDateTime;
 

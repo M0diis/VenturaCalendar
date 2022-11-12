@@ -170,22 +170,26 @@ public class TimeConfig extends Config implements ConfigUtils {
 
         ConfigurationSection section = cfg.getConfigurationSection(path);
 
-        if (section != null)
-            for (String key : section.getKeys(false))
+        if (section != null) {
+            for (String key : section.getKeys(false)) {
                 names.add(getString(path + "." + key + "." + value));
+            }
+        }
 
         return names;
     }
 
     @Override
     public String getString(String path) {
-        if (path == null)
+        if (path == null) {
             return "";
+        }
 
         String str = cfg.getString(path);
 
-        if (str == null || str.isEmpty())
+        if (str == null || str.isEmpty()) {
             return "";
+        }
 
         return Utils.format(str);
     }

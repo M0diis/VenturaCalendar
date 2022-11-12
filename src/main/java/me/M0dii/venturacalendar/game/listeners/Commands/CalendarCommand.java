@@ -2,9 +2,9 @@ package me.m0dii.venturacalendar.game.listeners.commands;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Date;
+import me.m0dii.venturacalendar.base.dateutils.DateCalculator;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeCalculator;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeDate;
+import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import me.m0dii.venturacalendar.base.events.CalendarOpenEvent;
 import me.m0dii.venturacalendar.base.events.RealTimeCalendarOpenEvent;
 import me.m0dii.venturacalendar.base.utils.Messenger;
@@ -42,7 +42,7 @@ public class CalendarCommand {
                 }
 
                 if (timeSystem.isRealTime()) {
-                    RealTimeDate date = RealTimeCalculator.now();
+                    RealTimeDate date = DateCalculator.realTimeNow();
 
                     RealTimeCalendar calendar = new RealTimeCalendar(date);
 
@@ -65,8 +65,8 @@ public class CalendarCommand {
                     }
                 }
 
-                Date date = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
-                Date creationDate = plugin.getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+                Date date = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                Date creationDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
                 Calendar calendar = new Calendar(date, creationDate, plugin);
                 storageUtils.storeCalendar(pl, calendar);

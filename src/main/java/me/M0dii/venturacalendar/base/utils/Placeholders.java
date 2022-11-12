@@ -3,8 +3,7 @@ package me.m0dii.venturacalendar.base.utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.*;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeCalculator;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeDate;
+import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -16,12 +15,10 @@ import java.util.List;
 public class Placeholders extends PlaceholderExpansion {
 
     private final VenturaCalendar plugin;
-    private final DateCalculator dateCalculator;
     private final BaseConfig baseConfig;
 
     public Placeholders(VenturaCalendar plugin) {
         this.plugin = plugin;
-        this.dateCalculator = plugin.getDateCalculator();
         this.baseConfig = plugin.getBaseConfig();
     }
 
@@ -80,7 +77,7 @@ public class Placeholders extends PlaceholderExpansion {
         }
 
         if (ts.isRealTime())
-            return parseRealTimeDatePlaceholders(RealTimeCalculator.now(), id.toLowerCase());
+            return parseRealTimeDatePlaceholders(DateCalculator.realTimeNow(), id.toLowerCase());
         else {
             String worldName = ts.getWorldName();
 
@@ -90,7 +87,7 @@ public class Placeholders extends PlaceholderExpansion {
                 return "Error: Time-system world not found.";
             }
 
-            return parseDatePlaceholders(dateCalculator.fromTicks(w.getFullTime(), ts), id.toLowerCase());
+            return parseDatePlaceholders(DateCalculator.fromTicks(w.getFullTime(), ts), id.toLowerCase());
         }
     }
 

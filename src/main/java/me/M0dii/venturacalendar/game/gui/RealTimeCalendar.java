@@ -2,7 +2,7 @@ package me.m0dii.venturacalendar.game.gui;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeDate;
+import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import me.m0dii.venturacalendar.base.itemutils.ItemCreator;
 import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.m0dii.venturacalendar.base.itemutils.Items;

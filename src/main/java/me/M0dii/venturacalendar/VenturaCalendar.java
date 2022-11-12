@@ -2,8 +2,7 @@ package me.m0dii.venturacalendar;
 
 import me.m0dii.venturacalendar.base.configutils.TimeConfig;
 import me.m0dii.venturacalendar.base.dateutils.*;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeCalculator;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeDate;
+import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import me.m0dii.venturacalendar.base.events.NewDayEvent;
 import me.m0dii.venturacalendar.base.utils.*;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
@@ -49,7 +48,6 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
 
     public static String PREFIX;
 
-    private DateCalculator dateCalculator;
     private DateUtils dateUtils;
     private TimeSystemUtils timeSystemUtils;
 
@@ -97,7 +95,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             for(World world : Bukkit.getWorlds()) {
-                RealTimeDate now = RealTimeCalculator.now();
+                RealTimeDate now = DateCalculator.realTimeNow();
 
                 world.setTime(24000 - (now.getHour() * 1000 + now.getMinute() * 1000 / 60));
             }
@@ -140,14 +138,14 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
             World world = Bukkit.getWorld(timeSystem.getWorldName());
 
             if (timeSystem.isRealTime()) {
-                RealTimeDate realTime = RealTimeCalculator.now();
+                RealTimeDate realTime = DateCalculator.realTimeNow();
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), realTime, p));
                 }
             }
             else if (world != null) {
-                Date date = getDateCalculator().fromTicks(world.getFullTime(), timeSystem);
+                Date date = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), date, p));
@@ -225,8 +223,6 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
         timeSystemUtils = new TimeSystemUtils();
         storageUtils = new StorageUtils();
 
-        dateCalculator = new DateCalculator(this);
-
         timeConfig = new TimeConfig(this);
         calendarConfig = new CalendarConfig(this);
         eventConfig = new EventConfig(this);
@@ -257,14 +253,6 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
         instance = null;
 
         getLogger().info("VenturaCalendar has been disabled.");
-    }
-
-    public DateCalculator getDateCalculator() {
-        if (dateCalculator == null) {
-            dateCalculator = new DateCalculator(this);
-        }
-
-        return dateCalculator;
     }
 
     public DateUtils getDateUtils() {

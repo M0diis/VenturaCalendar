@@ -3,9 +3,9 @@ package me.m0dii.venturacalendar.game.gui;
 import org.bukkit.entity.Player;
 
 public class Storage {
-    Player storageHolder;
+    private Player storageHolder;
 
-    Calendar calendar;
+    private Calendar calendar;
 
     public Player getHolder() {
         return storageHolder;
@@ -26,5 +26,4 @@ public class Storage {
     public boolean allNull() {
         return calendar == null;
     }
-
 }

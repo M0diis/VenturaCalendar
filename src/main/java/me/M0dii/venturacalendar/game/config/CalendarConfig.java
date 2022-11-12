@@ -59,7 +59,6 @@ public class CalendarConfig extends Config implements ConfigUtils {
         //Week
         items.put(Items.WEEK, getItemProperties(path + "week."));
 
-        calendar.put(InventoryProperties.HOLDER, null);
         calendar.put(InventoryProperties.HEADER, title);
         calendar.put(InventoryProperties.SIZE, size);
         calendar.put(InventoryProperties.ITEMS, items);

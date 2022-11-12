@@ -1,7 +1,5 @@
 package me.m0dii.venturacalendar.base.events;
 
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeCalculator;
-import me.m0dii.venturacalendar.game.gui.Calendar;
 import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

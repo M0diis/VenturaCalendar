@@ -1,21 +1,15 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
-import me.m0dii.venturacalendar.base.utils.Messenger;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.TimeZone;
 
 public class DateCalculator {
-    private final TimeSystemUtils tsUtils;
-    private final DateUtils dateUtils;
+    private static final VenturaCalendar instance = VenturaCalendar.getInstance();
+    private static final TimeSystemUtils timeSystemUtils = instance.getTimeSystemUtils();
 
-    public DateCalculator(VenturaCalendar plugin) {
-        this.tsUtils = plugin.getTimeSystemUtils();
-        this.dateUtils = plugin.getDateUtils();
-    }
-
-    public Date fromTicks(long ticks, TimeSystem timeSystem) {
+    public static Date fromTicks(long ticks, TimeSystem timeSystem) {
         long tick = 0;
         long second = 0;
         long minute = 0;
@@ -29,13 +23,13 @@ public class DateCalculator {
         List<Long> erasBegin = timeSystem.getErasBegin();
         List<Long> erasEnd = timeSystem.getErasEnd();
 
-        long ticksPerSecond = tsUtils.getTPU(DateEnum.SECOND, timeSystem);
-        long ticksPerMinute = tsUtils.getTPU(DateEnum.MINUTE, timeSystem);
-        long ticksPerHour = tsUtils.getTPU(DateEnum.HOUR, timeSystem);
-        long ticksPerDay = tsUtils.getTPU(DateEnum.DAY, timeSystem);
-        long ticksPerWeek = tsUtils.getTPU(DateEnum.WEEK, timeSystem);
-        List<Long> ticksPerMonth = tsUtils.getMonthTPU(timeSystem);
-        long ticksPerYear = tsUtils.getTPU(DateEnum.YEAR, timeSystem);
+        long ticksPerSecond = timeSystemUtils.getTPU(DateEnum.SECOND, timeSystem);
+        long ticksPerMinute = timeSystemUtils.getTPU(DateEnum.MINUTE, timeSystem);
+        long ticksPerHour = timeSystemUtils.getTPU(DateEnum.HOUR, timeSystem);
+        long ticksPerDay = timeSystemUtils.getTPU(DateEnum.DAY, timeSystem);
+        long ticksPerWeek = timeSystemUtils.getTPU(DateEnum.WEEK, timeSystem);
+        List<Long> ticksPerMonth = timeSystemUtils.getMonthTPU(timeSystem);
+        long ticksPerYear = timeSystemUtils.getTPU(DateEnum.YEAR, timeSystem);
         long rootTicks = ticks;
 
         long dayTicks = 24000;
@@ -89,5 +83,31 @@ public class DateCalculator {
         }
 
         return new Date(timeSystem, rootTicks, tick, second, minute, hour, day, week, month, year, era);
+    }
+
+    public static RealTimeDate realTimeNow() {
+        LocalDateTime date = LocalDateTime.now();
+
+        final String path = "main-time-system.real-time.offsets";
+
+        long secondOffset = instance.getTimeConfig().getLong(path + ".second");
+        long minuteOffset = instance.getTimeConfig().getLong(path + ".minute");
+        long hourOffset = instance.getTimeConfig().getLong(path + ".hour");
+        long dayOffset = instance.getTimeConfig().getLong(path + ".day");
+        long weekOffset = instance.getTimeConfig().getLong(path + ".week");
+        long monthOffset = instance.getTimeConfig().getLong(path + ".month");
+        long yearOffset = instance.getTimeConfig().getLong(path + ".year");
+
+        date = date.plusSeconds(secondOffset)
+                .plusMinutes(minuteOffset)
+                .plusHours(hourOffset)
+                .plusDays(dayOffset)
+                .plusWeeks(weekOffset)
+                .plusMonths(monthOffset)
+                .plusYears(yearOffset);
+
+        long era = 0;
+
+        return new RealTimeDate(era, date);
     }
 }

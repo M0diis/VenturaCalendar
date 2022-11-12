@@ -3,6 +3,7 @@ package me.m0dii.venturacalendar.game.listeners;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Date;
+import me.m0dii.venturacalendar.base.dateutils.DateCalculator;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.m0dii.venturacalendar.base.events.MonthEventDayEvent;
@@ -29,8 +30,9 @@ public class NewDayListener implements Listener {
     private static final List<UUID> redeemed = new ArrayList<>();
 
     public static boolean redeem(UUID uuid) {
-        if (redeemed.contains(uuid))
+        if (redeemed.contains(uuid)) {
             return false;
+        }
 
         redeemed.add(uuid);
 
@@ -38,7 +40,7 @@ public class NewDayListener implements Listener {
     }
 
     @EventHandler
-    public void onNewDay(NewDayEvent e) {
+    public void onNewDay(final NewDayEvent e) {
         if (e.isCancelled()) {
             return;
         }
@@ -51,10 +53,11 @@ public class NewDayListener implements Listener {
             return;
         }
 
-        Date date = plugin.getDateCalculator().fromTicks(w.getFullTime(), ts);
+        Date date = DateCalculator.fromTicks(w.getFullTime(), ts);
 
-        if (plugin.getBaseConfig().rewardsEnabled())
+        if (plugin.getBaseConfig().rewardsEnabled()) {
             redeemed.clear();
+        }
 
         for (MonthEvent event : plugin.getEventConfig().getEvents()) {
             if (event.hasFromTo()) {
@@ -89,13 +92,8 @@ public class NewDayListener implements Listener {
                 int stay = plugin.getBaseConfig().getInteger("new-day.title.stay");
                 int fadeout = plugin.getBaseConfig().getInteger("new-day.title.fade-out");
 
-                title = Utils.setPlaceholders(title, date, false);
-                subtitle = Utils.setPlaceholders(subtitle, date, false);
-
-                if (plugin.papiEnabled()) {
-                    title = PlaceholderAPI.setPlaceholders(p, title);
-                    subtitle = PlaceholderAPI.setPlaceholders(p, subtitle);
-                }
+                title = Utils.setPlaceholders(title, date, true);
+                subtitle = Utils.setPlaceholders(subtitle, date, true);
 
                 p.sendTitle(title, subtitle, fadein, stay, fadeout);
             }

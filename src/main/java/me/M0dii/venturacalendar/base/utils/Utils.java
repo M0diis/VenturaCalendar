@@ -7,7 +7,7 @@ import me.m0dii.venturacalendar.base.dateutils.Date;
 import me.m0dii.venturacalendar.base.dateutils.DateUtils;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.m0dii.venturacalendar.base.dateutils.realtime.RealTimeDate;
+import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

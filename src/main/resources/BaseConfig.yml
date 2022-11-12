@@ -82,6 +82,7 @@ messages:
   player-only: 'Calendar cannot be opened in the console.'
   no-permission: '&4You do not have permission to do that!'
   config-reloaded: '&aConfig reloaded.'
+  real-time-set: '&aCannot edit time in real time mode.'
 
 translations:
   # These are translations for the real-time calendar.
