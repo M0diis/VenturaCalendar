@@ -1,7 +1,7 @@
 package me.m0dii.venturacalendar.game.listeners.inventory;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
-import me.m0dii.venturacalendar.base.dateutils.FromTo;
+import me.m0dii.venturacalendar.base.dateutils.EventDays;
 import me.m0dii.venturacalendar.base.events.CalendarClickEvent;
 import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.m0dii.venturacalendar.base.itemutils.Items;
@@ -42,18 +42,18 @@ public class CalendarClickListener implements Listener {
             return;
         }
 
-        HashMap<String, FromTo> redeemableMonths = baseConfig.getRedeemableMonths();
+        HashMap<String, EventDays> redeemableMonths = baseConfig.getRedeemableMonths();
 
         if (cal.getDate() != null && baseConfig.redeemWhitelistEnabled()) {
-            FromTo fromTo = redeemableMonths.get(cal.getDate().getMonthName());
+            EventDays eventDays = redeemableMonths.get(cal.getDate().getMonthName());
 
-            if (fromTo == null) {
+            if (eventDays == null) {
                 return;
             }
 
             long day = cal.getDate().getDay() + 1;
 
-            if (!fromTo.includes((int) day)) {
+            if (!eventDays.includes((int) day)) {
                 return;
             }
         }

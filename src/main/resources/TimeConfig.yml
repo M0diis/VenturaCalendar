@@ -24,10 +24,10 @@ main-time-system:
     first-day-sunday: false
     # If sync is enabled, in-game time will be synced with real-time.
     # This means if it's noon, it will be noon in-game.
-    # This will also set DO_DAYLIGHT_CYCLE gamerule to false in all worlds.
+    # This will also set DO_DAYLIGHT_CYCLE gamerule to false the world specified in "world-name".
     # It regulates the world time ticks (which you can find with '/time query daytime')
     # with equation 'ticks = (24000 - currentHour * 1000 + currentMinutes * 1000 / 60)'.
-    sync: true
+    sync: false
   ticks-per-second: 20
   seconds-per-minute: 5
   minutes-per-hour: 10

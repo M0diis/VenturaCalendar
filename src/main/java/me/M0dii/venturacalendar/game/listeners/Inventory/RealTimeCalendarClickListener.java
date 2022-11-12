@@ -1,8 +1,7 @@
 package me.m0dii.venturacalendar.game.listeners.inventory;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
-import me.m0dii.venturacalendar.base.dateutils.FromTo;
-import me.m0dii.venturacalendar.base.events.CalendarClickEvent;
+import me.m0dii.venturacalendar.base.dateutils.EventDays;
 import me.m0dii.venturacalendar.base.events.RealTimeCalendarClickEvent;
 import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.m0dii.venturacalendar.base.itemutils.Items;
@@ -10,7 +9,6 @@ import me.m0dii.venturacalendar.base.utils.Messenger;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
 import me.m0dii.venturacalendar.game.config.Messages;
-import me.m0dii.venturacalendar.game.gui.Calendar;
 import me.m0dii.venturacalendar.game.gui.InventoryProperties;
 import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
 import me.m0dii.venturacalendar.game.listeners.NewDayListener;
@@ -44,18 +42,18 @@ public class RealTimeCalendarClickListener implements Listener {
             return;
         }
 
-        HashMap<String, FromTo> redeemableMonths = baseConfig.getRedeemableMonths();
+        HashMap<String, EventDays> redeemableMonths = baseConfig.getRedeemableMonths();
 
         if (cal.getDate() != null && baseConfig.redeemWhitelistEnabled()) {
-            FromTo fromTo = redeemableMonths.get(cal.getDate().getLocalDateTime().getMonth().name());
+            EventDays eventDays = redeemableMonths.get(cal.getDate().getLocalDateTime().getMonth().name());
 
-            if (fromTo == null) {
+            if (eventDays == null) {
                 return;
             }
 
             long day = cal.getDate().getDay() + 1;
 
-            if (!fromTo.includes((int) day)) {
+            if (!eventDays.includes((int) day)) {
                 return;
             }
         }

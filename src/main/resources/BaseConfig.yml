@@ -43,10 +43,12 @@ rewards:
   commands:
     - '[CONSOLE] give %player% diamond 1'
   #  - '[PLAYER] this will be executed by player'
+  #
   # This will play a sound to the player.
   # The first argument is the sound, the second is the volume and the third is the pitch.
   # You can find a list of sounds here: https://www.digminecraft.com/lists/sound_list_pc.php
   #  - '[SOUND] ENTITY.PLAYER.LEVELUP, 1.0, 1.0'
+  #
   # This will show a title to the player.
   # The first argument is the title, the second is the subtitle.
   # The last three are: fade-in, stay and fade-out times.
@@ -83,7 +85,19 @@ messages:
   no-permission: '&4You do not have permission to do that!'
   config-reloaded: '&aConfig reloaded.'
   real-time-set: '&aCannot edit time in real time mode.'
-
+  help: |
+    &a&lVenturaCalendar Help
+    &2/calendar &8- &aOpens the calendar.
+    &r
+    &2/vc reload &8- &areloads the configuration files.
+    &2/vc set date <YYYY/MM/DD> &8- &atries to set the current world time by the specified date.
+    &2/vc set worldticks/fulltime <ticks> &8- &atries to set the current world time by the specified date.
+    &2/vc set startyear/startingyear <year> &8- &asets the starting year.
+    &2/vc set offset sec/min/hour/day/week/month/year <value> &8- &asets the real-time offset.
+    &2/vc fastforward/ff/rewind/rew <time> &8- &afast-forwards or rewinds time in a gradual way, instead of setting instantly.
+    &2/vc add/subtract sec/min/hour/day/week <time> &8- &aadds or subtracts the time by the specified criteria.
+    &r
+    &71 second in Minecraft is 20 ticks. 1 day is 24000 ticks.
 translations:
   # These are translations for the real-time calendar.
   real-time:

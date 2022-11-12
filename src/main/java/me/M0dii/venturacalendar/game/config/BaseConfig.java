@@ -3,7 +3,7 @@ package me.m0dii.venturacalendar.game.config;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.configutils.Config;
 import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
-import me.m0dii.venturacalendar.base.dateutils.FromTo;
+import me.m0dii.venturacalendar.base.dateutils.EventDays;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class BaseConfig extends Config implements ConfigUtils {
     FileConfiguration cfg;
 
-    final HashMap<String, FromTo> redeemableMonths = new HashMap<>();
+    final HashMap<String, EventDays> redeemableMonths = new HashMap<>();
     final HashMap<Messages, String> messages = new HashMap<>();
 
     public boolean debug() {
@@ -80,14 +80,19 @@ public class BaseConfig extends Config implements ConfigUtils {
         return cfg.getBoolean("rewards.redeemable-months.enabled");
     }
 
-    public HashMap<String, FromTo> getRedeemableMonths() {
+    public HashMap<String, EventDays> getRedeemableMonths() {
         ConfigurationSection sec = cfg.getConfigurationSection("rewards.redeemable-months");
 
         if (sec != null) {
             sec.getValues(false).forEach((k, v) -> {
+                if (!k.equalsIgnoreCase("enabled")) {
+                    String[] fromToString = String.valueOf(v).split("-");
 
-                if (!k.equalsIgnoreCase("enabled"))
-                    redeemableMonths.put(k, new FromTo(String.valueOf(v)));
+                    int from = Integer.parseInt(fromToString[0]);
+                    int to = Integer.parseInt(fromToString[1]);
+
+                    redeemableMonths.put(k, new EventDays(from, to));
+                }
             });
         }
 
@@ -113,6 +118,8 @@ public class BaseConfig extends Config implements ConfigUtils {
                 getString(path + "redeemed"));
         messages.put(Messages.REAL_TIME_SET, VenturaCalendar.PREFIX +
                 getString(path + "real-time-set"));
+        messages.put(Messages.HELP, VenturaCalendar.PREFIX +
+                getString(path + "help"));
 
         messages.put(Messages.TITLE_TEXT, getString("new-day.title.text"));
         messages.put(Messages.SUBTITLE_TEXT, getString("new-day.title.subtitle"));

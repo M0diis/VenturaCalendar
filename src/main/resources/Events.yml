@@ -24,12 +24,13 @@ events:
     # months:
     # - 'January'
     # - 'February'
-    # Event will be displayed on these specific days, on January
+    # Event will be displayed on these specific days, on the specified months
     day-names:
       - 'Friday'
       - 'Saturday'
       - 'Sunday'
     description:
       - "&6Weekend is here!"
+    # Since 'current' not defined, it will override current day display
     display-material: LIGHT_BLUE_STAINED_GLASS_PANE
     commands: []

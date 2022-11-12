@@ -3,7 +3,7 @@ package me.m0dii.venturacalendar.game.config;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.configutils.Config;
 import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
-import me.m0dii.venturacalendar.base.dateutils.FromTo;
+import me.m0dii.venturacalendar.base.dateutils.EventDays;
 import me.m0dii.venturacalendar.base.dateutils.Month;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.utils.Utils;
@@ -62,7 +62,7 @@ public class EventConfig extends Config implements ConfigUtils {
                     }
                 }
                 else {
-                    String monthName = eventSection.getString("month");
+                    String monthName = eventSection.getString("month", "");
 
                     if (monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all")) {
                         for (Month month : plugin.getTimeConfig().getTimeSystem().getMonths()) {
@@ -78,15 +78,19 @@ public class EventConfig extends Config implements ConfigUtils {
     }
 
     private void createEvent(String eventName, ConfigurationSection eventSection, String month) {
-        FromTo fromTo = null;
+        EventDays eventDays = null;
 
         String eventDisplayName = Utils.format(eventSection.getString("name"));
 
         if (eventSection.contains("days")) {
-            fromTo = new FromTo(eventSection.getInt("days.start"), eventSection.getInt("days.end"));
+            if(eventSection.get("days") instanceof List eventDaysList) {
+                eventDays = new EventDays(eventDaysList);
+            } else {
+                eventDays = new EventDays(eventSection.getInt("days.start"), eventSection.getInt("days.end"));
+            }
         }
         else if (eventSection.contains("day")) {
-            fromTo = new FromTo(eventSection.getInt("day"), eventSection.getInt("day"));
+            eventDays = new EventDays(eventSection.getInt("day"), eventSection.getInt("day"));
         }
 
         List<String> description = eventSection.getStringList("description").stream()
@@ -98,8 +102,8 @@ public class EventConfig extends Config implements ConfigUtils {
         Material matCurr = null, matPassed = null, matFuture = null;
 
         if (eventSection.contains(disp + "current")
-                && eventSection.contains(disp + "passed")
-                && eventSection.contains(disp + "future")) {
+         && eventSection.contains(disp + "passed")
+         && eventSection.contains(disp + "future")) {
             matCurr = Utils.getMaterial(eventSection.getString("display-material.current", "GLASS_PANE"));
             matPassed = Utils.getMaterial(eventSection.getString("display-material.passed", "GLASS_PANE"));
             matFuture = Utils.getMaterial(eventSection.getString("display-material.future", "GLASS_PANE"));
@@ -107,13 +111,13 @@ public class EventConfig extends Config implements ConfigUtils {
         }
         else {
             matCurr = Utils.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
-            matPassed = Utils.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
-            matFuture = Utils.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
+            matPassed = matCurr;
+            matFuture = matCurr;
         }
 
         List<String> commands = eventSection.getStringList("commands");
 
-        MonthEvent event = new MonthEvent(eventDisplayName, month, eventName, fromTo, description, commands);
+        MonthEvent event = new MonthEvent(eventDisplayName, month, eventName, eventDays, description, commands);
 
         event.putDisplay(MonthEvent.DisplayType.CURRENT, matCurr);
         event.putDisplay(MonthEvent.DisplayType.PASSED, matPassed);

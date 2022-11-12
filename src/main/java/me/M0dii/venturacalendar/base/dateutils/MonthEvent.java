@@ -16,14 +16,14 @@ public class MonthEvent {
     private final String monthName;
 
     private final List<String> description;
-    private final FromTo eventDays;
+    private final EventDays eventDays;
 
     private final List<String> dayNames;
 
     private final Map<DisplayType, Material> display;
     private final List<String> commands;
 
-    public MonthEvent(String eventDisplayName, String monthName, String eventName, FromTo eventDays, List<String> description,
+    public MonthEvent(String eventDisplayName, String monthName, String eventName, EventDays eventDays, List<String> description,
                       List<String> commands) {
         this.eventDisplayName = eventDisplayName;
         this.eventName = eventName;
