@@ -41,13 +41,12 @@ public class VenturaCalendarCommand {
         }
 
         if (args.length > 1 && sender instanceof Player p) {
-
-            if (!sender.hasPermission("venturacalendar.command.fastforward")) {
-                Messenger.send(sender, Messages.NO_PERMISSION);
-                return;
-            }
-
             if (alias(args[0], "fastforward, ff, rewind, rew") && alias(args[1], "cancel, stop")) {
+                if (!sender.hasPermission("venturacalendar.command.fastforward")) {
+                    Messenger.send(sender, Messages.NO_PERMISSION);
+                    return;
+                }
+
                 for (BukkitRunnable task : tasks) {
                     task.cancel();
                 }
@@ -56,6 +55,19 @@ public class VenturaCalendarCommand {
             }
 
             if (alias(args[0], "fastforward, ff, rewind, rew")) {
+                if (!sender.hasPermission("venturacalendar.command.fastforward")) {
+                    Messenger.send(sender, Messages.NO_PERMISSION);
+                    return;
+                }
+
+                TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
+
+                if(timeSystem.isRealTime()) {
+                    Messenger.send(sender, Messages.REAL_TIME_SET);
+
+                    return;
+                }
+
                 long ticksToAdd = 0;
 
                 for (int i = 1; i < args.length; i++) {
@@ -105,7 +117,6 @@ public class VenturaCalendarCommand {
         }
 
         if (args.length >= 3 && sender instanceof Player p) {
-
             if (!sender.hasPermission("venturacalendar.command.changetime")) {
                 Messenger.send(sender, Messages.NO_PERMISSION);
 
@@ -114,6 +125,14 @@ public class VenturaCalendarCommand {
 
             if (alias(args[0], "set")) {
                 if (alias(args[1], "startyear, startingyear") && args.length == 3) {
+                    TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
+
+                    if(timeSystem.isRealTime()) {
+                        Messenger.send(sender, Messages.REAL_TIME_SET);
+
+                        return;
+                    }
+
                     try {
                         int startYear = Integer.parseInt(args[2]);
 
@@ -130,7 +149,58 @@ public class VenturaCalendarCommand {
                     }
                 }
 
+                if(alias(args[1], "offset") && args.length == 4) {
+                    try {
+                        int value = Integer.parseInt(args[3]);
+
+                        String path = "main-time-system.real-time.offsets";
+
+                        if (alias(args[2], "sec, second, seconds")) {
+                            plugin.getTimeConfig().set(path + ".second", value);
+                        }
+                        else if (alias(args[2], "min, minute, minutes")) {
+                            plugin.getTimeConfig().set(path + ".minute", value);
+                        }
+                        else if (alias(args[2], "h, hour, hours")) {
+                            plugin.getTimeConfig().set(path + ".hour", value);
+                        }
+                        else if (alias(args[2], "d, day, days")) {
+                            plugin.getTimeConfig().set(path + ".day", value);
+                        }
+                        else if (alias(args[2], "w, week, weeks")) {
+                            plugin.getTimeConfig().set(path + ".week", value);
+                        }
+                        else if (alias(args[2], "mon, month, months")) {
+                            plugin.getTimeConfig().set(path + ".month", value);
+                        }
+                        else if (alias(args[2], "y, year, years")) {
+                            plugin.getTimeConfig().set(path + ".year", value);
+                        }
+                        else {
+                            Messenger.send(p, "&aInvalid offset type.");
+                            return;
+                        }
+
+                        plugin.getTimeConfig().reloadConfig();
+                        plugin.getBaseConfig().reloadConfig();
+
+                        Messenger.send(p, "&aSuccessfully set &2'" + args[2] + "'&a offset to &2" + value);
+                    }
+                    catch (NumberFormatException ex) {
+                        Messenger.send(p, "&cInvalid number format.");
+                        Messenger.log(Messenger.Level.DEBUG, ex);
+                    }
+                }
+
                 if(alias(args[1], "worldticks, fulltime") && args.length == 3) {
+                    TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
+
+                    if(timeSystem.isRealTime()) {
+                        Messenger.send(sender, Messages.REAL_TIME_SET);
+
+                        return;
+                    }
+
                     try {
                         long worldTicks = Long.parseLong(args[2]);
 
@@ -145,6 +215,14 @@ public class VenturaCalendarCommand {
                 }
 
                 if (alias(args[1], "date") && args.length == 3) {
+                    TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
+
+                    if(timeSystem.isRealTime()) {
+                        Messenger.send(sender, Messages.REAL_TIME_SET);
+
+                        return;
+                    }
+
                     try {
                         String[] values = args[2].split("/");
 
@@ -216,6 +294,14 @@ public class VenturaCalendarCommand {
             }
 
             if (alias(args[0], "add, subtract")) {
+                TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
+
+                if(timeSystem.isRealTime()) {
+                    Messenger.send(sender, Messages.REAL_TIME_SET);
+
+                    return;
+                }
+
                 boolean sub = args[0].equalsIgnoreCase("subtract");
 
                 if (args[1].equalsIgnoreCase("seconds"))

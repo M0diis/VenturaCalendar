@@ -7,5 +7,6 @@ public enum Messages {
     CONFIG_RELOADED,
     REDEEMED,
     TITLE_TEXT,
-    SUBTITLE_TEXT
+    SUBTITLE_TEXT,
+    REAL_TIME_SET
 }

@@ -111,6 +111,8 @@ public class BaseConfig extends Config implements ConfigUtils {
                 getString(path + "config-reloaded"));
         messages.put(Messages.REDEEMED, VenturaCalendar.PREFIX +
                 getString(path + "redeemed"));
+        messages.put(Messages.REAL_TIME_SET, VenturaCalendar.PREFIX +
+                getString(path + "real-time-set"));
 
         messages.put(Messages.TITLE_TEXT, getString("new-day.title.text"));
         messages.put(Messages.SUBTITLE_TEXT, getString("new-day.title.subtitle"));
