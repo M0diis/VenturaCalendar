@@ -24,7 +24,7 @@ A simple calendar plugin for RPG and other servers.
 ### Development
 Building is quite simple.
 
-To build VenturaCalendar, you need JDK 8 or higher and Gradle installed on your system.
+To build VenturaCalendar, you need JDK 16 or higher and Gradle installed on your system.
 
 Clone the repository or download the source code from releases.  
 Run `gradlew shadowjar` to build the jar.  
