@@ -16,10 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RealTimeCalendar implements InventoryHolder {
@@ -32,10 +29,17 @@ public class RealTimeCalendar implements InventoryHolder {
     private final List<MonthEvent> events;
 
     public RealTimeCalendar(RealTimeDate date) {
-        date = new RealTimeDate(date);
-        creationDate = new RealTimeDate(date);
+        this.date = new RealTimeDate(date);
+        this.creationDate = new RealTimeDate(date);
 
-        this.date = date;
+        this.events = VenturaCalendar.getInstance().getEventConfig().getEvents();
+
+        this.inventory = createInventory(date);
+    }
+
+    public RealTimeCalendar(RealTimeDate date, RealTimeDate creationDate) {
+        this.date = new RealTimeDate(date);
+        this.creationDate = new RealTimeDate(creationDate);
 
         this.events = VenturaCalendar.getInstance().getEventConfig().getEvents();
 
@@ -52,7 +56,7 @@ public class RealTimeCalendar implements InventoryHolder {
 
     private Inventory createInventory(RealTimeDate date) {
         date = new RealTimeDate(date);
-        creationDate = new RealTimeDate(date);
+        creationDate = new RealTimeDate(creationDate);
 
         Map<InventoryProperties, Object> calendarProperties = VenturaCalendar.getInstance()
                 .getCalendarConfig().getCalendarProperties(false);
@@ -90,13 +94,17 @@ public class RealTimeCalendar implements InventoryHolder {
 
         LocalDateTime copy = LocalDateTime.of(date.getLocalDateTime().toLocalDate(), date.getLocalDateTime().toLocalTime());
 
-        for (long week = 0; week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9) {
+        for (int week = 0; week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9) {
             date.setWeek(weekOfMonth);
 
             copy = LocalDateTime.of((int)date.getYear(), date.getLocalDateTime().getMonth(), dayOfMonth, date.getLocalDateTime().getHour(), date.getLocalDateTime().getMinute(), date.getLocalDateTime().getSecond());
             date.setLocalDateTime(copy);
 
-            ItemStack weekItem = createItem(weekProps, date, true, null);
+            RealTimeDate forWeek = new RealTimeDate(date);
+
+            forWeek.setWeek(date.getWeek() + 1);
+
+            ItemStack weekItem = createItem(weekProps, forWeek, true, null);
 
             if (weekItem != null && weekSlot < 55) {
                 inventory.setItem(weekSlot, weekItem);
@@ -140,11 +148,40 @@ public class RealTimeCalendar implements InventoryHolder {
 
                 if (isEndOfMonth(date)) {
                     week = (int) (weeksThisMonth + 1);
-                    day = (int) (daysPerWeek + 1);
+                    day = daysPerWeek + 1;
                 }
             }
 
-            daySlot = (int) (daySlot + (8 - (daysPerWeek - 1)));
+            daySlot = daySlot + (8 - (daysPerWeek - 1));
+        }
+
+        ItemCreator nextMonthItem = new ItemCreator(Material.PAPER, 1, Utils.format("&aNext Month"), Collections.emptyList());
+        ItemCreator previousMonthItem = new ItemCreator(Material.PAPER, 1, Utils.format("&aPrevious Month"), Collections.emptyList());
+
+        inventory.setItem(8, nextMonthItem.getItem());
+        inventory.setItem(17, previousMonthItem.getItem());
+
+        boolean lastRowEmpty = false;
+
+        if(inventory.getSize() == 54) {
+            for (int i = 45; i < 54; i++) {
+                if (inventory.getItem(i) == null) {
+                    lastRowEmpty = true;
+                } else {
+                    lastRowEmpty = false;
+                    break;
+                }
+            }
+        }
+
+        if(lastRowEmpty) {
+            Inventory smallerInventory = Bukkit.createInventory(this, 45, title);
+
+            for (int i = 0; i < 45; i++) {
+                smallerInventory.setItem(i, inventory.getItem(i));
+            }
+
+            return smallerInventory;
         }
 
         return inventory;
@@ -170,10 +207,6 @@ public class RealTimeCalendar implements InventoryHolder {
         Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
         int amount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(itemProperties.get(ItemProperties.AMOUNT)), date, true));
 
-        if(week) {
-            amount++;
-        }
-
         List<String> lore = new ArrayList<>();
 
         if (itemProperties.get(ItemProperties.LORE) != null) {
@@ -184,31 +217,33 @@ public class RealTimeCalendar implements InventoryHolder {
 
         String skullOwner = (String) itemProperties.getOrDefault(ItemProperties.META_SKULL_OWNER, null);
 
+        System.out.println("CURRENT EVENTS");
+
+        for(MonthEvent event : events) {
+            System.out.println(event.getName());
+        }
+
+        System.out.println("END CURRENT EVENTS");
+
         if (!week) {
             for (MonthEvent event : events) {
-                if (event.hasFromTo()) {
-                    if (event.includesDate(date)) {
-                        material = event.getDisplay(type);
+                if (event.includesDate(date)) {
+                    material = event.getDisplay(type);
 
-                        lore.add("");
-                        lore.addAll(event.getDescription());
-
-                        continue;
-                    }
-                }
-
-                if (event.hasDayNames()) {
-                    if (event.includesDayName(date)) {
-                        material = event.getDisplay(type);
-
-                        lore.add("");
-                        lore.addAll(event.getDescription());
-                    }
+                    lore.add("");
+                    lore.addAll(event.getDescription());
                 }
             }
         }
 
-        return new ItemCreator(material, amount, name, lore).getItem();
+        if ((boolean) itemProperties.get(ItemProperties.TOGGLE)) {
+            if (skullOwner == null)
+                return new ItemCreator(material, amount, name, lore).getItem();
+            else
+                return new ItemCreator(material, amount, name, lore, skullOwner).getItem();
+        }
+
+        return null;
     }
 
     private boolean isToday(RealTimeDate date, RealTimeDate currentDate) {

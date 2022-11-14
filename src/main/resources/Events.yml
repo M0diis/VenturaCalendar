@@ -4,19 +4,39 @@ events:
     name: '&a| &2New Year''s day'
     month: 'January'
     day: 1
+    # You can also define multiple days:
+    # days:
+    #  - 1
+    #  - 2 # etc..
+    # Or you can define a range:
+    # days:
+    #   start: 1
+    #   end: 3
     # This will appear in the lore of the event day.
     description:
       - "&6Happy new year!"
     # Will override current days display
     display-material:
+      # If event matches the current day - it will use this material.
       current: GREEN_STAINED_GLASS_PANE
+      # If event already happened on the day - it will use this material.
       passed: RED_STAINED_GLASS_PANE
+      # If event day is past the current day - it will use this material.
       future: YELLOW_STAINED_GLASS_PANE
-    # Leave empty if you don't want to execute any commands:
+    # The command that will be trigerred once the day arrives.
+    # Leave empty if you don't want to execute any commands.
     # commands: []
     commands:
       - '[PLAYER] this will be executed by player'
       - '[CONSOLE] this will be executed by console'
+  year-specified-event:
+    name: '&a| &22023!'
+    month: 'January'
+    day: 1
+    description:
+      - "&6This only happens on year 2023 January 1st!"
+    display-material: LIGHT_BLUE_STAINED_GLASS_PANE
+    commands: []
   my-event:
     name: '&a| &2Weekend'
     month: 'Any'
