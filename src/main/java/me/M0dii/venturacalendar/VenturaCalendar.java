@@ -8,8 +8,6 @@ import me.m0dii.venturacalendar.base.utils.*;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
 import me.m0dii.venturacalendar.game.config.CalendarConfig;
 import me.m0dii.venturacalendar.game.config.EventConfig;
-import me.m0dii.venturacalendar.game.gui.Storage;
-import me.m0dii.venturacalendar.game.gui.StorageUtils;
 import me.m0dii.venturacalendar.game.listeners.EventDayListener;
 import me.m0dii.venturacalendar.game.listeners.NewDayListener;
 import me.m0dii.venturacalendar.game.listeners.commands.CmdExecutor;
@@ -44,14 +42,10 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
         return "https://www.spigotmc.org/resources/99128/";
     }
 
-    public static HashMap<Player, Storage> storages = new HashMap<>();
-
     public static String PREFIX;
 
     private DateUtils dateUtils;
     private TimeSystemUtils timeSystemUtils;
-
-    private StorageUtils storageUtils;
 
     private TimeConfig timeConfig;
     private CalendarConfig calendarConfig;
@@ -231,7 +225,6 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
 
         dateUtils = new DateUtils(this);
         timeSystemUtils = new TimeSystemUtils();
-        storageUtils = new StorageUtils();
 
         timeConfig = new TimeConfig(this);
         calendarConfig = new CalendarConfig(this);
@@ -278,14 +271,6 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
         }
 
         return timeSystemUtils;
-    }
-
-    public StorageUtils getStorageUtils() {
-        if (storageUtils == null) {
-            storageUtils = new StorageUtils();
-        }
-
-        return storageUtils;
     }
 
     public TimeConfig getTimeConfig() {

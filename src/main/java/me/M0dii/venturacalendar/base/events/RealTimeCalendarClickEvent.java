@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,10 +17,12 @@ public class RealTimeCalendarClickEvent extends Event implements Cancellable {
     private final Inventory inv;
     private final RealTimeCalendar calendar;
     private final ItemStack item;
+    private final InventoryClickEvent inventoryClickEvent;
     private final Player player;
 
-    public RealTimeCalendarClickEvent(RealTimeCalendar cal, Inventory inv, Player p, ItemStack item) {
+    public RealTimeCalendarClickEvent(RealTimeCalendar cal, InventoryClickEvent event, Inventory inv, Player p, ItemStack item) {
         this.calendar = cal;
+        this.inventoryClickEvent = event;
         this.player = p;
         this.inv = inv;
         this.item = item;
@@ -58,5 +61,9 @@ public class RealTimeCalendarClickEvent extends Event implements Cancellable {
 
     public Inventory getInventory() {
         return inv;
+    }
+
+    public InventoryClickEvent getInventoryClickEvent() {
+        return inventoryClickEvent;
     }
 }

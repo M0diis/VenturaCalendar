@@ -62,16 +62,7 @@ public class EventConfig extends Config implements ConfigUtils {
                     }
                 }
                 else {
-                    String monthName = eventSection.getString("month", "");
-
-                    if (monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all")) {
-                        for (Month month : plugin.getTimeConfig().getTimeSystem().getMonths()) {
-                            createEvent(k, eventSection, month.getName());
-                        }
-                    }
-                    else {
-                        createEvent(k, eventSection, monthName);
-                    }
+                    createEvent(k, eventSection, eventSection.getString("month", ""));
                 }
             });
         }
@@ -117,7 +108,9 @@ public class EventConfig extends Config implements ConfigUtils {
 
         List<String> commands = eventSection.getStringList("commands");
 
-        MonthEvent event = new MonthEvent(eventDisplayName, month, eventName, eventDays, description, commands);
+        int year = eventSection.getInt("year", -1);
+
+        MonthEvent event = new MonthEvent(eventDisplayName, month, eventName, eventDays, year, description, commands);
 
         event.putDisplay(MonthEvent.DisplayType.CURRENT, matCurr);
         event.putDisplay(MonthEvent.DisplayType.PASSED, matPassed);

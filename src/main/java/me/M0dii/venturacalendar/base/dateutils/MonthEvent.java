@@ -20,6 +20,8 @@ public class MonthEvent {
 
     private final List<String> dayNames;
 
+    private int year = -1;
+
     private final Map<DisplayType, Material> display;
     private final List<String> commands;
 
@@ -36,20 +38,50 @@ public class MonthEvent {
         this.dayNames = new ArrayList<>();
     }
 
+    public MonthEvent(String eventDisplayName, String monthName, String eventName, EventDays eventDays, int year, List<String> description,
+                      List<String> commands) {
+        this.eventDisplayName = eventDisplayName;
+        this.eventName = eventName;
+        this.monthName = monthName;
+        this.eventDays = eventDays;
+        this.year = year;
+        this.description = description;
+        this.commands = commands;
+
+        this.display = new HashMap<>();
+        this.dayNames = new ArrayList<>();
+    }
+
     public void putDisplay(DisplayType type, Material material) {
         this.display.put(type, material);
     }
 
     public boolean includesDate(Date date) {
-        return includesMonth(date.getMonthName()) && includesDay((int) date.getDay() + 1);
+        boolean includesMonth = (monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all"))
+                || this.monthName.equalsIgnoreCase(date.getMonthName());
+
+        boolean includesDay = !hasFromTo() || includesDay((int) date.getDay() + 1);
+
+        boolean includesYear = this.year == -1 || this.year == date.getYear();
+
+        boolean includesDayName = this.dayNames.isEmpty() || this.dayNames.stream()
+                .anyMatch(dayName -> dayName.equalsIgnoreCase(date.getDayName()));
+
+        return includesMonth && includesDay && includesYear && includesDayName;
     }
 
     public boolean includesDate(RealTimeDate date) {
-        return includesMonth(date.getLocalDateTime().getMonth().name()) && includesDay((int) date.getDay());
-    }
+        boolean includesMonth = (monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all"))
+                || this.monthName.equalsIgnoreCase(date.getLocalDateTime().getMonth().name());
 
-    public boolean includesMonth(String monthName) {
-        return this.monthName.equalsIgnoreCase(monthName);
+        boolean includesDay = !hasFromTo() || includesDay(date.getLocalDateTime().getDayOfMonth());
+
+        boolean includesYear = this.year == -1 || this.year == date.getLocalDateTime().getYear();
+
+        boolean includesDayName = this.dayNames.isEmpty() || this.dayNames.stream()
+                .anyMatch(dayName -> dayName.equalsIgnoreCase(date.getLocalDateTime().getDayOfWeek().name()));
+
+        return includesMonth && includesDay && includesYear && includesDayName;
     }
 
     public boolean includesDay(int day) {
@@ -92,25 +124,7 @@ public class MonthEvent {
         this.dayNames.add(dayName);
     }
 
-    public List<String> getDayNames() {
-        return dayNames;
-    }
-
-    public boolean hasDayNames() {
-        return !dayNames.isEmpty();
-    }
-
     public boolean hasFromTo() {
         return this.eventDays != null;
-    }
-
-    public boolean includesDayName(Date date) {
-        return dayNames.stream().anyMatch(name -> name.equalsIgnoreCase(date.getDayName()))
-                && date.getMonthName().equalsIgnoreCase(monthName);
-    }
-
-    public boolean includesDayName(RealTimeDate date) {
-        return dayNames.stream().anyMatch(name -> name.equalsIgnoreCase(date.getLocalDateTime().getDayOfWeek().name()))
-                && (!Objects.equals(monthName, "any") && date.getLocalDateTime().getMonth().name().equalsIgnoreCase(monthName));
     }
 }

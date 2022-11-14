@@ -104,18 +104,9 @@ public class Utils {
         String eventName = "", eventDesc = "";
 
         for (MonthEvent event : plugin.getEventConfig().getEvents()) {
-            if (event.hasFromTo()) {
-                if (event.includesDate(date)) {
-                    eventName = event.getDisplayName();
-                    eventDesc = String.join("\n", event.getDescription());
-                }
-            }
-
-            if (event.hasDayNames()) {
-                if (event.includesDayName(date)) {
-                    eventName = event.getDisplayName();
-                    eventDesc = String.join("\n", event.getDescription());
-                }
+            if (event.includesDate(date)) {
+                eventName = event.getDisplayName();
+                eventDesc = String.join("\n", event.getDescription());
             }
         }
 
@@ -186,20 +177,10 @@ public class Utils {
         String eventName = "", eventDesc = "";
 
         for (MonthEvent event : plugin.getEventConfig().getEvents()) {
-            if (event.hasFromTo()) {
-                if (event.includesDate(date)) {
-                    eventName = event.getDisplayName();
-                    eventDesc = String.join("\n", event.getDescription());
-                }
+            if (event.includesDate(date)) {
+                eventName = event.getDisplayName();
+                eventDesc = String.join("\n", event.getDescription());
             }
-
-            if (event.hasDayNames()) {
-                if (event.includesDayName(date)) {
-                    eventName = event.getDisplayName();
-                    eventDesc = String.join("\n", event.getDescription());
-                }
-            }
-
         }
 
         message = message

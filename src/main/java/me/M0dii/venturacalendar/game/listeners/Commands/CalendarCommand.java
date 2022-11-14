@@ -11,7 +11,6 @@ import me.m0dii.venturacalendar.base.utils.Messenger;
 import me.m0dii.venturacalendar.game.config.Messages;
 import me.m0dii.venturacalendar.game.gui.Calendar;
 import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
-import me.m0dii.venturacalendar.game.gui.StorageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -21,8 +20,6 @@ import org.bukkit.entity.Player;
 public class CalendarCommand {
     public CalendarCommand(CommandSender sender, Command command,
                            String label, String[] args, VenturaCalendar plugin) {
-        StorageUtils storageUtils = plugin.getStorageUtils();
-
         if (sender instanceof Player pl) {
 
             TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
@@ -69,7 +66,6 @@ public class CalendarCommand {
                 Date creationDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
                 Calendar calendar = new Calendar(date, creationDate, plugin);
-                storageUtils.storeCalendar(pl, calendar);
 
                 pl.openInventory(calendar.getInventory());
 

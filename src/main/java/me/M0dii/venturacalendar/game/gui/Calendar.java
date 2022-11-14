@@ -206,24 +206,11 @@ public class Calendar implements InventoryHolder {
 
         if (!week) {
             for (MonthEvent event : events) {
-                if (event.hasFromTo()) {
-                    if (event.includesDate(date)) {
-                        material = event.getDisplay(type);
+                if (event.includesDate(date)) {
+                    material = event.getDisplay(type);
 
-                        lore.add("");
-                        lore.addAll(event.getDescription());
-
-                        continue;
-                    }
-                }
-
-                if (event.hasDayNames()) {
-                    if (event.includesDayName(date)) {
-                        material = event.getDisplay(type);
-
-                        lore.add("");
-                        lore.addAll(event.getDescription());
-                    }
+                    lore.add("");
+                    lore.addAll(event.getDescription());
                 }
             }
         }

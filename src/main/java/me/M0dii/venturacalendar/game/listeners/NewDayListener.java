@@ -2,10 +2,7 @@ package me.m0dii.venturacalendar.game.listeners;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.VenturaCalendar;
-import me.m0dii.venturacalendar.base.dateutils.Date;
-import me.m0dii.venturacalendar.base.dateutils.DateCalculator;
-import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
-import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
+import me.m0dii.venturacalendar.base.dateutils.*;
 import me.m0dii.venturacalendar.base.events.MonthEventDayEvent;
 import me.m0dii.venturacalendar.base.events.NewDayEvent;
 import me.m0dii.venturacalendar.base.utils.Utils;
@@ -54,19 +51,21 @@ public class NewDayListener implements Listener {
         }
 
         Date date = DateCalculator.fromTicks(w.getFullTime(), ts);
+        RealTimeDate realTimeDate = DateCalculator.realTimeNow();
 
         if (plugin.getBaseConfig().rewardsEnabled()) {
             redeemed.clear();
         }
 
-        for (MonthEvent event : plugin.getEventConfig().getEvents()) {
-            if (event.hasFromTo()) {
-                if (event.includesDate(date)) {
+        if(ts.isRealTime()) {
+            for (MonthEvent event : plugin.getEventConfig().getEvents()) {
+                if (event.includesDate(realTimeDate)) {
                     Bukkit.getPluginManager().callEvent(new MonthEventDayEvent(ts, event));
                 }
             }
-            else if (event.hasDayNames()) {
-                if (event.includesDayName(date)) {
+        } else {
+            for (MonthEvent event : plugin.getEventConfig().getEvents()) {
+                if (event.includesDate(date)) {
                     Bukkit.getPluginManager().callEvent(new MonthEventDayEvent(ts, event));
                 }
             }
@@ -79,7 +78,13 @@ public class NewDayListener implements Listener {
 
             if (plugin.getBaseConfig().getNewDayMessage().isPresent()) {
                 String base = plugin.getBaseConfig().getNewDayMessage().get();
-                String msg = Utils.setPlaceholders(base, date, p);
+                String msg = "";
+
+                if(ts.isRealTime()) {
+                    msg = Utils.setPlaceholders(base, realTimeDate, p);
+                } else {
+                    msg = Utils.setPlaceholders(base, date, p);
+                }
 
                 p.sendMessage(msg);
             }
@@ -92,8 +97,17 @@ public class NewDayListener implements Listener {
                 int stay = plugin.getBaseConfig().getInteger("new-day.title.stay");
                 int fadeout = plugin.getBaseConfig().getInteger("new-day.title.fade-out");
 
-                title = Utils.setPlaceholders(title, date, true);
-                subtitle = Utils.setPlaceholders(subtitle, date, true);
+                if(ts.isRealTime()) {
+                    title = Utils.setPlaceholders(title, realTimeDate, p);
+                } else {
+                    title = Utils.setPlaceholders(title, date, p);
+                }
+
+                if(ts.isRealTime()) {
+                    subtitle = Utils.setPlaceholders(subtitle, realTimeDate, p);
+                } else {
+                    subtitle = Utils.setPlaceholders(subtitle, date, p);
+                }
 
                 p.sendTitle(title, subtitle, fadein, stay, fadeout);
             }

@@ -1,13 +1,11 @@
 package me.m0dii.venturacalendar.game.listeners.inventory;
 
-import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.events.CalendarClickEvent;
 import me.m0dii.venturacalendar.base.events.CalendarCloseEvent;
 import me.m0dii.venturacalendar.base.events.RealTimeCalendarClickEvent;
 import me.m0dii.venturacalendar.base.events.RealTimeCalendarCloseEvent;
 import me.m0dii.venturacalendar.game.gui.Calendar;
 import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
-import me.m0dii.venturacalendar.game.gui.Storage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,12 +23,6 @@ public final class InventoryListener implements Listener {
         Inventory inv = e.getClickedInventory();
         ItemStack item = e.getCurrentItem();
 
-        if (VenturaCalendar.storages.containsKey(player)) {
-            e.setCancelled(true);
-
-            Storage storage = VenturaCalendar.storages.get(player);
-        }
-
         if (inv == null || !(inv.getHolder() instanceof Calendar cal)) {
             return;
         }
@@ -47,19 +39,13 @@ public final class InventoryListener implements Listener {
         Inventory inv = e.getClickedInventory();
         ItemStack item = e.getCurrentItem();
 
-        if (VenturaCalendar.storages.containsKey(player)) {
-            e.setCancelled(true);
-
-            Storage storage = VenturaCalendar.storages.get(player);
-        }
-
         if (inv == null || !(inv.getHolder() instanceof RealTimeCalendar cal)) {
             return;
         }
 
         e.setCancelled(true);
 
-        Bukkit.getPluginManager().callEvent(new RealTimeCalendarClickEvent(cal, inv, player, item));
+        Bukkit.getPluginManager().callEvent(new RealTimeCalendarClickEvent(cal, e, inv, player, item));
     }
 
     @EventHandler
