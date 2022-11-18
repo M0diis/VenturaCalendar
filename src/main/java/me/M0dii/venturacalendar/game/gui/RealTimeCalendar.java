@@ -155,8 +155,35 @@ public class RealTimeCalendar implements InventoryHolder {
             daySlot = daySlot + (8 - (daysPerWeek - 1));
         }
 
-        ItemCreator nextMonthItem = new ItemCreator(Material.PAPER, 1, Utils.format("&aNext Month"), Collections.emptyList());
-        ItemCreator previousMonthItem = new ItemCreator(Material.PAPER, 1, Utils.format("&aPrevious Month"), Collections.emptyList());
+        Map<ItemProperties, Object> nextMonthProps = itemProperties.get(Items.NEXT_MONTH);
+        String nextMonthName = Utils.setPlaceholders((String) nextMonthProps.get(ItemProperties.NAME), creationDate, true);
+        Material nextMonthMaterial = (Material) nextMonthProps.get(ItemProperties.MATERIAL);
+        int nextMonthAmount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(nextMonthProps.get(ItemProperties.AMOUNT)), creationDate, true));
+
+        List<String> nextMonthLore = new ArrayList<>();
+
+        if (itemProperties.get(ItemProperties.LORE) != null) {
+            nextMonthLore = new ArrayList<>((List<String>) nextMonthProps.get(ItemProperties.LORE))
+                    .stream().map(str -> Utils.setPlaceholders(str, creationDate, true))
+                    .collect(Collectors.toList());
+        }
+        
+        ItemCreator nextMonthItem = new ItemCreator(nextMonthMaterial, nextMonthAmount, nextMonthName, nextMonthLore);
+        
+        Map<ItemProperties, Object> prevMonthProps = itemProperties.get(Items.PREVIOUS_MONTH);
+        String prevMonthName = Utils.setPlaceholders((String) prevMonthProps.get(ItemProperties.NAME), creationDate, true);
+        Material prevMonthMaterial = (Material) prevMonthProps.get(ItemProperties.MATERIAL);
+        int prevMonthAmount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(prevMonthProps.get(ItemProperties.AMOUNT)), creationDate, true));
+
+        List<String> prevMonthLore = new ArrayList<>();
+
+        if (itemProperties.get(ItemProperties.LORE) != null) {
+            prevMonthLore = new ArrayList<>((List<String>) prevMonthProps.get(ItemProperties.LORE))
+                    .stream().map(str -> Utils.setPlaceholders(str, creationDate, true))
+                    .collect(Collectors.toList());
+        }
+        
+        ItemCreator previousMonthItem = new ItemCreator(prevMonthMaterial, prevMonthAmount, prevMonthName, prevMonthLore);
 
         inventory.setItem(8, nextMonthItem.getItem());
         inventory.setItem(17, previousMonthItem.getItem());
@@ -216,14 +243,6 @@ public class RealTimeCalendar implements InventoryHolder {
         }
 
         String skullOwner = (String) itemProperties.getOrDefault(ItemProperties.META_SKULL_OWNER, null);
-
-        System.out.println("CURRENT EVENTS");
-
-        for(MonthEvent event : events) {
-            System.out.println(event.getName());
-        }
-
-        System.out.println("END CURRENT EVENTS");
 
         if (!week) {
             for (MonthEvent event : events) {

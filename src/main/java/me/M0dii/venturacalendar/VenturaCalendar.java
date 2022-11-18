@@ -83,26 +83,26 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
             return;
         }
 
-        if(getTimeConfig().getBoolean("main-tyme-system.real-time.sync")) {
-            World w = Bukkit.getWorld(timeSystem.getWorldName());
+        World w = Bukkit.getWorld(timeSystem.getWorldName());
 
-            if(w != null) {
-                w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-            }
+        if(w == null) {
+            return;
+        }
+
+        if(getTimeConfig().getBoolean("main-time-system.real-time.sync")) {
+            w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         } else {
-            World w = Bukkit.getWorld(timeSystem.getWorldName());
-
-            if(w != null) {
-                w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-            }
+            w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
         }
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
-            for(World world : Bukkit.getWorlds()) {
-                RealTimeDate now = DateCalculator.realTimeNow();
-
-                world.setTime(24000 - (now.getHour() * 1000 + now.getMinute() * 1000 / 60));
+            if(!getTimeConfig().getBoolean("main-time-system.real-time.sync")) {
+                return;
             }
+
+            RealTimeDate now = DateCalculator.realTimeNow();
+
+            w.setTime(24000 - (now.getHour() * 1000 + now.getMinute() * 1000 / 60));
         }, 0L, 20L);
     }
 

@@ -69,3 +69,15 @@ items:
     name: '&3Week %week%'
     material: BLACK_STAINED_GLASS_PANE
     amount: '%week%'
+
+  next-month:
+    toggle: true
+    name: '&aNext Month'
+    material: PAPER
+    amount: '1'
+
+  previous-month:
+    toggle: true
+    name: '&aPrevious Month'
+    material: PAPER
+    amount: '1'

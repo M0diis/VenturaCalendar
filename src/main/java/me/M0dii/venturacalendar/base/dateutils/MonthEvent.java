@@ -10,6 +10,7 @@ public class MonthEvent {
         CURRENT,
         FUTURE
     }
+    private int priority = -1;
 
     private final String eventName;
     private final String eventDisplayName;
@@ -126,5 +127,13 @@ public class MonthEvent {
 
     public boolean hasFromTo() {
         return this.eventDays != null;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

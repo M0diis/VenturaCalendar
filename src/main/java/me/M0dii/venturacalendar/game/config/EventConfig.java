@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +36,17 @@ public class EventConfig extends Config implements ConfigUtils {
     }
 
     public List<MonthEvent> getEvents() {
-        return this.events;
+        return this.events
+                .stream()
+                .sorted(Comparator.comparingInt(MonthEvent::getPriority))
+                .collect(Collectors.toList());
     }
 
     public MonthEvent getEvent(String name) {
-        return this.events.stream().filter(event -> event.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+        return this.events.stream()
+                .filter(event -> event.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public void loadEvents() {
@@ -125,6 +132,8 @@ public class EventConfig extends Config implements ConfigUtils {
                 event.addDayName(dayName);
             }
         }
+
+        event.setPriority(eventSection.getInt("priority", -1));
 
         this.events.add(event);
     }

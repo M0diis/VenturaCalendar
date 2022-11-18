@@ -3,6 +3,11 @@ events:
     # This will appear in the name of the display item.
     name: '&a| &2New Year''s day'
     month: 'January'
+    # If two events are on the same day, the one with the highest priority will be displayed.
+    # This includes material and name.
+    # The lores are applied from the both events.
+    # Default = -1, if not defined
+    priority: 1
     day: 1
     # You can also define multiple days:
     # days:
@@ -30,11 +35,11 @@ events:
       - '[PLAYER] this will be executed by player'
       - '[CONSOLE] this will be executed by console'
   year-specified-event:
-    name: '&a| &22023!'
-    month: 'January'
+    name: '&a| &22023 February 1st!'
+    month: 'February'
     day: 1
     description:
-      - "&6This only happens on year 2023 January 1st!"
+      - "&6This only happens on year 2023 February 1st!"
     display-material: LIGHT_BLUE_STAINED_GLASS_PANE
     commands: []
   my-event:
