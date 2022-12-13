@@ -5,5 +5,9 @@ public enum Items {
     DAY,
     PASSED,
     FUTURE,
-    WEEK
+    WEEK,
+
+    NEXT_MONTH,
+
+    PREVIOUS_MONTH
 }

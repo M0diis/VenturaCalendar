@@ -46,7 +46,6 @@ public class Placeholders extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, @NotNull String id) {
         TimeSystem ts = plugin.getTimeConfig().getTimeSystem();
 
-
         if (id.startsWith("event_")) {
             String eventName = id.split("_")[1];
 

@@ -1,4 +1,4 @@
-package me.m0dii.venturacalendar.game.listeners.commands;
+package me.m0dii.venturacalendar.game.commands;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Month;

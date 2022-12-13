@@ -56,8 +56,15 @@ public class CalendarConfig extends Config implements ConfigUtils {
         // Passed
         items.put(Items.PASSED, getItemProperties(path + "passed."));
 
-        //Week
+        // Week
         items.put(Items.WEEK, getItemProperties(path + "week."));
+
+        // Next Month Button
+        items.put(Items.NEXT_MONTH, getItemProperties(path + "next-month."));
+
+        // Previous Month Button
+        items.put(Items.PREVIOUS_MONTH, getItemProperties(path + "previous-month."));
+
 
         calendar.put(InventoryProperties.HEADER, title);
         calendar.put(InventoryProperties.SIZE, size);

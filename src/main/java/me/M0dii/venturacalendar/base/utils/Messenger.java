@@ -25,23 +25,15 @@ public class Messenger {
 
     public static void log(Level level, String msg) {
         switch (level) {
-            case INFO:
-                plugin.getLogger().info(msg);
-                break;
-            case WARN:
-                plugin.getLogger().warning(msg);
-                break;
-            case ERROR:
-                plugin.getLogger().severe(msg);
-                break;
-            case DEBUG: {
-                if (plugin.getBaseConfig().debug()) {
-                    Bukkit.getConsoleSender().sendMessage("[DEBUG] " + msg);
+            case INFO -> plugin.getLogger().info(msg);
+            case WARN -> plugin.getLogger().warning(msg);
+            case ERROR -> plugin.getLogger().severe(msg);
+            case DEBUG -> {
+                if (VenturaCalendar.debug) {
+                    Bukkit.getConsoleSender().sendMessage("&3[&bVenturaCalendar Debug&3] &b" + msg);
                 }
             }
-            break;
-            default:
-                break;
+            default -> { }
         }
     }
 

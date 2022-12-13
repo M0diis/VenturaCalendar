@@ -10,6 +10,8 @@ main-time-system:
   world-name: 'world'
   # If you enable real-time calendar, non-real-time options, such as
   # "ticks-per-second", "ticks-per-minute" will be ignored.
+  # If enabled, command '/calendar' will open real-time calendar by default.
+  # You can still open real-time calendar with '/calendar realtime'.
   real-time:
     enabled: false
     offsets:

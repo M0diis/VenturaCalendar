@@ -10,7 +10,7 @@ import me.m0dii.venturacalendar.game.config.CalendarConfig;
 import me.m0dii.venturacalendar.game.config.EventConfig;
 import me.m0dii.venturacalendar.game.listeners.EventDayListener;
 import me.m0dii.venturacalendar.game.listeners.NewDayListener;
-import me.m0dii.venturacalendar.game.listeners.commands.CmdExecutor;
+import me.m0dii.venturacalendar.game.commands.CmdExecutor;
 import me.m0dii.venturacalendar.game.listeners.inventory.*;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;

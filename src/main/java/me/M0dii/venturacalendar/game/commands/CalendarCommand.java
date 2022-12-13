@@ -1,4 +1,4 @@
-package me.m0dii.venturacalendar.game.listeners.commands;
+package me.m0dii.venturacalendar.game.commands;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.Date;
@@ -21,7 +21,6 @@ public class CalendarCommand {
     public CalendarCommand(CommandSender sender, Command command,
                            String label, String[] args, VenturaCalendar plugin) {
         if (sender instanceof Player pl) {
-
             TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
             if (args.length == 0) {
@@ -70,6 +69,59 @@ public class CalendarCommand {
                 pl.openInventory(calendar.getInventory());
 
                 Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
+
+                return;
+            }
+
+            if(args.length == 1 && args[0].equalsIgnoreCase("realtime")) {
+                if (!pl.hasPermission("venturacalendar.calendar.realtime")) {
+                    Messenger.send(pl, Messages.NO_PERMISSION);
+
+                    return;
+                }
+
+                RealTimeDate date = DateCalculator.realTimeNow();
+
+                RealTimeCalendar calendar = new RealTimeCalendar(date);
+
+                pl.openInventory(calendar.getInventory());
+
+                Bukkit.getPluginManager().callEvent(new RealTimeCalendarOpenEvent(calendar, calendar.getInventory(), pl));
+
+                return;
+            }
+
+            if(args.length == 1 && args[0].equalsIgnoreCase("game")) {
+                if (!pl.hasPermission("venturacalendar.calendar.game")) {
+                    Messenger.send(pl, Messages.NO_PERMISSION);
+
+                    return;
+                }
+
+                String worldName = timeSystem.getWorldName();
+                World world = Bukkit.getWorld(worldName);
+
+                if (world == null) {
+                    Messenger.log(Messenger.Level.WARN, "World '" + timeSystem.getWorldName() + "' was not found.");
+                    Messenger.log(Messenger.Level.WARN, "Falling back to world name 'world'.");
+
+                    world = Bukkit.getWorld("world");
+
+                    if (world == null) {
+                        Messenger.log(Messenger.Level.WARN, "Fall-back world named 'world' was not found.");
+
+                        return;
+                    }
+
+                    Date date = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                    Date creationDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+
+                    Calendar calendar = new Calendar(date, creationDate, plugin);
+
+                    pl.openInventory(calendar.getInventory());
+
+                    Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
+                }
 
                 return;
             }

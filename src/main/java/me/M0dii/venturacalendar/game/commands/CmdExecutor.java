@@ -1,4 +1,4 @@
-package me.m0dii.venturacalendar.game.listeners.commands;
+package me.m0dii.venturacalendar.game.commands;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
@@ -14,14 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class CmdExecutor implements CommandExecutor, TabCompleter {
-    final TimeSystem timeSystem;
 
-    final VenturaCalendar plugin;
+    private final VenturaCalendar plugin;
 
     public CmdExecutor(VenturaCalendar plugin) {
         this.plugin = plugin;
-
-        this.timeSystem = plugin.getTimeConfig().getTimeSystem();
     }
 
     @Override
@@ -45,10 +42,17 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
 
         String name = command.getName().toLowerCase();
 
+        if(name.equals("calendar") || name.equalsIgnoreCase("cal")) {
+            if(args.length == 1) {
+                addCompletesMatching(completes, args[0],
+                        "realtime",
+                        "game");
+            }
+        }
+
         if (name.equals("venturacalendar") || name.equals("vc")) {
             if (args.length == 1) {
-                addCompletesMatching(completes,
-                        args[0],
+                addCompletesMatching(completes, args[0],
                         "reload",
                         "set",
                         "add",
@@ -70,20 +74,31 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
 
             if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("set")) {
-                    addCompletesMatching(completes, args[1], "startyear", "date", "worldticks", "offset");
+                    addCompletesMatching(completes, args[1],
+                            "startyear",
+                            "date",
+                            "worldticks",
+                            "offset");
                 }
                 else {
-                    completes.add("seconds");
-                    completes.add("minutes");
-                    completes.add("hours");
-                    completes.add("days");
-                    completes.add("weeks");
+                    addCompletesMatching(completes, args[1],
+                            "seconds",
+                            "minutes",
+                            "hours",
+                            "days",
+                            "weeks");
                 }
             }
 
             if (args.length == 3) {
                 if(args[1].equalsIgnoreCase("offset")) {
-                    addCompletesMatching(completes, args[2], "seconds", "minutes", "hours", "days", "weeks", "years");
+                    addCompletesMatching(completes, args[2],
+                            "seconds",
+                            "minutes",
+                            "hours",
+                            "days",
+                            "weeks",
+                            "years");
                 }
 
                 if (args[2].equalsIgnoreCase("date")) {
