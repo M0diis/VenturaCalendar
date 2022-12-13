@@ -2,9 +2,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ main, no_residence ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, no_residence ]
+    branches: [ main ]
 
 jobs:
   build:
