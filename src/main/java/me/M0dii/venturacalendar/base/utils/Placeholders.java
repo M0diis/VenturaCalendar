@@ -75,19 +75,19 @@ public class Placeholders extends PlaceholderExpansion {
                 return plugin.getBaseConfig().getActionBarMessage().orElse("");
         }
 
-        if (ts.isRealTime())
+        if (ts.isRealTime()) {
             return parseRealTimeDatePlaceholders(DateCalculator.realTimeNow(), id.toLowerCase());
-        else {
-            String worldName = ts.getWorldName();
-
-            World w = Bukkit.getWorld(worldName);
-
-            if (w == null) {
-                return "Error: Time-system world not found.";
-            }
-
-            return parseDatePlaceholders(DateCalculator.fromTicks(w.getFullTime(), ts), id.toLowerCase());
         }
+
+        String worldName = ts.getWorldName();
+
+        World w = Bukkit.getWorld(worldName);
+
+        if (w == null) {
+            return "Error: Time-system world not found.";
+        }
+
+        return parseDatePlaceholders(DateCalculator.fromTicks(w.getFullTime(), ts), id.toLowerCase());
     }
 
     private static final String[] MONTHS = new String[] {

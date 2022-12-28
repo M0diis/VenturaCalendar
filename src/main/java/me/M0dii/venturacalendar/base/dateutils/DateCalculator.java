@@ -86,6 +86,10 @@ public class DateCalculator {
     }
 
     public static RealTimeDate realTimeNow() {
+        return realTimeNow(0);
+    }
+
+    public static RealTimeDate realTimeNow(int monthOffsetVar) {
         LocalDateTime date = LocalDateTime.now();
 
         final String path = "main-time-system.real-time.offsets";
@@ -106,7 +110,35 @@ public class DateCalculator {
                 .plusMonths(monthOffset)
                 .plusYears(yearOffset);
 
+        if(monthOffsetVar != 0) {
+            if(monthOffsetVar > 0) {
+                date = date.plusMonths(monthOffsetVar);
+            } else {
+                date = date.minusMonths(Math.abs(monthOffsetVar));
+            }
+        }
+
         long era = 0;
+
+        List<String> eras = instance.getTimeConfig().getListString("main-time-system.eras");
+
+        for(String e : eras) {
+            String[] split = e.split(", ");
+
+            if(split.length != 3) {
+                instance.getLogger().warning("Invalid era format: " + e);
+                continue;
+            }
+
+            String name = split[0].trim();
+
+            long begin = Long.parseLong(split[1].trim());
+            long end = Long.parseLong(split[2].trim());
+
+            if(date.getYear() >= begin && date.getYear() <= end) {
+                era = eras.indexOf(e);
+            }
+        }
 
         return new RealTimeDate(era, date);
     }

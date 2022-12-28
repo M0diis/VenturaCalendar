@@ -1,6 +1,7 @@
 package me.m0dii.venturacalendar.game.gui;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
+import me.m0dii.venturacalendar.base.dateutils.DateCalculator;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import me.m0dii.venturacalendar.base.itemutils.ItemCreator;
@@ -28,6 +29,8 @@ public class RealTimeCalendar implements InventoryHolder {
 
     private final List<MonthEvent> events;
 
+    private RealTimeDate realTimeCurrentDate;
+
     public RealTimeCalendar(RealTimeDate date) {
         this.date = new RealTimeDate(date);
         this.creationDate = new RealTimeDate(date);
@@ -35,6 +38,8 @@ public class RealTimeCalendar implements InventoryHolder {
         this.events = VenturaCalendar.getInstance().getEventConfig().getEvents();
 
         this.inventory = createInventory(date);
+
+        this.realTimeCurrentDate = DateCalculator.realTimeNow();
     }
 
     public RealTimeCalendar(RealTimeDate date, RealTimeDate creationDate) {
@@ -44,6 +49,21 @@ public class RealTimeCalendar implements InventoryHolder {
         this.events = VenturaCalendar.getInstance().getEventConfig().getEvents();
 
         this.inventory = createInventory(date);
+
+
+        this.realTimeCurrentDate = DateCalculator.realTimeNow();
+    }
+
+    public void setCreationDate(RealTimeDate creationDate) {
+        this.creationDate = new RealTimeDate(creationDate);
+    }
+
+    public RealTimeDate getCreationDate() {
+        return this.creationDate;
+    }
+
+    public void setDate(RealTimeDate date) {
+        this.date.setLocalDateTime(date.getLocalDateTime());
     }
 
     public RealTimeDate getDate() {
@@ -57,6 +77,7 @@ public class RealTimeCalendar implements InventoryHolder {
     private Inventory createInventory(RealTimeDate date) {
         date = new RealTimeDate(date);
         creationDate = new RealTimeDate(creationDate);
+        realTimeCurrentDate = DateCalculator.realTimeNow();
 
         Map<InventoryProperties, Object> calendarProperties = VenturaCalendar.getInstance()
                 .getCalendarConfig().getCalendarProperties(false);
@@ -116,7 +137,7 @@ public class RealTimeCalendar implements InventoryHolder {
                 copy = LocalDateTime.of((int)date.getYear(), date.getLocalDateTime().getMonth(), dayOfMonth, date.getLocalDateTime().getHour(), date.getLocalDateTime().getMinute(), date.getLocalDateTime().getSecond());
                 date.setLocalDateTime(copy);
 
-                if (isToday(date, creationDate)) {
+                if (isToday(date)) {
 
                     ItemStack todayItem = createItem(todayProps, date, false, MonthEvent.DisplayType.CURRENT);
 
@@ -265,10 +286,10 @@ public class RealTimeCalendar implements InventoryHolder {
         return null;
     }
 
-    private boolean isToday(RealTimeDate date, RealTimeDate currentDate) {
-        return date.getYear() == currentDate.getYear()
-            && date.getMonth() == currentDate.getMonth()
-            && date.getDay() == currentDate.getDay();
+    private boolean isToday(RealTimeDate date) {
+        return date.getYear() == realTimeCurrentDate.getYear()
+            && date.getMonth() == realTimeCurrentDate.getMonth()
+            && date.getDay() == realTimeCurrentDate.getDay();
     }
 
     private boolean isFuture(RealTimeDate date, RealTimeDate currentDate) {

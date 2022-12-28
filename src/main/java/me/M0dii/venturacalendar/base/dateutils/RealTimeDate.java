@@ -70,10 +70,6 @@ public class RealTimeDate {
         return this.era;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return this.localDateTime;
-    }
-
     public void setSecond(long second) {
         this.second = second;
     }
@@ -104,6 +100,11 @@ public class RealTimeDate {
 
     public void setEra(long era) {
         this.era = era;
+    }
+
+
+    public LocalDateTime getLocalDateTime() {
+        return this.localDateTime;
     }
 
     public void setLocalDateTime(LocalDateTime localDateTime) {
