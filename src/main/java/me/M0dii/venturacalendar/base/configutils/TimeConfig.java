@@ -13,10 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TimeConfig extends Config implements ConfigUtils {
-    FileConfiguration cfg;
+    private FileConfiguration cfg;
 
     public TimeConfig(VenturaCalendar plugin) {
         super(plugin.getDataFolder(), "TimeConfig.yml", plugin);
@@ -37,8 +36,7 @@ public class TimeConfig extends Config implements ConfigUtils {
     public TimeSystem getTimeSystem() {
         if (timeSystems.containsKey("main-time-system")) {
             return timeSystems.get("main-time-system");
-        }
-        else {
+        } else {
             Messenger.log(Messenger.Level.ERROR, "Timesystem 'main-time-system' was not found in the config.");
         }
 
@@ -125,38 +123,38 @@ public class TimeConfig extends Config implements ConfigUtils {
 
         long eraZero = 1;
 
-        TimeSystem ts = new TimeSystem(
-                worldName, "main-time-system",
-                ticksPerSecond,
-                secondsPerMinute,
-                minutesPerHour,
-                hoursPerDay,
-                daysPerWeek,
-                monthDays,
-                monthsPerYear,
-                erasBegin,
-                erasEnd,
-
-                tickZero,
-                secondZero,
-                minuteZero,
-                hourZero,
-                dayZero,
-                weekZero,
-                monthZero,
-                yearZero,
-                eraZero,
-
-                dayNames,
-                months,
-                eraNames
-        );
+        TimeSystem ts = TimeSystem.builder()
+                .worldName(worldName)
+                .name("main-time-system")
+                .ticksPerSecond(ticksPerSecond)
+                .secondsPerMinute(secondsPerMinute)
+                .minutesPerHour(minutesPerHour)
+                .hoursPerDay(hoursPerDay)
+                .daysPerWeek(daysPerWeek)
+                .daysPerMonth(monthDays)
+                .monthsPerYear(monthsPerYear)
+                .erasBegin(erasBegin)
+                .erasEnd(erasEnd)
+                .tickZero(tickZero)
+                .secondZero(secondZero)
+                .minuteZero(minuteZero)
+                .hourZero(hourZero)
+                .dayZero(dayZero)
+                .weekZero(weekZero)
+                .monthZero(monthZero)
+                .yearZero(yearZero)
+                .eraZero(eraZero)
+                .dayNames(dayNames)
+                .months(months)
+                .eraNames(eraNames)
+                .build();
 
         ts.setRealTime(realTime);
 
         return ts;
     }
 
+    @Override
     public FileConfiguration reloadConfig() {
         cfg = super.reloadConfig();
 
@@ -213,6 +211,6 @@ public class TimeConfig extends Config implements ConfigUtils {
     public List<String> getListString(String path) {
         return cfg.getStringList(path).stream()
                 .map(Utils::format)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

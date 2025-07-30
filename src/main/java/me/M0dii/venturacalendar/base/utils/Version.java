@@ -3,10 +3,18 @@ package me.m0dii.venturacalendar.base.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
+@SuppressWarnings("java:S115")
 public enum Version implements Comparable<Version> {
-    v1_19_R1(18),
-    v1_18_R2(17),
-    v1_18_R1(16),
+    // https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/
+    v1_20_R4(21), // 1.20.6 / 1.20.5
+    v1_20_R3(22), // 1.20.3 / 1.20.4
+    v1_20_R2(22), // 1.20.2
+    v1_20_R1(21), // 1.20 / 1.20.1
+    v1_19_R3(20), // 1.19.4
+    v1_19_R2(19), // 1.19.3
+    v1_19_R1(18), // 1.19.1 / 1.19.2
+    v1_18_R2(17), // 1.18.2
+    v1_18_R1(16), // 1.18 / 1.18.1
     v1_17_R1(15),
     v1_16_R3(14),
     v1_16_R2(13),
@@ -33,8 +41,8 @@ public enum Version implements Comparable<Version> {
         this.value = value;
     }
 
-    public static boolean serverIsNewerThan(Version version) {
-        return getServerVersion(Bukkit.getServer()).isNewerThan(version);
+    public static boolean serverIsOlderThan(Version version) {
+        return !getServerVersion(Bukkit.getServer()).isNewerThan(version);
     }
 
     /**

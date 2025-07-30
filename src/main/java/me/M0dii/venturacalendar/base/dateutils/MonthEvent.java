@@ -1,9 +1,13 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
 
 import java.util.*;
 
+@Getter
+@Setter
 public class MonthEvent {
     public enum DisplayType {
         PASSED,
@@ -26,20 +30,12 @@ public class MonthEvent {
     private final Map<DisplayType, Material> display;
     private final List<String> commands;
 
-    public MonthEvent(String eventDisplayName, String monthName, String eventName, EventDays eventDays, List<String> description,
-                      List<String> commands) {
-        this.eventDisplayName = eventDisplayName;
-        this.eventName = eventName;
-        this.monthName = monthName;
-        this.eventDays = eventDays;
-        this.description = description;
-        this.commands = commands;
-
-        this.display = new HashMap<>();
-        this.dayNames = new ArrayList<>();
-    }
-
-    public MonthEvent(String eventDisplayName, String monthName, String eventName, EventDays eventDays, int year, List<String> description,
+    public MonthEvent(String eventDisplayName,
+                      String monthName,
+                      String eventName,
+                      EventDays eventDays,
+                      int year,
+                      List<String> description,
                       List<String> commands) {
         this.eventDisplayName = eventDisplayName;
         this.eventName = eventName;
@@ -49,7 +45,7 @@ public class MonthEvent {
         this.description = description;
         this.commands = commands;
 
-        this.display = new HashMap<>();
+        this.display = new EnumMap<>(DisplayType.class);
         this.dayNames = new ArrayList<>();
     }
 
@@ -57,16 +53,16 @@ public class MonthEvent {
         this.display.put(type, material);
     }
 
-    public boolean includesDate(Date date) {
+    public boolean includesDate(VenturaCalendarDate venturaCalendarDate) {
         boolean includesMonth = (monthName.equalsIgnoreCase("any") || monthName.equalsIgnoreCase("all"))
-                || this.monthName.equalsIgnoreCase(date.getMonthName());
+                || this.monthName.equalsIgnoreCase(venturaCalendarDate.getMonthName());
 
-        boolean includesDay = !hasFromTo() || includesDay((int) date.getDay() + 1);
+        boolean includesDay = !hasFromTo() || includesDay((int) venturaCalendarDate.getDay() + 1);
 
-        boolean includesYear = this.year == -1 || this.year == date.getYear();
+        boolean includesYear = this.year == -1 || this.year == venturaCalendarDate.getYear();
 
         boolean includesDayName = this.dayNames.isEmpty() || this.dayNames.stream()
-                .anyMatch(dayName -> dayName.equalsIgnoreCase(date.getDayName()));
+                .anyMatch(dayName -> dayName.equalsIgnoreCase(venturaCalendarDate.getDayName()));
 
         return includesMonth && includesDay && includesYear && includesDayName;
     }
@@ -91,14 +87,6 @@ public class MonthEvent {
 
     public Material getDisplay(DisplayType type) {
         return this.display.get(type);
-    }
-
-    public List<String> getCommands() {
-        return commands;
-    }
-
-    public List<String> getDescription() {
-        return description;
     }
 
     public String getMonth() {
@@ -127,13 +115,5 @@ public class MonthEvent {
 
     public boolean hasFromTo() {
         return this.eventDays != null;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 }

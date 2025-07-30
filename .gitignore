@@ -1,5 +1,6 @@
 .gradle
 .idea
 build
+run
 
 copy_over.bat

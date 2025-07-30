@@ -1,8 +1,15 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
 public class TimeSystem {
     private final String worldName;
     private final String name;
@@ -35,118 +42,33 @@ public class TimeSystem {
     private final List<String> dayNames;
     private final List<String> eraNames;
 
-    public TimeSystem(String worldname,
-                      String name,
-                      long ticksPerSecond,
-                      long secondsPerMinute,
-                      long minutesPerHour,
-                      long hoursPerDay,
-                      long daysPerWeek,
-                      List<Long> daysPerMonth,
-                      long monthsPerYear,
-                      List<Long> erasBegin,
-                      List<Long> erasEnd,
-
-                      long tickZero,
-                      long secondZero,
-                      long minuteZero,
-                      long hourZero,
-                      long dayZero,
-                      long weekZero,
-                      long monthZero,
-                      long yearZero,
-                      long eraZero,
-
-                      List<String> dayNames,
-                      List<Month> months,
-                      List<String> eraNames) {
-        this.worldName = worldname;
-        this.name = name;
-
-        this.ticksPerSecond = ticksPerSecond;
-        this.secondsPerMinute = secondsPerMinute;
-        this.minutesPerHour = minutesPerHour;
-        this.hoursPerDay = hoursPerDay;
-        this.daysPerWeek = daysPerWeek;
-        this.daysPerMonth = daysPerMonth;
-        this.monthsPerYear = monthsPerYear;
-        this.erasBegin = erasBegin;
-        this.erasEnd = erasEnd;
-
-        this.tickZero = tickZero;
-        this.secondZero = secondZero;
-        this.minuteZero = minuteZero;
-        this.hourZero = hourZero;
-        this.dayZero = dayZero;
-        this.weekZero = weekZero;
-        this.monthZero = monthZero;
-        this.yearZero = yearZero;
-        this.eraZero = eraZero;
-
-        this.dayNames = dayNames;
-        this.months = months;
-        this.eraNames = eraNames;
-    }
-
-    public TimeSystem(TimeSystem timeSystem) {
-        this.worldName = timeSystem.getWorldName();
-        this.name = timeSystem.getName();
-
-        this.ticksPerSecond = timeSystem.getTicksPerSecond();
-        this.secondsPerMinute = timeSystem.getSecondsPerMinute();
-        this.minutesPerHour = timeSystem.getMinutesPerHour();
-        this.hoursPerDay = timeSystem.getHoursPerDay();
-        this.daysPerWeek = timeSystem.getDaysPerWeek();
-        this.daysPerMonth = timeSystem.getDaysPerMonth();
-        this.monthsPerYear = timeSystem.getMonthsPerYear();
-        this.erasBegin = timeSystem.getErasBegin();
-        this.erasEnd = timeSystem.getErasEnd();
-
-        this.tickZero = timeSystem.getTickZero();
-        this.secondZero = timeSystem.getSecondZero();
-        this.minuteZero = timeSystem.getMinuteZero();
-        this.hourZero = timeSystem.getHourZero();
-        this.dayZero = timeSystem.getDayZero();
-        this.weekZero = timeSystem.getWeekZero();
-        this.monthZero = timeSystem.getMonthZero();
-        this.yearZero = timeSystem.getYearZero();
-        this.eraZero = timeSystem.getEraZero();
-
-        this.dayNames = timeSystem.getDayNames();
-        this.months = timeSystem.getMonths();
-        this.eraNames = timeSystem.getEraNames();
-    }
-
-    public void setRealTime(boolean realTime) {
-        this.realTime = realTime;
-    }
-
-    public boolean isRealTime() {
-        return realTime;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getWorldName() {
-        return this.worldName;
-    }
-
-    public long getTicksPerSecond() {
-        return ticksPerSecond;
-    }
-
-    public long getSecondsPerMinute() {
-        return secondsPerMinute;
-    }
-
-    public long getMinutesPerHour() {
-        return minutesPerHour;
-    }
-
-    public long getHoursPerDay() {
-        return hoursPerDay;
+    public static TimeSystem of(TimeSystem timeSystem) {
+        return TimeSystem.builder()
+                .worldName(timeSystem.getWorldName())
+                .name(timeSystem.getName())
+                .ticksPerSecond(timeSystem.getTicksPerSecond())
+                .secondsPerMinute(timeSystem.getSecondsPerMinute())
+                .minutesPerHour(timeSystem.getMinutesPerHour())
+                .hoursPerDay(timeSystem.getHoursPerDay())
+                .daysPerWeek(timeSystem.getDaysPerWeek())
+                .daysPerMonth(timeSystem.getDaysPerMonth())
+                .monthsPerYear(timeSystem.getMonthsPerYear())
+                .erasBegin(timeSystem.getErasBegin())
+                .erasEnd(timeSystem.getErasEnd())
+                .tickZero(timeSystem.getTickZero())
+                .secondZero(timeSystem.getSecondZero())
+                .minuteZero(timeSystem.getMinuteZero())
+                .hourZero(timeSystem.getHourZero())
+                .dayZero(timeSystem.getDayZero())
+                .weekZero(timeSystem.getWeekZero())
+                .monthZero(timeSystem.getMonthZero())
+                .yearZero(timeSystem.getYearZero())
+                .eraZero(timeSystem.getEraZero())
+                .dayNames(timeSystem.getDayNames())
+                .months(timeSystem.getMonths())
+                .eraNames(timeSystem.getEraNames())
+                .realTime(timeSystem.isRealTime())
+                .build();
     }
 
     public long getDaysPerWeek() {
@@ -156,76 +78,9 @@ public class TimeSystem {
         return daysPerWeek;
     }
 
-    public List<Long> getDaysPerMonth() {
-        return daysPerMonth;
+    public Month getMonth(@NotNull String name) {
+        return months.stream().filter(month -> month.getName().equals(name)).findFirst().orElse(null);
+
     }
 
-    public long getMonthsPerYear() {
-        return monthsPerYear;
-    }
-
-    public List<Long> getErasBegin() {
-        return erasBegin;
-    }
-
-    public List<Long> getErasEnd() {
-        return erasEnd;
-    }
-
-    public long getTickZero() {
-        return tickZero;
-    }
-
-    public long getSecondZero() {
-        return secondZero;
-    }
-
-    public long getMinuteZero() {
-        return minuteZero;
-    }
-
-    public long getHourZero() {
-        return hourZero;
-    }
-
-    public long getDayZero() {
-        return dayZero;
-    }
-
-    public long getWeekZero() {
-        return weekZero;
-    }
-
-    public long getMonthZero() {
-        return monthZero;
-    }
-
-    public long getYearZero() {
-        return yearZero;
-    }
-
-    public long getEraZero() {
-        return eraZero;
-    }
-
-    public List<String> getDayNames() {
-        return dayNames;
-    }
-
-    public List<Month> getMonths() {
-        return months;
-    }
-
-    public Month getMonth(String name) {
-        for (Month month : months) {
-            if (month.getName().equals(name))
-                return month;
-        }
-
-        return null;
-    }
-
-    public List<String> getEraNames() {
-        return eraNames;
-    }
 }

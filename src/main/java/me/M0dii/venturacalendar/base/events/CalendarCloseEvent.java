@@ -1,5 +1,6 @@
 package me.m0dii.venturacalendar.base.events;
 
+import lombok.Getter;
 import me.m0dii.venturacalendar.game.gui.Calendar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -8,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class CalendarCloseEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
@@ -20,10 +22,6 @@ public class CalendarCloseEvent extends Event implements Cancellable {
         this.calendar = cal;
         this.inv = inv;
         this.player = p;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLERS_LIST;
     }
 
     @Override
@@ -41,12 +39,8 @@ public class CalendarCloseEvent extends Event implements Cancellable {
         return HANDLERS_LIST;
     }
 
-    public Calendar getCalendar() {
-        return calendar;
-    }
-
-    public Player getPlayer() {
-        return player;
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 
     public Inventory getInventory() {

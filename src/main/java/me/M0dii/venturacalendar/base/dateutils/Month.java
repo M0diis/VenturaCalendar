@@ -1,5 +1,8 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
+import lombok.Getter;
+
+@Getter
 public class Month {
     private final String name;
     private final long days;
@@ -11,15 +14,4 @@ public class Month {
         this.seasonName = season;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public long getDays() {
-        return days;
-    }
-
-    public String getSeasonName() {
-        return seasonName;
-    }
 }

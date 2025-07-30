@@ -21,49 +21,44 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Calendar implements InventoryHolder {
-    final DateUtils dateUtils;
-    final CalendarConfig calConf;
+    private final DateUtils dateUtils;
+    private final CalendarConfig calConf;
 
-    final Date date;
-    final Date creationDate;
+    private final VenturaCalendarDate venturaCalendarDate;
+    private final VenturaCalendarDate creationVenturaCalendarDate;
 
-    final Inventory inventory;
-    final HashMap<Items, Object> items = new HashMap<>();
+    private final Inventory inventory;
+    private final Map<Items, Object> items = new HashMap<>();
 
-    final List<MonthEvent> events;
+    private final List<MonthEvent> events;
 
-    public Calendar(Date date, Date creationDate, VenturaCalendar plugin) {
+    public Calendar(VenturaCalendarDate venturaCalendarDate,
+                    VenturaCalendarDate creationVenturaCalendarDate,
+                    VenturaCalendar plugin) {
         dateUtils = plugin.getDateUtils();
         calConf = plugin.getCalendarConfig();
 
-        date = new Date(date);
-        creationDate = new Date(creationDate);
+        this.venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        this.creationVenturaCalendarDate = new VenturaCalendarDate(creationVenturaCalendarDate);
 
         this.events = plugin.getEventConfig().getEvents();
 
-        this.date = date;
-        this.creationDate = creationDate;
-
-        this.inventory = createInventory(date, creationDate);
+        this.inventory = createInventory(venturaCalendarDate, creationVenturaCalendarDate);
     }
 
-    public Date getDate() {
-        return this.date;
+    public VenturaCalendarDate getDate() {
+        return this.venturaCalendarDate;
     }
 
     public @NotNull Inventory getInventory() {
         return this.inventory;
     }
 
-    public HashMap<Items, Object> getItems() {
-        return this.items;
-    }
+    private Inventory createInventory(VenturaCalendarDate venturaCalendarDate, VenturaCalendarDate creationVenturaCalendarDate) {
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        creationVenturaCalendarDate = new VenturaCalendarDate(creationVenturaCalendarDate);
 
-    private Inventory createInventory(Date date, Date creationDate) {
-        date = new Date(date);
-        creationDate = new Date(creationDate);
-
-        TimeSystem ts = new TimeSystem(date.getTimeSystem());
+        TimeSystem ts = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
         Map<InventoryProperties, Object> calendarProperties = calConf.getCalendarProperties(false);
 
@@ -72,13 +67,13 @@ public class Calendar implements InventoryHolder {
         List<ItemStack> futureDayItems = new ArrayList<>();
         List<ItemStack> weekItems = new ArrayList<>();
 
-        String title = Utils.setPlaceholders((String) calendarProperties.get(InventoryProperties.HEADER), date, true);
+        String title = Utils.setPlaceholders((String) calendarProperties.get(InventoryProperties.HEADER), venturaCalendarDate, true);
 
-        Inventory inventory = Bukkit.createInventory(this, getInventorySize(date, ts), title);
+        Inventory newInventory = Bukkit.createInventory(this, getInventorySize(venturaCalendarDate, ts), title);
 
-        double daysPerMonth = ts.getDaysPerMonth().get((int) date.getMonth());
+        double daysPerMonth = ts.getDaysPerMonth().get((int) venturaCalendarDate.getMonth());
         double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.DAY,
-                (int) date.getDay(), date
+                (int) venturaCalendarDate.getDay(), venturaCalendarDate
         ));
 
         double daysPerWeek = ts.getDaysPerWeek();
@@ -91,9 +86,7 @@ public class Calendar implements InventoryHolder {
         long dayOfMonth = 0;
         long weekOfMonth = 0;
 
-        Map<Items, HashMap<ItemProperties, Object>> itemProperties =
-                (HashMap<Items, HashMap<ItemProperties, Object>>)
-                        calendarProperties.get(InventoryProperties.ITEMS);
+        var itemProperties = (HashMap<Items, HashMap<ItemProperties, Object>>) calendarProperties.get(InventoryProperties.ITEMS);
 
         Map<ItemProperties, Object> todayProps = itemProperties.get(Items.TODAY);
         Map<ItemProperties, Object> passedDayProps = itemProperties.get(Items.PASSED);
@@ -101,54 +94,52 @@ public class Calendar implements InventoryHolder {
         Map<ItemProperties, Object> weekProps = itemProperties.get(Items.WEEK);
 
         for (long week = 1; week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9) {
-            date.setWeek(weekOfMonth);
+            venturaCalendarDate.setWeek(weekOfMonth);
 
             for (long day = 1; day <= daysPerWeek; day++, dayOfMonth++, daySlot++) {
-                date.setDay(dayOfMonth);
+                venturaCalendarDate.setDay(dayOfMonth);
 
-                if (isToday(date, creationDate)) {
-                    ItemStack todayItem = createItem(todayProps, date, false, MonthEvent.DisplayType.CURRENT);
+                if (isToday(venturaCalendarDate, creationVenturaCalendarDate)) {
+                    ItemStack todayItem = createItem(todayProps, venturaCalendarDate, false, MonthEvent.DisplayType.CURRENT);
 
                     if (todayItem != null && daySlot < 55) {
-                        inventory.setItem(daySlot, todayItem);
+                        newInventory.setItem(daySlot, todayItem);
                         items.put(Items.TODAY, todayItem);
                         dayItems.add(todayItem);
                     }
-                }
-                else if (isFuture(date, creationDate)) {
-                    ItemStack dayItem = createItem(futureDayProps, date, false, MonthEvent.DisplayType.FUTURE);
+                } else if (isFuture(venturaCalendarDate, creationVenturaCalendarDate)) {
+                    ItemStack dayItem = createItem(futureDayProps, venturaCalendarDate, false, MonthEvent.DisplayType.FUTURE);
 
                     if (dayItem != null && daySlot < 55) {
-                        inventory.setItem(daySlot, dayItem);
+                        newInventory.setItem(daySlot, dayItem);
+                        dayItems.add(dayItem);
+                    }
+                } else {
+                    ItemStack dayItem = createItem(passedDayProps, venturaCalendarDate, false, MonthEvent.DisplayType.PASSED);
+
+                    if (dayItem != null && daySlot < 55) {
+                        newInventory.setItem(daySlot, dayItem);
                         dayItems.add(dayItem);
                     }
                 }
-                else {
-                    ItemStack dayItem = createItem(passedDayProps, date, false, MonthEvent.DisplayType.PASSED);
 
-                    if (dayItem != null && daySlot < 55) {
-                        inventory.setItem(daySlot, dayItem);
-                        dayItems.add(dayItem);
-                    }
-                }
-
-                if (isEndOfWeek(date, daySlot)) {
+                if (isEndOfWeek(venturaCalendarDate, daySlot)) {
                     daySlot++;
                     dayOfMonth++;
 
                     break;
                 }
 
-                if (isEndOfMonth(date)) {
+                if (isEndOfMonth(venturaCalendarDate)) {
                     week = (int) (weeksThisMonth + 1);
                     day = (int) (daysPerWeek + 1);
                 }
             }
 
-            ItemStack weekItem = createItem(weekProps, date, true, null);
+            ItemStack weekItem = createItem(weekProps, venturaCalendarDate, true, null);
 
             if (weekItem != null && weekSlot < 55) {
-                inventory.setItem(weekSlot, weekItem);
+                newInventory.setItem(weekSlot, weekItem);
                 weekItems.add(weekItem);
             }
 
@@ -160,11 +151,11 @@ public class Calendar implements InventoryHolder {
         items.put(Items.FUTURE, futureDayItems);
         items.put(Items.WEEK, weekItems);
 
-        return inventory;
+        return newInventory;
     }
 
-    private boolean isEndOfWeek(Date date, int daySlot) {
-        TimeSystem timeSystem = date.getTimeSystem();
+    private boolean isEndOfWeek(VenturaCalendarDate venturaCalendarDate, int daySlot) {
+        TimeSystem timeSystem = venturaCalendarDate.getTimeSystem();
 
         long daysPerWeek = timeSystem.getDaysPerWeek();
 
@@ -174,31 +165,31 @@ public class Calendar implements InventoryHolder {
         if (daysPerWeek <= 0)
             daysPerWeek = 1;
 
-        if (date.getWeek() == 0)
+        if (venturaCalendarDate.getWeek() == 0)
             return daySlot == (daysPerWeek - 1);
 
         return false;
     }
 
-    private boolean isEndOfMonth(Date date) {
-        TimeSystem timeSystem = date.getTimeSystem();
+    private boolean isEndOfMonth(VenturaCalendarDate venturaCalendarDate) {
+        TimeSystem timeSystem = venturaCalendarDate.getTimeSystem();
 
-        long daysPerMonth = timeSystem.getDaysPerMonth().get((int) date.getMonth());
+        long daysPerMonth = timeSystem.getDaysPerMonth().get((int) venturaCalendarDate.getMonth());
 
-        return date.getDay() == daysPerMonth - 1;
+        return venturaCalendarDate.getDay() == daysPerMonth - 1;
     }
 
-    public ItemStack createItem(Map<ItemProperties, Object> itemProperties, Date date, boolean week,
+    public ItemStack createItem(Map<ItemProperties, Object> itemProperties, VenturaCalendarDate venturaCalendarDate, boolean week,
                                 MonthEvent.DisplayType type) {
-        String name = Utils.setPlaceholders((String) itemProperties.get(ItemProperties.NAME), date, true);
+        String name = Utils.setPlaceholders((String) itemProperties.get(ItemProperties.NAME), venturaCalendarDate, true);
         Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
-        int amount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(itemProperties.get(ItemProperties.AMOUNT)), date, true));
+        int amount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(itemProperties.get(ItemProperties.AMOUNT)), venturaCalendarDate, true));
 
         List<String> lore = new ArrayList<>();
 
         if (itemProperties.get(ItemProperties.LORE) != null) {
             lore = new ArrayList<>((List<String>) itemProperties.get(ItemProperties.LORE))
-                    .stream().map(str -> Utils.setPlaceholders(str, date, true))
+                    .stream().map(str -> Utils.setPlaceholders(str, venturaCalendarDate, true))
                     .collect(Collectors.toList());
         }
 
@@ -206,7 +197,7 @@ public class Calendar implements InventoryHolder {
 
         if (!week) {
             for (MonthEvent event : events) {
-                if (event.includesDate(date)) {
+                if (event.includesDate(venturaCalendarDate)) {
                     material = event.getDisplay(type);
 
                     lore.add("");
@@ -225,26 +216,26 @@ public class Calendar implements InventoryHolder {
         return null;
     }
 
-    private boolean isToday(Date date, Date currentDate) {
-        return date.getYear() == currentDate.getYear()
-                && date.getMonth() == currentDate.getMonth()
-                && date.getDay() == currentDate.getDay();
+    private boolean isToday(VenturaCalendarDate venturaCalendarDate, VenturaCalendarDate currentVenturaCalendarDate) {
+        return venturaCalendarDate.getYear() == currentVenturaCalendarDate.getYear()
+                && venturaCalendarDate.getMonth() == currentVenturaCalendarDate.getMonth()
+                && venturaCalendarDate.getDay() == currentVenturaCalendarDate.getDay();
     }
 
-    private boolean isFuture(Date date, Date currentDate) {
-        return date.getMonth() >= currentDate.getMonth()
-                && date.getDay() > currentDate.getDay();
+    private boolean isFuture(VenturaCalendarDate venturaCalendarDate, VenturaCalendarDate currentVenturaCalendarDate) {
+        return venturaCalendarDate.getMonth() >= currentVenturaCalendarDate.getMonth()
+                && venturaCalendarDate.getDay() > currentVenturaCalendarDate.getDay();
     }
 
 
-    private int getInventorySize(Date date, TimeSystem timeSystem) {
-        date = new Date(date);
-        timeSystem = new TimeSystem(timeSystem);
+    private int getInventorySize(VenturaCalendarDate venturaCalendarDate, TimeSystem timeSystem) {
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        timeSystem = TimeSystem.of(timeSystem);
 
         int slots = 0;
 
-        double daysPerMonth = timeSystem.getDaysPerMonth().get((int) date.getMonth());
-        double firstWeekDay = (double) dateUtils.getDayOfWeek(dateUtils.down(DateEnum.DAY, (int) date.getDay(), date));
+        double daysPerMonth = timeSystem.getDaysPerMonth().get((int) venturaCalendarDate.getMonth());
+        double firstWeekDay = dateUtils.getDayOfWeek(dateUtils.down(DateEnum.DAY, (int) venturaCalendarDate.getDay(), venturaCalendarDate));
         double daysPerWeek = timeSystem.getDaysPerWeek();
 
         if (daysPerWeek > 8)

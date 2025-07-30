@@ -1,7 +1,6 @@
 package me.m0dii.venturacalendar.game.commands;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
-import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,10 +21,12 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender,
+                             @NotNull Command command,
+                             @NotNull String label,
+                             @NotNull String @NotNull [] args) {
         if (command.getName().equalsIgnoreCase("calendar")) {
-            new CalendarCommand(sender, command, label, args, plugin);
+            new CalendarCommand(sender, args, plugin);
         }
 
         if (command.getName().equalsIgnoreCase("venturacalendar")) {
@@ -36,14 +37,16 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-                                                @NotNull String alias, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
+                                                @NotNull Command command,
+                                                @NotNull String alias,
+                                                @NotNull String @NotNull [] args) {
         List<String> completes = new ArrayList<>();
 
         String name = command.getName().toLowerCase();
 
-        if(name.equals("calendar") || name.equalsIgnoreCase("cal")) {
-            if(args.length == 1) {
+        if (name.equals("calendar") || name.equalsIgnoreCase("cal")) {
+            if (args.length == 1) {
                 addCompletesMatching(completes, args[0],
                         "realtime",
                         "game");
@@ -79,8 +82,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
                             "date",
                             "worldticks",
                             "offset");
-                }
-                else {
+                } else {
                     addCompletesMatching(completes, args[1],
                             "seconds",
                             "minutes",
@@ -91,7 +93,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
             }
 
             if (args.length == 3) {
-                if(args[1].equalsIgnoreCase("offset")) {
+                if (args[1].equalsIgnoreCase("offset")) {
                     addCompletesMatching(completes, args[2],
                             "seconds",
                             "minutes",
@@ -111,7 +113,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
     }
 
     private void addCompletesMatching(List<String> completes, String arg, String... args) {
-        for(String s : args) {
+        for (String s : args) {
             if (s.toLowerCase().contains(arg.toLowerCase())) {
                 completes.add(s);
             }

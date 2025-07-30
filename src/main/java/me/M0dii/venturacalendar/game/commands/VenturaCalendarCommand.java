@@ -47,7 +47,7 @@ public class VenturaCalendarCommand {
                 return;
             }
             else {
-                Messenger.send(sender, Messages.UNKNOWN_COMMAND);
+                Messenger.send(sender, Messages.HELP);
             }
         }
 
@@ -331,7 +331,7 @@ public class VenturaCalendarCommand {
                     fastForwards(args[2], p, 168000L, " week.", " weeks.", sub);
             }
         }
-        else Messenger.send(sender, Messages.UNKNOWN_COMMAND);
+        else Messenger.send(sender, Messages.HELP);
     }
 
     private void fastForwards(String amt, Player p, long oneAmount, String s, String s2, boolean subtract) {

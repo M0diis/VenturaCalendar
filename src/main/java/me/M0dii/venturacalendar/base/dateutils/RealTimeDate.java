@@ -1,7 +1,12 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 public class RealTimeDate {
     private long second;
     private long minute;
@@ -38,76 +43,5 @@ public class RealTimeDate {
         this.localDateTime = date.getLocalDateTime();
     }
 
-    public long getSecond() {
-        return this.second;
-    }
 
-    public long getMinute() {
-        return this.minute;
-    }
-
-    public long getHour() {
-        return this.hour;
-    }
-
-    public long getDay() {
-        return this.day;
-    }
-
-    public long getWeek() {
-        return this.week;
-    }
-
-    public long getMonth() {
-        return this.month;
-    }
-
-    public long getYear() {
-        return this.year;
-    }
-
-    public long getEra() {
-        return this.era;
-    }
-
-    public void setSecond(long second) {
-        this.second = second;
-    }
-
-    public void setMinute(long minute) {
-        this.minute = minute;
-    }
-
-    public void setHour(long hour) {
-        this.hour = hour;
-    }
-
-    public void setDay(long day) {
-        this.day = day;
-    }
-
-    public void setWeek(long week) {
-        this.week = week;
-    }
-
-    public void setMonth(long month) {
-        this.month = month;
-    }
-
-    public void setYear(long year) {
-        this.year = year;
-    }
-
-    public void setEra(long era) {
-        this.era = era;
-    }
-
-
-    public LocalDateTime getLocalDateTime() {
-        return this.localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
-    }
 }

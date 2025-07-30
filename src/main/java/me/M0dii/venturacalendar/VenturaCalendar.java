@@ -1,5 +1,6 @@
 package me.m0dii.venturacalendar;
 
+import lombok.Getter;
 import me.m0dii.venturacalendar.base.configutils.TimeConfig;
 import me.m0dii.venturacalendar.base.dateutils.*;
 import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
@@ -30,11 +31,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public class VenturaCalendar extends JavaPlugin implements Listener {
+    @Getter
     private static VenturaCalendar instance;
-
-    public static VenturaCalendar getInstance() {
-        return instance;
-    }
+    private Placeholders placeholders;
 
     public static boolean debug = false;
 
@@ -54,6 +53,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
 
     private boolean papiEnabled = false;
 
+    @Override
     public void onEnable() {
         instance = this;
 
@@ -89,14 +89,10 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
             return;
         }
 
-        if(getTimeConfig().getBoolean("main-time-system.real-time.sync")) {
-            w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        } else {
-            w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-        }
+        w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, !getTimeConfig().getBoolean("main-time-system.real-time.sync"));
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
-            if(!getTimeConfig().getBoolean("main-time-system.real-time.sync")) {
+            if(Boolean.FALSE.equals(getTimeConfig().getBoolean("main-time-system.real-time.sync"))) {
                 return;
             }
 
@@ -111,11 +107,11 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
             return;
         }
 
-        if(!getBaseConfig().getBoolean("action-bar.enabled")) {
+        if(Boolean.FALSE.equals(getBaseConfig().getBoolean("action-bar.enabled"))) {
             return;
         }
 
-        if (!Version.serverIsNewerThan(Version.v1_11_R1)) {
+        if (Version.serverIsOlderThan(Version.v1_11_R1)) {
             return;
         }
 
@@ -125,7 +121,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
                 return;
             }
 
-            if (!Version.serverIsNewerThan(Version.v1_11_R1)) {
+            if (Version.serverIsOlderThan(Version.v1_11_R1)) {
                 return;
             }
 
@@ -149,10 +145,10 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
                 }
             }
             else if (world != null) {
-                Date date = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), date, p));
+                    p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), venturaCalendarDate, p));
                 }
             }
         }, 0L, 20L);
@@ -216,8 +212,9 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
         baseConfig = new BaseConfig(this);
 
         Plugin pAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+
         if (pAPI != null && pAPI.isEnabled()) {
-            Placeholders placeholders = new Placeholders(this);
+            this.placeholders = new Placeholders(this);
             placeholders.register();
 
             papiEnabled = true;
@@ -252,8 +249,15 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new RealTimeCalendarCloseListener(), this);
     }
 
+    @Override
     public void onDisable() {
         instance = null;
+
+        Plugin pAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+
+        if (pAPI != null && pAPI.isEnabled()) {
+            placeholders.unregister();
+        }
 
         getLogger().info("VenturaCalendar has been disabled.");
     }

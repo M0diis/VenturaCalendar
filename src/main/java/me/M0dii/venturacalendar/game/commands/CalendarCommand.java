@@ -1,7 +1,7 @@
 package me.m0dii.venturacalendar.game.commands;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
-import me.m0dii.venturacalendar.base.dateutils.Date;
+import me.m0dii.venturacalendar.base.dateutils.VenturaCalendarDate;
 import me.m0dii.venturacalendar.base.dateutils.DateCalculator;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
 import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
@@ -13,13 +13,14 @@ import me.m0dii.venturacalendar.game.gui.Calendar;
 import me.m0dii.venturacalendar.game.gui.RealTimeCalendar;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CalendarCommand {
-    public CalendarCommand(CommandSender sender, Command command,
-                           String label, String[] args, VenturaCalendar plugin) {
+
+    public CalendarCommand(CommandSender sender,
+                           String[] args,
+                           VenturaCalendar plugin) {
         if (sender instanceof Player pl) {
             TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
@@ -61,10 +62,10 @@ public class CalendarCommand {
                     }
                 }
 
-                Date date = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
-                Date creationDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                VenturaCalendarDate creationVenturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
-                Calendar calendar = new Calendar(date, creationDate, plugin);
+                Calendar calendar = new Calendar(venturaCalendarDate, creationVenturaCalendarDate, plugin);
 
                 pl.openInventory(calendar.getInventory());
 
@@ -113,10 +114,10 @@ public class CalendarCommand {
                         return;
                     }
 
-                    Date date = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
-                    Date creationDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                    VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                    VenturaCalendarDate creationVenturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
-                    Calendar calendar = new Calendar(date, creationDate, plugin);
+                    Calendar calendar = new Calendar(venturaCalendarDate, creationVenturaCalendarDate, plugin);
 
                     pl.openInventory(calendar.getInventory());
 

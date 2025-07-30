@@ -3,13 +3,10 @@ package me.m0dii.venturacalendar.base.utils;
 import com.cryptomorin.xseries.XMaterial;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.m0dii.venturacalendar.VenturaCalendar;
-import me.m0dii.venturacalendar.base.dateutils.Date;
-import me.m0dii.venturacalendar.base.dateutils.DateUtils;
-import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
-import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
-import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
+import me.m0dii.venturacalendar.base.dateutils.*;
+import me.m0dii.venturacalendar.base.dateutils.VenturaCalendarDate;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,13 +16,17 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class Utils {
+    private Utils() {
+        // Utility class, no instantiation allowed
+    }
+
     private static final VenturaCalendar plugin = VenturaCalendar.getInstance();
 
     private static final String[] MONTHS = new String[] {
             "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     };
 
-    private static final Pattern HEX_PATTERN = Pattern.compile("#([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])");
+    private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])");
 
     public static String format(String text) {
         if (text == null || text.isEmpty())
@@ -67,12 +68,12 @@ public class Utils {
         return m;
     }
 
-    public static String setPlaceholders(String message, Date date, boolean papi) {
-        return setPlaceholders(message, date, papi, null);
+    public static String setPlaceholders(String message, VenturaCalendarDate venturaCalendarDate, boolean papi) {
+        return setPlaceholders(message, venturaCalendarDate, papi, null);
     }
 
-    public static String setPlaceholders(String message, Date date, Player p) {
-        return setPlaceholders(message, date, true, p);
+    public static String setPlaceholders(String message, VenturaCalendarDate venturaCalendarDate, Player p) {
+        return setPlaceholders(message, venturaCalendarDate, true, p);
     }
 
     public static String setPlaceholders(String message, RealTimeDate date, boolean papi) {
@@ -101,7 +102,8 @@ public class Utils {
                 .replaceAll("%[yY]ear(|s)%", String.valueOf(date.getYear()))
                 .replaceAll("%[eE]ra(|s)%", String.valueOf(date.getEra()));
 
-        String eventName = "", eventDesc = "";
+        String eventName = "";
+        String eventDesc = "";
 
         for (MonthEvent event : plugin.getEventConfig().getEvents()) {
             if (event.includesDate(date)) {
@@ -145,12 +147,12 @@ public class Utils {
         return message;
     }
 
-    public static String setPlaceholders(String message, Date date, boolean papi, Player p) {
+    public static String setPlaceholders(String message, VenturaCalendarDate venturaCalendarDate, boolean papi, Player p) {
         DateUtils du = plugin.getDateUtils();
 
-        date = new Date(date);
-        TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
-        date = du.addZeroPoints(date);
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
+        venturaCalendarDate = du.addZeroPoints(venturaCalendarDate);
 
         if (message == null || message.isEmpty()) {
             Messenger.log(Messenger.Level.DEBUG, "Message is empty when setting placeholders, skipping.");
@@ -158,41 +160,42 @@ public class Utils {
         }
 
         message = message
-                .replaceAll("%[tT]ick(|s)%", String.valueOf(date.getTick()))
-                .replaceAll("%[sS]econd(|s)%", String.valueOf(date.getSecond()))
-                .replaceAll("%[mM]inute(|s)%", String.valueOf(date.getMinute()))
-                .replaceAll("%[hH]our(|s)%", String.valueOf(date.getHour()))
-                .replaceAll("%[dD]ay(|s)%", String.valueOf(date.getDay()))
-                .replaceAll("%[wW]eek(|s)%", String.valueOf(date.getWeek()))
-                .replaceAll("%[mM]onth(|s)%", String.valueOf(date.getMonth()))
-                .replaceAll("%[yY]ear(|s)%", String.valueOf(date.getYear()))
-                .replaceAll("%[eE]ra(|s)%", String.valueOf(date.getEra()));
+                .replaceAll("%[tT]ick(|s)%", String.valueOf(venturaCalendarDate.getTick()))
+                .replaceAll("%[sS]econd(|s)%", String.valueOf(venturaCalendarDate.getSecond()))
+                .replaceAll("%[mM]inute(|s)%", String.valueOf(venturaCalendarDate.getMinute()))
+                .replaceAll("%[hH]our(|s)%", String.valueOf(venturaCalendarDate.getHour()))
+                .replaceAll("%[dD]ay(|s)%", String.valueOf(venturaCalendarDate.getDay()))
+                .replaceAll("%[wW]eek(|s)%", String.valueOf(venturaCalendarDate.getWeek()))
+                .replaceAll("%[mM]onth(|s)%", String.valueOf(venturaCalendarDate.getMonth()))
+                .replaceAll("%[yY]ear(|s)%", String.valueOf(venturaCalendarDate.getYear()))
+                .replaceAll("%[eE]ra(|s)%", String.valueOf(venturaCalendarDate.getEra()));
 
         if(p != null) {
             message = message.replaceAll("%world_ticks%", String.valueOf(p.getWorld().getFullTime()));
         }
 
-        date = du.removeZeroPoints(date);
+        venturaCalendarDate = du.removeZeroPoints(venturaCalendarDate);
 
-        String eventName = "", eventDesc = "";
+        String eventName = "";
+        String eventDesc = "";
 
         for (MonthEvent event : plugin.getEventConfig().getEvents()) {
-            if (event.includesDate(date)) {
+            if (event.includesDate(venturaCalendarDate)) {
                 eventName = event.getDisplayName();
                 eventDesc = String.join("\n", event.getDescription());
             }
         }
 
         message = message
-                .replaceAll("%[dD]ay(_|)[nN]ame%", date.getDayName())
+                .replaceAll("%[dD]ay(_|)[nN]ame%", venturaCalendarDate.getDayName())
                 .replaceAll("%[eE]vent(_|)[nN]ame%", eventName)
                 .replaceAll("%[eE]vent(_|)[dD]escription%", eventDesc)
-                .replaceAll("%[mM]onth(_|)[nN]ame%", date.getMonthName())
-                .replaceAll("%[sS]eason(_|)[nN]ame%", date.getSeasonName())
-                .replaceAll("%[eE]ra(_|)[nN]ame%", date.getEraName())
+                .replaceAll("%[mM]onth(_|)[nN]ame%", venturaCalendarDate.getMonthName())
+                .replaceAll("%[sS]eason(_|)[nN]ame%", venturaCalendarDate.getSeasonName())
+                .replaceAll("%[eE]ra(_|)[nN]ame%", venturaCalendarDate.getEraName())
                 .replaceAll("%[tT]ime[sS]ystem(_|)[nN]ame%", timeSystem.getName())
                 .replaceAll("%[tT]ime[sS]ystem(_|)[wW]orld%", timeSystem.getWorldName())
-                .replaceAll("%[yY]ears(_|)[pP]assed%", String.valueOf(date.getYear()));
+                .replaceAll("%[yY]ears(_|)[pP]assed%", String.valueOf(venturaCalendarDate.getYear()));
 
         if (papi && plugin.papiEnabled())
             PlaceholderAPI.setPlaceholders(p, message);

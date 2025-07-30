@@ -1,5 +1,6 @@
 package me.m0dii.venturacalendar.base.events;
 
+import lombok.Getter;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
 import org.bukkit.event.Cancellable;
@@ -7,20 +8,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class MonthEventDayEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
 
-    private final TimeSystem ts;
-    private final MonthEvent event;
+    private final TimeSystem timeSystem;
+    private final MonthEvent monthEvent;
 
-    public MonthEventDayEvent(TimeSystem ts, MonthEvent event) {
-        this.ts = ts;
-        this.event = event;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLERS_LIST;
+    public MonthEventDayEvent(TimeSystem timeSystem, MonthEvent monthEvent) {
+        this.timeSystem = timeSystem;
+        this.monthEvent = monthEvent;
     }
 
     @Override
@@ -38,11 +36,7 @@ public class MonthEventDayEvent extends Event implements Cancellable {
         return HANDLERS_LIST;
     }
 
-    public TimeSystem getTimeSystem() {
-        return ts;
-    }
-
-    public MonthEvent getMonthEvent() {
-        return event;
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 }

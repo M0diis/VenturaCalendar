@@ -1,8 +1,11 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public final class EventDays {
     private int from = -1;
     private int to = -1;
@@ -16,14 +19,6 @@ public final class EventDays {
     public EventDays(int from, int to) {
         this.from = from;
         this.to = to;
-    }
-
-    public int getTo() {
-        return this.to;
-    }
-
-    public int getFrom() {
-        return this.from;
     }
 
     public boolean includes(int number) {

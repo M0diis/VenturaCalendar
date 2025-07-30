@@ -3,13 +3,13 @@ package me.m0dii.venturacalendar.base.utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.*;
-import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Placeholders extends PlaceholderExpansion {
@@ -68,11 +68,13 @@ public class Placeholders extends PlaceholderExpansion {
             }
         }
 
-        switch(id) {
-            case "newday_message":
+        switch (id) {
+            case "newday_message" -> {
                 return plugin.getBaseConfig().getNewDayMessage().orElse("");
-            case "actionbar_message":
+            }
+            case "actionbar_message" -> {
                 return plugin.getBaseConfig().getActionBarMessage().orElse("");
+            }
         }
 
         if (ts.isRealTime()) {
@@ -90,7 +92,7 @@ public class Placeholders extends PlaceholderExpansion {
         return parseDatePlaceholders(DateCalculator.fromTicks(w.getFullTime(), ts), id.toLowerCase());
     }
 
-    private static final String[] MONTHS = new String[] {
+    private static final String[] MONTHS = new String[]{
             "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     };
 
@@ -116,15 +118,15 @@ public class Placeholders extends PlaceholderExpansion {
                     return "Error: Invalid month.";
                 }
 
-                if(seasonNames.size() < 4) {
+                if (seasonNames.size() < 4) {
                     return "Error: Invalid season names.";
                 }
 
-                if(monthIndex < 3 || monthIndex > 10) {
+                if (monthIndex < 3 || monthIndex > 10) {
                     return seasonNames.get(3);
-                } else if(monthIndex < 6) {
-                    return seasonNames.get(0);
-                } else if(monthIndex < 9) {
+                } else if (monthIndex < 6) {
+                    return seasonNames.getFirst();
+                } else if (monthIndex < 9) {
                     return seasonNames.get(1);
                 } else {
                     return seasonNames.get(2);
@@ -147,100 +149,107 @@ public class Placeholders extends PlaceholderExpansion {
                     return "Error: Invalid month.";
                 }
 
-                if(monthIndex == 1)
-                    return "28";
-                else if(monthIndex == 3 || monthIndex == 5 || monthIndex == 8 || monthIndex == 10)
-                    return "30";
-                else
-                    return "31";
+                return switch (monthIndex) {
+                    case 1 -> "28";
+                    case 3, 5, 8, 10 -> "30";
+                    default -> "31";
+                };
             }
         }
 
         switch (id) {
-            case "date_event_name":
+            case "date_event_name" -> {
                 for (MonthEvent event : this.plugin.getEventConfig().getEvents()) {
                     if (event.includesDate(date)) {
                         return event.getDisplayName();
                     }
                 }
                 return "";
-            case "date_event_description":
+            }
+            case "date_event_description" -> {
                 for (MonthEvent event : this.plugin.getEventConfig().getEvents()) {
                     if (event.includesDate(date)) {
                         return String.join("\n", event.getDescription());
                     }
                 }
                 return "";
-            case "date_second":
+            }
+            case "date_second" -> {
                 return String.valueOf(date.getSecond());
-            case "date_minute":
+            }
+            case "date_minute" -> {
                 return String.valueOf(date.getMinute());
-            case "date_hour":
+            }
+            case "date_hour" -> {
                 return String.valueOf(date.getHour());
-            case "date_day":
+            }
+            case "date_day" -> {
                 return String.valueOf(date.getDay());
-            case "date_week":
+            }
+            case "date_week" -> {
                 return String.valueOf(date.getWeek());
-            case "date_month":
+            }
+            case "date_month" -> {
                 return String.valueOf(date.getMonth());
-            case "date_season":
-            {
-                if(seasonNames.size() < 4) {
+            }
+            case "date_season" -> {
+                if (seasonNames.size() < 4) {
                     return "Error: Invalid season names.";
                 }
 
-                if(date.getMonth() < 3 || date.getMonth() > 10) {
+                if (date.getMonth() < 3 || date.getMonth() > 10) {
                     return "4";
-                } else if(date.getMonth() < 6) {
+                } else if (date.getMonth() < 6) {
                     return "1";
-                } else if(date.getMonth() < 9) {
+                } else if (date.getMonth() < 9) {
                     return "2";
                 } else {
                     return "3";
                 }
             }
-            case "date_year":
+            case "date_year" -> {
                 return String.valueOf(date.getYear());
-            case "date_era":
+            }
+            case "date_era" -> {
                 return String.valueOf(date.getEra());
-            case "date_day_name":
+            }
+            case "date_day_name" -> {
                 return dayNames.get(date.getLocalDateTime().getDayOfWeek().getValue() - 1);
-            case "date_month_name":
+            }
+            case "date_month_name" -> {
                 return monthNames.get(date.getLocalDateTime().getMonthValue() - 1);
-            case "date_season_name":
-            {
-                if(seasonNames.size() < 4) {
+            }
+            case "date_season_name" -> {
+                if (seasonNames.size() < 4) {
                     return "Error: Invalid season names.";
                 }
 
-                if(date.getMonth() < 3 || date.getMonth() > 10) {
+                if (date.getMonth() < 3 || date.getMonth() > 10) {
                     return seasonNames.get(3);
-                } else if(date.getMonth() < 6) {
-                    return seasonNames.get(0);
-                } else if(date.getMonth() < 9) {
+                } else if (date.getMonth() < 6) {
+                    return seasonNames.getFirst();
+                } else if (date.getMonth() < 9) {
                     return seasonNames.get(1);
                 } else {
                     return seasonNames.get(2);
                 }
             }
-            case "date_day_of_week":
+            case "date_day_of_week" -> {
                 return String.valueOf(date.getLocalDateTime().getDayOfWeek().getValue());
-            default:
+            }
+            default -> {
                 return "";
+            }
         }
     }
 
-    private String parseDatePlaceholders(Date date, String id) {
+    private String parseDatePlaceholders(VenturaCalendarDate venturaCalendarDate, String id) {
         TimeSystem ts = plugin.getTimeConfig().getTimeSystem();
         DateUtils du = plugin.getDateUtils();
 
-        long dow = du.getDayOfWeek(date);
+        long dow = du.getDayOfWeek(venturaCalendarDate);
 
-        date = du.addZeroPoints(date);
-
-        if (date == null) {
-            return "";
-        }
+        venturaCalendarDate = du.addZeroPoints(venturaCalendarDate);
 
         if (id.startsWith("month_")) {
             if (id.endsWith("_season")) {
@@ -260,57 +269,121 @@ public class Placeholders extends PlaceholderExpansion {
             }
         }
 
+        // %venturacalendar_date_formatted_<simple-date-format>%
+        if (id.startsWith("date_formatted_")) {
+            String pattern = id.split("_")[2];
+
+            if (pattern == null || pattern.isEmpty()) {
+                return "";
+            }
+
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+            return sdf.format(venturaCalendarDate.toDate());
+        }
+
         switch (id) {
-            case "date_event_name":
-                date = du.removeZeroPoints(date);
+            case "date_event_name" -> {
+                venturaCalendarDate = du.removeZeroPoints(venturaCalendarDate);
                 for (MonthEvent event : this.plugin.getEventConfig().getEvents()) {
-                    if (event.includesDate(date)) {
+                    if (event.includesDate(venturaCalendarDate)) {
                         return event.getDisplayName();
                     }
                 }
                 return "";
-            case "date_event_description":
-                date = du.removeZeroPoints(date);
+            }
+            case "date_event_description" -> {
+                venturaCalendarDate = du.removeZeroPoints(venturaCalendarDate);
                 for (MonthEvent event : this.plugin.getEventConfig().getEvents()) {
-                    if (event.includesDate(date)) {
+                    if (event.includesDate(venturaCalendarDate)) {
                         return String.join("\n", event.getDescription());
                     }
                 }
                 return "";
-            case "date_tick":
-                return String.valueOf(date.getTick());
-            case "date_second":
-                return String.valueOf(date.getSecond());
-            case "date_minute":
-                return String.valueOf(date.getMinute());
-            case "date_hour":
-                return String.valueOf(date.getHour());
-            case "date_day":
-                return String.valueOf(date.getDay());
-            case "date_week":
-                return String.valueOf(date.getWeek());
-            case "date_month":
-                return String.valueOf(date.getMonth());
-            case "date_year":
-                return String.valueOf(date.getYear());
-            case "date_years_passed":
-                date = du.removeZeroPoints(date);
-                return String.valueOf(date.getYear());
-            case "date_era":
-                return String.valueOf(date.getEra());
-            case "date_day_name":
-                return String.valueOf(date.getDayName());
-            case "date_month_name":
-                date = du.removeZeroPoints(date);
-                return String.valueOf(date.getMonthName());
-            case "date_season_name":
-                return String.valueOf(date.getSeasonName());
-            case "date_era_name":
-                return String.valueOf(date.getEraName());
-            case "date_day_of_week":
+            }
+            case "date_tick" -> {
+                return String.valueOf(venturaCalendarDate.getTick());
+            }
+            case "date_second" -> {
+                return String.valueOf(venturaCalendarDate.getSecond());
+            }
+            case "date_minute" -> {
+                return String.valueOf(venturaCalendarDate.getMinute());
+            }
+            case "date_hour" -> {
+                return String.valueOf(venturaCalendarDate.getHour());
+            }
+            case "date_day" -> {
+                return String.valueOf(venturaCalendarDate.getDay());
+            }
+            case "date_week" -> {
+                return String.valueOf(venturaCalendarDate.getWeek());
+            }
+            case "date_month" -> {
+                return String.valueOf(venturaCalendarDate.getMonth());
+            }
+            case "date_year" -> {
+                return String.valueOf(venturaCalendarDate.getYear());
+            }
+            case "date_years_passed" -> {
+                venturaCalendarDate = du.removeZeroPoints(venturaCalendarDate);
+                return String.valueOf(venturaCalendarDate.getYear());
+            }
+            case "date_era" -> {
+                return String.valueOf(venturaCalendarDate.getEra());
+            }
+            case "date_day_name" -> {
+                return String.valueOf(venturaCalendarDate.getDayName());
+            }
+            case "date_month_name" -> {
+                venturaCalendarDate = du.removeZeroPoints(venturaCalendarDate);
+                return String.valueOf(venturaCalendarDate.getMonthName());
+            }
+            case "date_season_name" -> {
+                return String.valueOf(venturaCalendarDate.getSeasonName());
+            }
+            case "date_era_name" -> {
+                return String.valueOf(venturaCalendarDate.getEraName());
+            }
+            case "date_day_of_week" -> {
                 return String.valueOf(dow);
-            default:
+            }
+            default -> {
                 return "";
+            }
         }
+    }
+
+    private static final List<String> PLACEHOLDERS = List.of(
+            "%venturacalendar_date_tick%",
+            "%venturacalendar_date_second%",
+            "%venturacalendar_date_minute%",
+            "%venturacalendar_date_hour%",
+            "%venturacalendar_date_day%",
+            "%venturacalendar_date_week%",
+            "%venturacalendar_date_month%",
+            "%venturacalendar_date_year%",
+            "%venturacalendar_date_era%",
+            "%venturacalendar_date_day_name%",
+            "%venturacalendar_date_month_name%",
+            "%venturacalendar_date_season_name%",
+            "%venturacalendar_date_era_name%",
+            "%venturacalendar_date_day_of_week%",
+            "%venturacalendar_date_event_name%",
+            "%venturacalendar_date_event_description%",
+            "%venturacalendar_date_years_passed%",
+            "%venturacalendar_date_formatted_<simple-date-format>%",
+            "%venturacalendar_month_<month>_season%",
+            "%venturacalendar_month_<month>_days%",
+            "%venturacalendar_newday_message%",
+            "%venturacalendar_actionbar_message%",
+            "%venturacalendar_event_<event>_start%",
+            "%venturacalendar_event_<event>_end%",
+            "%venturacalendar_event_<event>_description%"
+    );
+
+    @Override
+    public @NotNull List<String> getPlaceholders() {
+        return PLACEHOLDERS;
     }
 }

@@ -2,11 +2,13 @@ package me.m0dii.venturacalendar.base.dateutils;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class DateUtils {
-    final VenturaCalendar plugin;
+    private final VenturaCalendar plugin;
 
     public DateUtils(VenturaCalendar plugin) {
         this.plugin = plugin;
@@ -15,84 +17,81 @@ public class DateUtils {
     /*
      * Puts all date properties from DateEnum into a HashMap.
      */
-    public HashMap<DateEnum, Object> toHashMap(Date date) {
-        date = new Date(date);
+    public Map<DateEnum, Object> toHashMap(VenturaCalendarDate venturaCalendarDate) {
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
 
-        HashMap<DateEnum, Object> dateMap = new HashMap<>();
+        Map<DateEnum, Object> dateMap = new EnumMap<>(DateEnum.class);
 
-        dateMap.put(DateEnum.TIMESYSTEM, date.getTimeSystem());
+        dateMap.put(DateEnum.TIMESYSTEM, venturaCalendarDate.getTimeSystem());
 
-        dateMap.put(DateEnum.TICK, date.getTick());
-        dateMap.put(DateEnum.SECOND, date.getSecond());
-        dateMap.put(DateEnum.MINUTE, date.getMinute());
-        dateMap.put(DateEnum.HOUR, date.getHour());
-        dateMap.put(DateEnum.DAY, date.getDay());
-        dateMap.put(DateEnum.WEEK, date.getWeek());
-        dateMap.put(DateEnum.MONTH, date.getMonth());
-        dateMap.put(DateEnum.YEAR, date.getYear());
-        dateMap.put(DateEnum.ERA, date.getEra());
+        dateMap.put(DateEnum.TICK, venturaCalendarDate.getTick());
+        dateMap.put(DateEnum.SECOND, venturaCalendarDate.getSecond());
+        dateMap.put(DateEnum.MINUTE, venturaCalendarDate.getMinute());
+        dateMap.put(DateEnum.HOUR, venturaCalendarDate.getHour());
+        dateMap.put(DateEnum.DAY, venturaCalendarDate.getDay());
+        dateMap.put(DateEnum.WEEK, venturaCalendarDate.getWeek());
+        dateMap.put(DateEnum.MONTH, venturaCalendarDate.getMonth());
+        dateMap.put(DateEnum.YEAR, venturaCalendarDate.getYear());
+        dateMap.put(DateEnum.ERA, venturaCalendarDate.getEra());
 
         return dateMap;
     }
 
-    public Date getNullDate(TimeSystem timeSystem) {
-        return new Date(timeSystem, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    @Nonnull
+    public VenturaCalendarDate addZeroPoints(VenturaCalendarDate venturaCalendarDate) {
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+
+        TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
+
+        venturaCalendarDate.setTick(venturaCalendarDate.getTick() + timeSystem.getTickZero());
+        venturaCalendarDate.setSecond(venturaCalendarDate.getSecond() + timeSystem.getSecondZero());
+        venturaCalendarDate.setMinute(venturaCalendarDate.getMinute() + timeSystem.getMinuteZero());
+        venturaCalendarDate.setHour(venturaCalendarDate.getHour() + timeSystem.getHourZero());
+        venturaCalendarDate.setDay(venturaCalendarDate.getDay() + 1);
+        venturaCalendarDate.setWeek(venturaCalendarDate.getWeek() + 1);
+        venturaCalendarDate.setMonth(venturaCalendarDate.getMonth() + 1);
+        venturaCalendarDate.setYear(venturaCalendarDate.getYear() + timeSystem.getYearZero());
+        venturaCalendarDate.setEra(venturaCalendarDate.getEra() + timeSystem.getEraZero());
+
+        return venturaCalendarDate;
     }
 
-    public Date addZeroPoints(Date date) {
-        date = new Date(date);
+    public VenturaCalendarDate removeZeroPoints(VenturaCalendarDate venturaCalendarDate) {
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
 
-        TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
+        TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
-        date.setTick(date.getTick() + timeSystem.getTickZero());
-        date.setSecond(date.getSecond() + timeSystem.getSecondZero());
-        date.setMinute(date.getMinute() + timeSystem.getMinuteZero());
-        date.setHour(date.getHour() + timeSystem.getHourZero());
-        date.setDay(date.getDay() + 1);
-        date.setWeek(date.getWeek() + 1);
-        date.setMonth(date.getMonth() + 1);
-        date.setYear(date.getYear() + timeSystem.getYearZero());
-        date.setEra(date.getEra() + timeSystem.getEraZero());
+        venturaCalendarDate.setTick(venturaCalendarDate.getTick() - timeSystem.getTickZero());
+        venturaCalendarDate.setSecond(venturaCalendarDate.getSecond() - timeSystem.getSecondZero());
+        venturaCalendarDate.setMinute(venturaCalendarDate.getMinute() - timeSystem.getMinuteZero());
+        venturaCalendarDate.setHour(venturaCalendarDate.getHour() - timeSystem.getHourZero());
+        venturaCalendarDate.setDay(venturaCalendarDate.getDay() - 1);
+        venturaCalendarDate.setWeek(venturaCalendarDate.getWeek() - 1);
+        venturaCalendarDate.setMonth(venturaCalendarDate.getMonth() - 1);
+        venturaCalendarDate.setYear(venturaCalendarDate.getYear() - timeSystem.getYearZero());
+        venturaCalendarDate.setEra(venturaCalendarDate.getEra() - timeSystem.getEraZero());
 
-        return date;
-    }
-
-    public Date removeZeroPoints(Date date) {
-        date = new Date(date);
-
-        TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
-
-        date.setTick(date.getTick() - timeSystem.getTickZero());
-        date.setSecond(date.getSecond() - timeSystem.getSecondZero());
-        date.setMinute(date.getMinute() - timeSystem.getMinuteZero());
-        date.setHour(date.getHour() - timeSystem.getHourZero());
-        date.setDay(date.getDay() - 1);
-        date.setWeek(date.getWeek() - 1);
-        date.setMonth(date.getMonth() - 1);
-        date.setYear(date.getYear() - timeSystem.getYearZero());
-        date.setEra(date.getEra() - timeSystem.getEraZero());
-
-        return date;
+        return venturaCalendarDate;
     }
 
     /*
      * Methods to calculate up or down a single parameter from a given date, with the date timeSystem.
      * With maximum and minimum check.
      */
-    public Date up(DateEnum unit, int count, Date date) {
-        return calculate(unit, count, date, false);
+    public VenturaCalendarDate up(DateEnum unit, int count, VenturaCalendarDate venturaCalendarDate) {
+        return calculate(unit, count, venturaCalendarDate, false);
     }
 
-    public Date down(DateEnum unit, int count, Date date) {
-        return calculate(unit, count, date, true);
+    public VenturaCalendarDate down(DateEnum unit, int count, VenturaCalendarDate venturaCalendarDate) {
+        return calculate(unit, count, venturaCalendarDate, true);
     }
 
-    private Date calculate(DateEnum unit, int count, Date date, boolean down) {
-        date = new Date(date);
+    private VenturaCalendarDate calculate(DateEnum unit, int count, VenturaCalendarDate venturaCalendarDate, boolean down) {
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
 
-        TimeSystem timeSystem = new TimeSystem(date.getTimeSystem());
+        TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
-        long ticks = date.getRootTicks();
+        long ticks = venturaCalendarDate.getRootTicks();
 
         long ticksPerSecond = timeSystem.getTicksPerSecond();
         long ticksPerMinute = ticksPerSecond * timeSystem.getSecondsPerMinute();
@@ -110,61 +109,61 @@ public class DateUtils {
         for (long ticksThisMonth : ticksPerMonth)
             ticksPerYear = ticksPerYear + ticksThisMonth;
 
-        switch (unit) {
-            case TICK:
-                if (!down) return DateCalculator.fromTicks(ticks + count, timeSystem);
-                return DateCalculator.fromTicks(ticks - count, timeSystem);
-
-            case SECOND:
-                if (!down) return DateCalculator.fromTicks(ticks + (ticksPerSecond * count), timeSystem);
-                return DateCalculator.fromTicks(ticks - (ticksPerSecond * count), timeSystem);
-
-            case MINUTE:
-                if (!down) return DateCalculator.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
-                return DateCalculator.fromTicks(ticks - (ticksPerMinute * count), timeSystem);
-
-            case HOUR:
-                if (!down) return DateCalculator.fromTicks(ticks + (ticksPerHour * count), timeSystem);
-                return DateCalculator.fromTicks(ticks - (ticksPerHour * count), timeSystem);
-
-            case DAY:
-                if (!down) return DateCalculator.fromTicks(ticks + (ticksPerDay * count), timeSystem);
-                return DateCalculator.fromTicks(ticks - (ticksPerDay * count), timeSystem);
-
-            case WEEK:
-                if (!down) return DateCalculator.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
-                return DateCalculator.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
-
-            case MONTH:
-                if (!down) return DateCalculator.fromTicks(ticks + ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
-                return DateCalculator.fromTicks(ticks - ticksPerMonth.get((int) date.getMonth() - 1), timeSystem);
-
-            case YEAR:
-                if (!down) return DateCalculator.fromTicks(ticks + (ticksPerYear * count), timeSystem);
-                return DateCalculator.fromTicks(ticks - (ticksPerYear * count), timeSystem);
-
-            default:
-                return date;
-        }
+        return switch (unit) {
+            case TICK -> {
+                if (!down) yield DateCalculator.fromTicks(ticks + count, timeSystem);
+                yield DateCalculator.fromTicks(ticks - count, timeSystem);
+            }
+            case SECOND -> {
+                if (!down) yield DateCalculator.fromTicks(ticks + (ticksPerSecond * count), timeSystem);
+                yield DateCalculator.fromTicks(ticks - (ticksPerSecond * count), timeSystem);
+            }
+            case MINUTE -> {
+                if (!down) yield DateCalculator.fromTicks(ticks + (ticksPerMinute * count), timeSystem);
+                yield DateCalculator.fromTicks(ticks - (ticksPerMinute * count), timeSystem);
+            }
+            case HOUR -> {
+                if (!down) yield DateCalculator.fromTicks(ticks + (ticksPerHour * count), timeSystem);
+                yield DateCalculator.fromTicks(ticks - (ticksPerHour * count), timeSystem);
+            }
+            case DAY -> {
+                if (!down) yield DateCalculator.fromTicks(ticks + (ticksPerDay * count), timeSystem);
+                yield DateCalculator.fromTicks(ticks - (ticksPerDay * count), timeSystem);
+            }
+            case WEEK -> {
+                if (!down) yield DateCalculator.fromTicks(ticks + (ticksPerWeek * count), timeSystem);
+                yield DateCalculator.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
+            }
+            case MONTH -> {
+                if (!down)
+                    yield DateCalculator.fromTicks(ticks + ticksPerMonth.get((int) venturaCalendarDate.getMonth() - 1), timeSystem);
+                yield DateCalculator.fromTicks(ticks - ticksPerMonth.get((int) venturaCalendarDate.getMonth() - 1), timeSystem);
+            }
+            case YEAR -> {
+                if (!down) yield DateCalculator.fromTicks(ticks + (ticksPerYear * count), timeSystem);
+                yield DateCalculator.fromTicks(ticks - (ticksPerYear * count), timeSystem);
+            }
+            default -> venturaCalendarDate;
+        };
     }
 
-    public long getDayOfWeek(Date date) {
-        if (date == null) return 0L;
+    public long getDayOfWeek(VenturaCalendarDate venturaCalendarDate) {
+        if (venturaCalendarDate == null) return 0L;
 
-        date = new Date(date);
+        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
 
-        if (date.getMonth() != 6) {
-            date.setDay(date.getDay() + 1);
+        if (venturaCalendarDate.getMonth() != 6) {
+            venturaCalendarDate.setDay(venturaCalendarDate.getDay() + 1);
         }
 
-        int cc = (int) (date.getYear() / 100);
-        int yy = (int) (date.getYear() - ((date.getYear() / 100) * 100));
+        int cc = (int) (venturaCalendarDate.getYear() / 100);
+        int yy = (int) (venturaCalendarDate.getYear() - ((venturaCalendarDate.getYear() / 100) * 100));
 
         int c = (cc / 4) - 2 * cc - 1;
         int y = 5 * yy / 4;
-        int m = (int) (26 * (date.getMonth() + 1) / 10);
-        int d = (int) date.getDay();
+        int m = (int) (26 * (venturaCalendarDate.getMonth() + 1) / 10);
+        int d = (int) venturaCalendarDate.getDay();
 
-        return (int) ((c + y + m + d) % date.getTimeSystem().getDaysPerWeek());
+        return (int) ((c + y + m + d) % venturaCalendarDate.getTimeSystem().getDaysPerWeek());
     }
 }

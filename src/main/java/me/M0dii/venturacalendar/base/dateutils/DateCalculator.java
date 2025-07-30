@@ -6,10 +6,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class DateCalculator {
+    private DateCalculator() {
+        // Prevent instantiation
+    }
+
     private static final VenturaCalendar instance = VenturaCalendar.getInstance();
     private static final TimeSystemUtils timeSystemUtils = instance.getTimeSystemUtils();
 
-    public static Date fromTicks(long ticks, TimeSystem timeSystem) {
+    public static VenturaCalendarDate fromTicks(long ticks, TimeSystem timeSystem) {
         long tick = 0;
         long second = 0;
         long minute = 0;
@@ -82,7 +86,7 @@ public class DateCalculator {
                 era = index;
         }
 
-        return new Date(timeSystem, rootTicks, tick, second, minute, hour, day, week, month, year, era);
+        return new VenturaCalendarDate(timeSystem, rootTicks, tick, second, minute, hour, day, week, month, year, era);
     }
 
     public static RealTimeDate realTimeNow() {
@@ -110,8 +114,8 @@ public class DateCalculator {
                 .plusMonths(monthOffset)
                 .plusYears(yearOffset);
 
-        if(monthOffsetVar != 0) {
-            if(monthOffsetVar > 0) {
+        if (monthOffsetVar != 0) {
+            if (monthOffsetVar > 0) {
                 date = date.plusMonths(monthOffsetVar);
             } else {
                 date = date.minusMonths(Math.abs(monthOffsetVar));
@@ -122,20 +126,19 @@ public class DateCalculator {
 
         List<String> eras = instance.getTimeConfig().getListString("main-time-system.eras");
 
-        for(String e : eras) {
+        for (String e : eras) {
             String[] split = e.split(", ");
 
-            if(split.length != 3) {
+            if (split.length != 3) {
                 instance.getLogger().warning("Invalid era format: " + e);
+                instance.getLogger().warning("Expected format: 'Era Name, Begin Year, End Year'");
                 continue;
             }
-
-            String name = split[0].trim();
 
             long begin = Long.parseLong(split[1].trim());
             long end = Long.parseLong(split[2].trim());
 
-            if(date.getYear() >= begin && date.getYear() <= end) {
+            if (date.getYear() >= begin && date.getYear() <= end) {
                 era = eras.indexOf(e);
             }
         }
