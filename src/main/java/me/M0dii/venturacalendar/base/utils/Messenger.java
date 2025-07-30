@@ -6,13 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class Messenger {
-    public enum Level {
-        INFO,
-        WARN,
-        ERROR,
-        DEBUG
-    }
-
     private static final VenturaCalendar plugin = VenturaCalendar.getInstance();
 
     public static void send(CommandSender sender, String msg) {
@@ -33,7 +26,8 @@ public class Messenger {
                     Bukkit.getConsoleSender().sendMessage("&3[&bVenturaCalendar Debug&3] &b" + msg);
                 }
             }
-            default -> { }
+            default -> {
+            }
         }
     }
 
@@ -45,5 +39,12 @@ public class Messenger {
         if (level == Level.DEBUG) {
             ex.printStackTrace();
         }
+    }
+
+    public enum Level {
+        INFO,
+        WARN,
+        ERROR,
+        DEBUG
     }
 }

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TimeConfig extends Config implements ConfigUtils {
+    final HashMap<String, TimeSystem> timeSystems = new HashMap<>();
     private FileConfiguration cfg;
 
     public TimeConfig(VenturaCalendar plugin) {
@@ -30,8 +31,6 @@ public class TimeConfig extends Config implements ConfigUtils {
 
         saveConfig();
     }
-
-    final HashMap<String, TimeSystem> timeSystems = new HashMap<>();
 
     public TimeSystem getTimeSystem() {
         if (timeSystems.containsKey("main-time-system")) {

@@ -38,8 +38,8 @@ public class Calendar implements InventoryHolder {
         dateUtils = plugin.getDateUtils();
         calConf = plugin.getCalendarConfig();
 
-        this.venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
-        this.creationVenturaCalendarDate = new VenturaCalendarDate(creationVenturaCalendarDate);
+        this.venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
+        this.creationVenturaCalendarDate = VenturaCalendarDate.clone(creationVenturaCalendarDate);
 
         this.events = plugin.getEventConfig().getEvents();
 
@@ -55,8 +55,8 @@ public class Calendar implements InventoryHolder {
     }
 
     private Inventory createInventory(VenturaCalendarDate venturaCalendarDate, VenturaCalendarDate creationVenturaCalendarDate) {
-        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
-        creationVenturaCalendarDate = new VenturaCalendarDate(creationVenturaCalendarDate);
+        venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
+        creationVenturaCalendarDate = VenturaCalendarDate.clone(creationVenturaCalendarDate);
 
         TimeSystem ts = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
@@ -229,7 +229,7 @@ public class Calendar implements InventoryHolder {
 
 
     private int getInventorySize(VenturaCalendarDate venturaCalendarDate, TimeSystem timeSystem) {
-        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
         timeSystem = TimeSystem.of(timeSystem);
 
         int slots = 0;

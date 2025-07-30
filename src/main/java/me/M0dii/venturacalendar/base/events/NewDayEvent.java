@@ -12,16 +12,19 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class NewDayEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private boolean isCancelled;
-
     private final TimeSystem timeSystem;
     private final World world;
     private final VenturaCalendarDate date;
+    private boolean isCancelled;
 
     public NewDayEvent(TimeSystem ts, World world, VenturaCalendarDate date) {
         this.timeSystem = ts;
         this.world = world;
         this.date = date;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 
     @Override
@@ -36,10 +39,6 @@ public class NewDayEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return HANDLERS_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
 

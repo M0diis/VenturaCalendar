@@ -14,6 +14,36 @@ import java.util.List;
 
 public class Placeholders extends PlaceholderExpansion {
 
+    private static final String[] MONTHS = new String[]{
+            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    };
+    private static final List<String> PLACEHOLDERS = List.of(
+            "%venturacalendar_date_tick%",
+            "%venturacalendar_date_second%",
+            "%venturacalendar_date_minute%",
+            "%venturacalendar_date_hour%",
+            "%venturacalendar_date_day%",
+            "%venturacalendar_date_week%",
+            "%venturacalendar_date_month%",
+            "%venturacalendar_date_year%",
+            "%venturacalendar_date_era%",
+            "%venturacalendar_date_day_name%",
+            "%venturacalendar_date_month_name%",
+            "%venturacalendar_date_season_name%",
+            "%venturacalendar_date_era_name%",
+            "%venturacalendar_date_day_of_week%",
+            "%venturacalendar_date_event_name%",
+            "%venturacalendar_date_event_description%",
+            "%venturacalendar_date_years_passed%",
+            "%venturacalendar_date_formatted_<simple-date-format>%",
+            "%venturacalendar_month_<month>_season%",
+            "%venturacalendar_month_<month>_days%",
+            "%venturacalendar_newday_message%",
+            "%venturacalendar_actionbar_message%",
+            "%venturacalendar_event_<event>_start%",
+            "%venturacalendar_event_<event>_end%",
+            "%venturacalendar_event_<event>_description%"
+    );
     private final VenturaCalendar plugin;
     private final BaseConfig baseConfig;
 
@@ -92,10 +122,6 @@ public class Placeholders extends PlaceholderExpansion {
         return parseDatePlaceholders(DateCalculator.fromTicks(w.getFullTime(), ts), id.toLowerCase());
     }
 
-    private static final String[] MONTHS = new String[]{
-            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    };
-
     private String parseRealTimeDatePlaceholders(RealTimeDate date, String id) {
         List<String> dayNames = baseConfig.getListString("translations.real-time.day-names");
         List<String> monthNames = baseConfig.getListString("translations.real-time.month-names");
@@ -161,7 +187,7 @@ public class Placeholders extends PlaceholderExpansion {
             case "date_event_name" -> {
                 for (MonthEvent event : this.plugin.getEventConfig().getEvents()) {
                     if (event.includesDate(date)) {
-                        return event.getDisplayName();
+                        return event.getEventDisplayName();
                     }
                 }
                 return "";
@@ -279,7 +305,7 @@ public class Placeholders extends PlaceholderExpansion {
 
             SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 
-            return sdf.format(venturaCalendarDate.toDate());
+            return sdf.format(venturaCalendarDate.toLocalDateTime());
         }
 
         switch (id) {
@@ -287,7 +313,7 @@ public class Placeholders extends PlaceholderExpansion {
                 venturaCalendarDate = du.removeZeroPoints(venturaCalendarDate);
                 for (MonthEvent event : this.plugin.getEventConfig().getEvents()) {
                     if (event.includesDate(venturaCalendarDate)) {
-                        return event.getDisplayName();
+                        return event.getEventDisplayName();
                     }
                 }
                 return "";
@@ -353,34 +379,6 @@ public class Placeholders extends PlaceholderExpansion {
             }
         }
     }
-
-    private static final List<String> PLACEHOLDERS = List.of(
-            "%venturacalendar_date_tick%",
-            "%venturacalendar_date_second%",
-            "%venturacalendar_date_minute%",
-            "%venturacalendar_date_hour%",
-            "%venturacalendar_date_day%",
-            "%venturacalendar_date_week%",
-            "%venturacalendar_date_month%",
-            "%venturacalendar_date_year%",
-            "%venturacalendar_date_era%",
-            "%venturacalendar_date_day_name%",
-            "%venturacalendar_date_month_name%",
-            "%venturacalendar_date_season_name%",
-            "%venturacalendar_date_era_name%",
-            "%venturacalendar_date_day_of_week%",
-            "%venturacalendar_date_event_name%",
-            "%venturacalendar_date_event_description%",
-            "%venturacalendar_date_years_passed%",
-            "%venturacalendar_date_formatted_<simple-date-format>%",
-            "%venturacalendar_month_<month>_season%",
-            "%venturacalendar_month_<month>_days%",
-            "%venturacalendar_newday_message%",
-            "%venturacalendar_actionbar_message%",
-            "%venturacalendar_event_<event>_start%",
-            "%venturacalendar_event_<event>_end%",
-            "%venturacalendar_event_<event>_description%"
-    );
 
     @Override
     public @NotNull List<String> getPlaceholders() {

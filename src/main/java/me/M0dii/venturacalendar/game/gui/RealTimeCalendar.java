@@ -1,5 +1,7 @@
 package me.m0dii.venturacalendar.game.gui;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.DateCalculator;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
@@ -17,18 +19,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class RealTimeCalendar implements InventoryHolder {
+
     private final RealTimeDate date;
-
-    private RealTimeDate creationDate;
-
     private final Inventory inventory;
-
     private final List<MonthEvent> events;
-
+    private RealTimeDate creationDate;
     private RealTimeDate realTimeCurrentDate;
 
     public RealTimeCalendar(RealTimeDate date) {
@@ -54,20 +58,8 @@ public class RealTimeCalendar implements InventoryHolder {
         this.realTimeCurrentDate = DateCalculator.realTimeNow();
     }
 
-    public void setCreationDate(RealTimeDate creationDate) {
-        this.creationDate = new RealTimeDate(creationDate);
-    }
-
-    public RealTimeDate getCreationDate() {
-        return this.creationDate;
-    }
-
     public void setDate(RealTimeDate date) {
         this.date.setLocalDateTime(date.getLocalDateTime());
-    }
-
-    public RealTimeDate getDate() {
-        return this.date;
     }
 
     public @NotNull Inventory getInventory() {
@@ -84,13 +76,13 @@ public class RealTimeCalendar implements InventoryHolder {
 
         String title = Utils.setPlaceholders((String) calendarProperties.get(InventoryProperties.HEADER), date, true);
 
-        Inventory inventory = Bukkit.createInventory(this, getInventorySize(date), title);
+        Inventory newInventory = Bukkit.createInventory(this, getInventorySize(date), title);
 
         double daysPerMonth = date.getLocalDateTime().getMonth().length(false);
 
         int firstWeekDay = date.getLocalDateTime().withDayOfMonth(1).get(ChronoField.DAY_OF_WEEK);
 
-        if(!VenturaCalendar.getInstance().getTimeConfig().getBoolean("main-time-system.real-time.first-day-sunday")) {
+        if (Boolean.FALSE.equals(VenturaCalendar.getInstance().getTimeConfig().getBoolean("main-time-system.real-time.first-day-sunday"))) {
             firstWeekDay--;
         }
 
@@ -99,7 +91,7 @@ public class RealTimeCalendar implements InventoryHolder {
         double weeksThisMonth = Math.ceil(((daysPerMonth + firstWeekDay) / daysPerWeek));
 
         int weekSlot = daysPerWeek;
-        int daySlot =  firstWeekDay;
+        int daySlot = firstWeekDay;
 
         int dayOfMonth = 1;
         long weekOfMonth = 0;
@@ -118,7 +110,7 @@ public class RealTimeCalendar implements InventoryHolder {
         for (int week = 0; week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9) {
             date.setWeek(weekOfMonth);
 
-            copy = LocalDateTime.of((int)date.getYear(), date.getLocalDateTime().getMonth(), dayOfMonth, date.getLocalDateTime().getHour(), date.getLocalDateTime().getMinute(), date.getLocalDateTime().getSecond());
+            copy = LocalDateTime.of((int) date.getYear(), date.getLocalDateTime().getMonth(), dayOfMonth, date.getLocalDateTime().getHour(), date.getLocalDateTime().getMinute(), date.getLocalDateTime().getSecond());
             date.setLocalDateTime(copy);
 
             RealTimeDate forWeek = new RealTimeDate(date);
@@ -128,13 +120,13 @@ public class RealTimeCalendar implements InventoryHolder {
             ItemStack weekItem = createItem(weekProps, forWeek, true, null);
 
             if (weekItem != null && weekSlot < 55) {
-                inventory.setItem(weekSlot, weekItem);
+                newInventory.setItem(weekSlot, weekItem);
             }
 
             for (long day = 0; day < daysPerWeek; day++, dayOfMonth++, daySlot++) {
                 date.setDay(dayOfMonth);
 
-                copy = LocalDateTime.of((int)date.getYear(), date.getLocalDateTime().getMonth(), dayOfMonth, date.getLocalDateTime().getHour(), date.getLocalDateTime().getMinute(), date.getLocalDateTime().getSecond());
+                copy = LocalDateTime.of((int) date.getYear(), date.getLocalDateTime().getMonth(), dayOfMonth, date.getLocalDateTime().getHour(), date.getLocalDateTime().getMinute(), date.getLocalDateTime().getSecond());
                 date.setLocalDateTime(copy);
 
                 if (isToday(date)) {
@@ -142,21 +134,19 @@ public class RealTimeCalendar implements InventoryHolder {
                     ItemStack todayItem = createItem(todayProps, date, false, MonthEvent.DisplayType.CURRENT);
 
                     if (todayItem != null && daySlot < 55) {
-                        inventory.setItem(daySlot, todayItem);
+                        newInventory.setItem(daySlot, todayItem);
                     }
-                }
-                else if (isFuture(date, creationDate)) {
+                } else if (isFuture(date, creationDate)) {
                     ItemStack dayItem = createItem(futureDayProps, date, false, MonthEvent.DisplayType.FUTURE);
 
                     if (dayItem != null && daySlot < 55) {
-                        inventory.setItem(daySlot, dayItem);
+                        newInventory.setItem(daySlot, dayItem);
                     }
-                }
-                else {
+                } else {
                     ItemStack dayItem = createItem(passedDayProps, date, false, MonthEvent.DisplayType.PASSED);
 
                     if (dayItem != null && daySlot < 55) {
-                        inventory.setItem(daySlot, dayItem);
+                        newInventory.setItem(daySlot, dayItem);
                     }
                 }
 
@@ -183,14 +173,16 @@ public class RealTimeCalendar implements InventoryHolder {
 
         List<String> nextMonthLore = new ArrayList<>();
 
-        if (itemProperties.get(ItemProperties.LORE) != null) {
-            nextMonthLore = new ArrayList<>((List<String>) nextMonthProps.get(ItemProperties.LORE))
+        if (itemProperties.get(Items.NEXT_MONTH) != null) {
+            var nextMonthLoreList = nextMonthProps.get(ItemProperties.LORE);
+
+            nextMonthLore = new ArrayList<>((List<String>) nextMonthLoreList)
                     .stream().map(str -> Utils.setPlaceholders(str, creationDate, true))
-                    .collect(Collectors.toList());
+                    .toList();
         }
-        
+
         ItemCreator nextMonthItem = new ItemCreator(nextMonthMaterial, nextMonthAmount, nextMonthName, nextMonthLore);
-        
+
         Map<ItemProperties, Object> prevMonthProps = itemProperties.get(Items.PREVIOUS_MONTH);
         String prevMonthName = Utils.setPlaceholders((String) prevMonthProps.get(ItemProperties.NAME), creationDate, true);
         Material prevMonthMaterial = (Material) prevMonthProps.get(ItemProperties.MATERIAL);
@@ -198,22 +190,24 @@ public class RealTimeCalendar implements InventoryHolder {
 
         List<String> prevMonthLore = new ArrayList<>();
 
-        if (itemProperties.get(ItemProperties.LORE) != null) {
-            prevMonthLore = new ArrayList<>((List<String>) prevMonthProps.get(ItemProperties.LORE))
+        if (itemProperties.get(Items.PREVIOUS_MONTH) != null) {
+            var prevMonthLoreList = prevMonthProps.get(ItemProperties.LORE);
+
+            prevMonthLore = new ArrayList<>((List<String>) prevMonthLoreList)
                     .stream().map(str -> Utils.setPlaceholders(str, creationDate, true))
-                    .collect(Collectors.toList());
+                    .toList();
         }
-        
+
         ItemCreator previousMonthItem = new ItemCreator(prevMonthMaterial, prevMonthAmount, prevMonthName, prevMonthLore);
 
-        inventory.setItem(8, nextMonthItem.getItem());
-        inventory.setItem(17, previousMonthItem.getItem());
+        newInventory.setItem(8, nextMonthItem.getItem());
+        newInventory.setItem(17, previousMonthItem.getItem());
 
         boolean lastRowEmpty = false;
 
-        if(inventory.getSize() == 54) {
+        if (newInventory.getSize() == 54) {
             for (int i = 45; i < 54; i++) {
-                if (inventory.getItem(i) == null) {
+                if (newInventory.getItem(i) == null) {
                     lastRowEmpty = true;
                 } else {
                     lastRowEmpty = false;
@@ -222,17 +216,17 @@ public class RealTimeCalendar implements InventoryHolder {
             }
         }
 
-        if(lastRowEmpty) {
+        if (lastRowEmpty) {
             Inventory smallerInventory = Bukkit.createInventory(this, 45, title);
 
             for (int i = 0; i < 45; i++) {
-                smallerInventory.setItem(i, inventory.getItem(i));
+                smallerInventory.setItem(i, newInventory.getItem(i));
             }
 
             return smallerInventory;
         }
 
-        return inventory;
+        return newInventory;
     }
 
     private boolean isEndOfWeek(RealTimeDate date, int daySlot) {
@@ -277,22 +271,23 @@ public class RealTimeCalendar implements InventoryHolder {
         }
 
         if ((boolean) itemProperties.get(ItemProperties.TOGGLE)) {
-            if (skullOwner == null)
+            if (skullOwner == null) {
                 return new ItemCreator(material, amount, name, lore).getItem();
-            else
+            } else {
                 return new ItemCreator(material, amount, name, lore, skullOwner).getItem();
+            }
         }
 
         return null;
     }
 
-    private boolean isToday(RealTimeDate date) {
+    private boolean isToday(@NotNull RealTimeDate date) {
         return date.getYear() == realTimeCurrentDate.getYear()
-            && date.getMonth() == realTimeCurrentDate.getMonth()
-            && date.getDay() == realTimeCurrentDate.getDay();
+                && date.getMonth() == realTimeCurrentDate.getMonth()
+                && date.getDay() == realTimeCurrentDate.getDay();
     }
 
-    private boolean isFuture(RealTimeDate date, RealTimeDate currentDate) {
+    private boolean isFuture(@NotNull RealTimeDate date, @NotNull RealTimeDate currentDate) {
         return date.getMonth() >= currentDate.getMonth()
                 && date.getDay() > currentDate.getDay();
     }

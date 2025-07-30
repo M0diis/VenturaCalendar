@@ -11,14 +11,17 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class MonthEventDayEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private boolean isCancelled;
-
     private final TimeSystem timeSystem;
     private final MonthEvent monthEvent;
+    private boolean isCancelled;
 
     public MonthEventDayEvent(TimeSystem timeSystem, MonthEvent monthEvent) {
         this.timeSystem = timeSystem;
         this.monthEvent = monthEvent;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 
     @Override
@@ -33,10 +36,6 @@ public class MonthEventDayEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return HANDLERS_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
 }

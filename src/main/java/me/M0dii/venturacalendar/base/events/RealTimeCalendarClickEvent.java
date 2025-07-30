@@ -14,13 +14,12 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class RealTimeCalendarClickEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private boolean isCancelled;
-
     private final Inventory inventory;
     private final RealTimeCalendar calendar;
     private final ItemStack item;
     private final InventoryClickEvent inventoryClickEvent;
     private final Player player;
+    private boolean isCancelled;
 
     public RealTimeCalendarClickEvent(RealTimeCalendar cal,
                                       InventoryClickEvent event,
@@ -32,6 +31,10 @@ public class RealTimeCalendarClickEvent extends Event implements Cancellable {
         this.player = p;
         this.inventory = inventory;
         this.item = item;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 
     @Override
@@ -46,10 +49,6 @@ public class RealTimeCalendarClickEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return HANDLERS_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
 

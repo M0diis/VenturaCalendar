@@ -1,9 +1,7 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TimeSystemUtils {
     public List<Long> getMonthTPU(TimeSystem timeSystem) {
@@ -15,7 +13,7 @@ public class TimeSystemUtils {
         return timeSystem.getDaysPerMonth().stream()
                 .mapToLong(daysThisMonth -> daysThisMonth)
                 .mapToObj(daysThisMonth -> ticksPerDay * daysThisMonth)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public long getTPU(DateEnum unit, TimeSystem timeSystem) {

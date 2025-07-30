@@ -33,9 +33,8 @@ public enum Version implements Comparable<Version> {
     v1_8_R1(0),
     UNKNOWN(-1);
 
-    private boolean notified = false;
-
     private final int value;
+    private boolean notified = false;
 
     Version(int value) {
         this.value = value;
@@ -58,8 +57,7 @@ public enum Version implements Comparable<Version> {
 
         try {
             return valueOf(version.trim());
-        }
-        catch (final IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             return Version.UNKNOWN;
         }
     }

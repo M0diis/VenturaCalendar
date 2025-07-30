@@ -4,7 +4,6 @@ import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.configutils.Config;
 import me.m0dii.venturacalendar.base.configutils.ConfigUtils;
 import me.m0dii.venturacalendar.base.dateutils.EventDays;
-import me.m0dii.venturacalendar.base.dateutils.Month;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.Material;
@@ -14,37 +13,30 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EventConfig extends Config implements ConfigUtils {
     private final List<MonthEvent> events;
-    private final VenturaCalendar plugin;
     private FileConfiguration cfg;
 
     public EventConfig(VenturaCalendar plugin) {
         super(plugin.getDataFolder(), "Events.yml", plugin);
-
-        this.plugin = plugin;
 
         this.cfg = super.loadConfig();
 
         this.events = new ArrayList<>();
 
         loadEvents();
-
-        VenturaCalendar.PREFIX = getString("messages.prefix");
     }
 
     public List<MonthEvent> getEvents() {
-        return this.events
-                .stream()
+        return this.events.stream()
                 .sorted(Comparator.comparingInt(MonthEvent::getPriority))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public MonthEvent getEvent(String name) {
         return this.events.stream()
-                .filter(event -> event.getName().equalsIgnoreCase(name))
+                .filter(event -> event.getEventName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }
@@ -67,8 +59,7 @@ public class EventConfig extends Config implements ConfigUtils {
                     for (String month : eventSection.getStringList("months")) {
                         createEvent(k, eventSection, month);
                     }
-                }
-                else {
+                } else {
                     createEvent(k, eventSection, eventSection.getString("month", ""));
                 }
             });
@@ -81,33 +72,31 @@ public class EventConfig extends Config implements ConfigUtils {
         String eventDisplayName = Utils.format(eventSection.getString("name"));
 
         if (eventSection.contains("days")) {
-            if(eventSection.get("days") instanceof List eventDaysList) {
+            if (eventSection.get("days") instanceof List eventDaysList) {
                 eventDays = new EventDays(eventDaysList);
             } else {
                 eventDays = new EventDays(eventSection.getInt("days.start"), eventSection.getInt("days.end"));
             }
-        }
-        else if (eventSection.contains("day")) {
+        } else if (eventSection.contains("day")) {
             eventDays = new EventDays(eventSection.getInt("day"), eventSection.getInt("day"));
         }
 
         List<String> description = eventSection.getStringList("description").stream()
                 .map(Utils::format)
-                .collect(Collectors.toList());
+                .toList();
 
         String disp = "display-material.";
 
         Material matCurr = null, matPassed = null, matFuture = null;
 
         if (eventSection.contains(disp + "current")
-         && eventSection.contains(disp + "passed")
-         && eventSection.contains(disp + "future")) {
+                && eventSection.contains(disp + "passed")
+                && eventSection.contains(disp + "future")) {
             matCurr = Utils.getMaterial(eventSection.getString("display-material.current", "GLASS_PANE"));
             matPassed = Utils.getMaterial(eventSection.getString("display-material.passed", "GLASS_PANE"));
             matFuture = Utils.getMaterial(eventSection.getString("display-material.future", "GLASS_PANE"));
 
-        }
-        else {
+        } else {
             matCurr = Utils.getMaterial(eventSection.getString("display-material", "WHITE_STAINED_GLASS_PANE"));
             matPassed = matCurr;
             matFuture = matCurr;
@@ -138,6 +127,7 @@ public class EventConfig extends Config implements ConfigUtils {
         this.events.add(event);
     }
 
+    @Override
     public FileConfiguration reloadConfig() {
         cfg = super.loadConfig();
 
@@ -178,6 +168,6 @@ public class EventConfig extends Config implements ConfigUtils {
     public List<String> getListString(String path) {
         return cfg.getStringList(path).stream()
                 .map(Utils::format)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

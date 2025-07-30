@@ -18,7 +18,7 @@ public class DateUtils {
      * Puts all date properties from DateEnum into a HashMap.
      */
     public Map<DateEnum, Object> toHashMap(VenturaCalendarDate venturaCalendarDate) {
-        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
 
         Map<DateEnum, Object> dateMap = new EnumMap<>(DateEnum.class);
 
@@ -39,7 +39,7 @@ public class DateUtils {
 
     @Nonnull
     public VenturaCalendarDate addZeroPoints(VenturaCalendarDate venturaCalendarDate) {
-        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
 
         TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
@@ -57,7 +57,7 @@ public class DateUtils {
     }
 
     public VenturaCalendarDate removeZeroPoints(VenturaCalendarDate venturaCalendarDate) {
-        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
 
         TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
@@ -87,7 +87,7 @@ public class DateUtils {
     }
 
     private VenturaCalendarDate calculate(DateEnum unit, int count, VenturaCalendarDate venturaCalendarDate, boolean down) {
-        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
 
         TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
@@ -150,7 +150,7 @@ public class DateUtils {
     public long getDayOfWeek(VenturaCalendarDate venturaCalendarDate) {
         if (venturaCalendarDate == null) return 0L;
 
-        venturaCalendarDate = new VenturaCalendarDate(venturaCalendarDate);
+        venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
 
         if (venturaCalendarDate.getMonth() != 6) {
             venturaCalendarDate.setDay(venturaCalendarDate.getDay() + 1);

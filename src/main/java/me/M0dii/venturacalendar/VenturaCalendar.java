@@ -3,15 +3,14 @@ package me.m0dii.venturacalendar;
 import lombok.Getter;
 import me.m0dii.venturacalendar.base.configutils.TimeConfig;
 import me.m0dii.venturacalendar.base.dateutils.*;
-import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
 import me.m0dii.venturacalendar.base.events.NewDayEvent;
 import me.m0dii.venturacalendar.base.utils.*;
+import me.m0dii.venturacalendar.game.commands.CmdExecutor;
 import me.m0dii.venturacalendar.game.config.BaseConfig;
 import me.m0dii.venturacalendar.game.config.CalendarConfig;
 import me.m0dii.venturacalendar.game.config.EventConfig;
 import me.m0dii.venturacalendar.game.listeners.EventDayListener;
 import me.m0dii.venturacalendar.game.listeners.NewDayListener;
-import me.m0dii.venturacalendar.game.commands.CmdExecutor;
 import me.m0dii.venturacalendar.game.listeners.inventory.*;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
@@ -31,26 +30,19 @@ import java.util.Map;
 import java.util.Optional;
 
 public class VenturaCalendar extends JavaPlugin implements Listener {
+    private static final String SPIGOT_URL = "https://www.spigotmc.org/resources/99128/";
+    public static boolean debug = false;
+    public static String PREFIX;
+    static boolean newDay = false;
     @Getter
     private static VenturaCalendar instance;
     private Placeholders placeholders;
-
-    public static boolean debug = false;
-
-    public String getSpigotLink() {
-        return "https://www.spigotmc.org/resources/99128/";
-    }
-
-    public static String PREFIX;
-
     private DateUtils dateUtils;
     private TimeSystemUtils timeSystemUtils;
-
     private TimeConfig timeConfig;
     private CalendarConfig calendarConfig;
     private EventConfig eventConfig;
     private BaseConfig baseConfig;
-
     private boolean papiEnabled = false;
 
     @Override
@@ -79,20 +71,20 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
     private void syncDaylight() {
         TimeSystem timeSystem = getTimeConfig().getTimeSystem();
 
-        if(!timeSystem.isRealTime()) {
+        if (!timeSystem.isRealTime()) {
             return;
         }
 
         World w = Bukkit.getWorld(timeSystem.getWorldName());
 
-        if(w == null) {
+        if (w == null) {
             return;
         }
 
         w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, !getTimeConfig().getBoolean("main-time-system.real-time.sync"));
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
-            if(Boolean.FALSE.equals(getTimeConfig().getBoolean("main-time-system.real-time.sync"))) {
+            if (Boolean.FALSE.equals(getTimeConfig().getBoolean("main-time-system.real-time.sync"))) {
                 return;
             }
 
@@ -107,7 +99,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
             return;
         }
 
-        if(Boolean.FALSE.equals(getBaseConfig().getBoolean("action-bar.enabled"))) {
+        if (Boolean.FALSE.equals(getBaseConfig().getBoolean("action-bar.enabled"))) {
             return;
         }
 
@@ -143,8 +135,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), realTime, p));
                 }
-            }
-            else if (world != null) {
+            } else if (world != null) {
                 VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
@@ -163,7 +154,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
                 getLogger().info("You are running an outdated version of VenturaCalendar.");
                 getLogger().info("Latest version: " + ver + ", you are using: " + curr);
                 getLogger().info("You can download the latest version on Spigot:");
-                getLogger().info(getSpigotLink());
+                getLogger().info(SPIGOT_URL);
             }
         });
     }
@@ -183,8 +174,6 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
 
         metrics.addCustomChart(c);
     }
-
-    static boolean newDay = false;
 
     private void newDayCheckTimer() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->

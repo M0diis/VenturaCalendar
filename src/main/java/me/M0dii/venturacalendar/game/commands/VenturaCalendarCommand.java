@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VenturaCalendarCommand {
-    List<BukkitRunnable> tasks = new ArrayList<>();
+    private final List<BukkitRunnable> tasks = new ArrayList<>();
 
     public VenturaCalendarCommand(CommandSender sender, String[] args, VenturaCalendar plugin) {
         if (args.length == 1) {
@@ -34,8 +34,7 @@ public class VenturaCalendarCommand {
                 Messenger.send(sender, Messages.CONFIG_RELOADED);
 
                 return;
-            }
-            else if(alias(args[0], "help, info")) {
+            } else if (alias(args[0], "help, info")) {
                 if (!sender.hasPermission("venturacalendar.command.help")) {
                     Messenger.send(sender, Messages.NO_PERMISSION);
 
@@ -45,8 +44,7 @@ public class VenturaCalendarCommand {
                 Messenger.send(sender, Messages.HELP);
 
                 return;
-            }
-            else {
+            } else {
                 Messenger.send(sender, Messages.HELP);
             }
         }
@@ -73,7 +71,7 @@ public class VenturaCalendarCommand {
 
                 TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
-                if(timeSystem.isRealTime()) {
+                if (timeSystem.isRealTime()) {
                     Messenger.send(sender, Messages.REAL_TIME_SET);
 
                     return;
@@ -87,7 +85,7 @@ public class VenturaCalendarCommand {
 
                 World w = p.getWorld();
 
-                final long[] total = { ticksToAdd };
+                final long[] total = {ticksToAdd};
 
                 boolean add = alias(args[0], "fastforward, ff");
 
@@ -102,8 +100,7 @@ public class VenturaCalendarCommand {
 
                         if (add) {
                             w.setFullTime(w.getFullTime() + toAdd);
-                        }
-                        else {
+                        } else {
                             w.setFullTime(w.getFullTime() - toAdd);
                         }
 
@@ -138,7 +135,7 @@ public class VenturaCalendarCommand {
                 if (alias(args[1], "startyear, startingyear") && args.length == 3) {
                     TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
-                    if(timeSystem.isRealTime()) {
+                    if (timeSystem.isRealTime()) {
                         Messenger.send(sender, Messages.REAL_TIME_SET);
 
                         return;
@@ -153,14 +150,13 @@ public class VenturaCalendarCommand {
                         plugin.getBaseConfig().reloadConfig();
 
                         Messenger.send(p, "&aSuccessfully set starting year to " + startYear);
-                    }
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
                         Messenger.send(p, "&aInvalid number format.");
                         Messenger.log(Messenger.Level.DEBUG, ex);
                     }
                 }
 
-                if(alias(args[1], "offset") && args.length == 4) {
+                if (alias(args[1], "offset") && args.length == 4) {
                     try {
                         int value = Integer.parseInt(args[3]);
 
@@ -168,26 +164,19 @@ public class VenturaCalendarCommand {
 
                         if (alias(args[2], "sec, second, seconds")) {
                             plugin.getTimeConfig().set(path + ".second", value);
-                        }
-                        else if (alias(args[2], "min, minute, minutes")) {
+                        } else if (alias(args[2], "min, minute, minutes")) {
                             plugin.getTimeConfig().set(path + ".minute", value);
-                        }
-                        else if (alias(args[2], "h, hour, hours")) {
+                        } else if (alias(args[2], "h, hour, hours")) {
                             plugin.getTimeConfig().set(path + ".hour", value);
-                        }
-                        else if (alias(args[2], "d, day, days")) {
+                        } else if (alias(args[2], "d, day, days")) {
                             plugin.getTimeConfig().set(path + ".day", value);
-                        }
-                        else if (alias(args[2], "w, week, weeks")) {
+                        } else if (alias(args[2], "w, week, weeks")) {
                             plugin.getTimeConfig().set(path + ".week", value);
-                        }
-                        else if (alias(args[2], "mon, month, months")) {
+                        } else if (alias(args[2], "mon, month, months")) {
                             plugin.getTimeConfig().set(path + ".month", value);
-                        }
-                        else if (alias(args[2], "y, year, years")) {
+                        } else if (alias(args[2], "y, year, years")) {
                             plugin.getTimeConfig().set(path + ".year", value);
-                        }
-                        else {
+                        } else {
                             Messenger.send(p, "&aInvalid offset type.");
                             return;
                         }
@@ -196,17 +185,16 @@ public class VenturaCalendarCommand {
                         plugin.getBaseConfig().reloadConfig();
 
                         Messenger.send(p, "&aSuccessfully set &2'" + args[2] + "'&a offset to &2" + value);
-                    }
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
                         Messenger.send(p, "&cInvalid number format.");
                         Messenger.log(Messenger.Level.DEBUG, ex);
                     }
                 }
 
-                if(alias(args[1], "worldticks, fulltime") && args.length == 3) {
+                if (alias(args[1], "worldticks, fulltime") && args.length == 3) {
                     TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
-                    if(timeSystem.isRealTime()) {
+                    if (timeSystem.isRealTime()) {
                         Messenger.send(sender, Messages.REAL_TIME_SET);
 
                         return;
@@ -218,8 +206,7 @@ public class VenturaCalendarCommand {
                         p.getWorld().setFullTime(worldTicks);
 
                         Messenger.send(p, "&aSuccessfully set world ticks to " + worldTicks);
-                    }
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
                         Messenger.send(p, "&aInvalid number format.");
                         Messenger.log(Messenger.Level.DEBUG, ex);
                     }
@@ -228,7 +215,7 @@ public class VenturaCalendarCommand {
                 if (alias(args[1], "date") && args.length == 3) {
                     TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
-                    if(timeSystem.isRealTime()) {
+                    if (timeSystem.isRealTime()) {
                         Messenger.send(sender, Messages.REAL_TIME_SET);
 
                         return;
@@ -253,8 +240,7 @@ public class VenturaCalendarCommand {
 
                         try {
                             m = Integer.parseInt(month) - 1;
-                        }
-                        catch (NumberFormatException ex) {
+                        } catch (NumberFormatException ex) {
                             Messenger.send(p, "&cIllegal month number format.");
                             Messenger.log(Messenger.Level.DEBUG, ex);
                         }
@@ -273,8 +259,7 @@ public class VenturaCalendarCommand {
 
                         try {
                             d = Integer.parseInt(day);
-                        }
-                        catch (NumberFormatException ex) {
+                        } catch (NumberFormatException ex) {
                             Messenger.send(p, "&cIllegal day number format.");
                             Messenger.log(Messenger.Level.DEBUG, ex);
                         }
@@ -296,8 +281,7 @@ public class VenturaCalendarCommand {
                         plugin.getTimeConfig().reloadConfig();
                         plugin.getBaseConfig().reloadConfig();
 
-                    }
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
                         Messenger.send(p, "&aIllegal number format.");
                         Messenger.log(Messenger.Level.DEBUG, ex);
                     }
@@ -307,7 +291,7 @@ public class VenturaCalendarCommand {
             if (alias(args[0], "add, subtract")) {
                 TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
-                if(timeSystem.isRealTime()) {
+                if (timeSystem.isRealTime()) {
                     Messenger.send(sender, Messages.REAL_TIME_SET);
 
                     return;
@@ -330,8 +314,7 @@ public class VenturaCalendarCommand {
                 if (alias(args[1], "w, week, weeks"))
                     fastForwards(args[2], p, 168000L, " week.", " weeks.", sub);
             }
-        }
-        else Messenger.send(sender, Messages.HELP);
+        } else Messenger.send(sender, Messages.HELP);
     }
 
     private void fastForwards(String amt, Player p, long oneAmount, String s, String s2, boolean subtract) {
@@ -354,10 +337,8 @@ public class VenturaCalendarCommand {
                 w.setFullTime(w.getFullTime() + total);
 
                 Messenger.send(p, "&aFast-forwarded the time by " + amount + (amt.charAt(0) == '1' ? s : s2));
-            }
-            else Messenger.send(p, "&aWorld time can not go below 0 days.");
-        }
-        catch (NumberFormatException ex) {
+            } else Messenger.send(p, "&aWorld time can not go below 0 days.");
+        } catch (NumberFormatException ex) {
             Messenger.send(p, "&cProvided amount is not valid.");
         }
     }

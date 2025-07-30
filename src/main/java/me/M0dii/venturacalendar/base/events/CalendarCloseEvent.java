@@ -12,16 +12,19 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class CalendarCloseEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private boolean isCancelled;
-
     private final Inventory inv;
     private final Calendar calendar;
     private final Player player;
+    private boolean isCancelled;
 
     public CalendarCloseEvent(Calendar cal, Inventory inv, Player p) {
         this.calendar = cal;
         this.inv = inv;
         this.player = p;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 
     @Override
@@ -36,10 +39,6 @@ public class CalendarCloseEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return HANDLERS_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
 

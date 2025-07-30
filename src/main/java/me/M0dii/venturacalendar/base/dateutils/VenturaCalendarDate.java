@@ -1,15 +1,16 @@
 package me.m0dii.venturacalendar.base.dateutils;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import me.m0dii.venturacalendar.VenturaCalendar;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class VenturaCalendarDate {
     private final VenturaCalendar plugin = VenturaCalendar.getInstance();
@@ -27,19 +28,20 @@ public class VenturaCalendarDate {
     private long year;
     private long era;
 
-    public VenturaCalendarDate(VenturaCalendarDate venturaCalendarDate) {
-        this.timeSystem = venturaCalendarDate.getTimeSystem();
-        this.rootTicks = venturaCalendarDate.getRootTicks();
-
-        this.tick = venturaCalendarDate.getTick();
-        this.second = venturaCalendarDate.getSecond();
-        this.minute = venturaCalendarDate.getMinute();
-        this.hour = venturaCalendarDate.getHour();
-        this.day = venturaCalendarDate.getDay();
-        this.week = venturaCalendarDate.getWeek();
-        this.month = venturaCalendarDate.getMonth();
-        this.year = venturaCalendarDate.getYear();
-        this.era = venturaCalendarDate.getEra();
+    public static VenturaCalendarDate clone(VenturaCalendarDate venturaCalendarDate) {
+        return VenturaCalendarDate.builder()
+                .timeSystem(venturaCalendarDate.getTimeSystem())
+                .rootTicks(venturaCalendarDate.getRootTicks())
+                .tick(venturaCalendarDate.getTick())
+                .second(venturaCalendarDate.getSecond())
+                .minute(venturaCalendarDate.getMinute())
+                .hour(venturaCalendarDate.getHour())
+                .day(venturaCalendarDate.getDay())
+                .week(venturaCalendarDate.getWeek())
+                .month(venturaCalendarDate.getMonth())
+                .year(venturaCalendarDate.getYear())
+                .era(venturaCalendarDate.getEra())
+                .build();
     }
 
     public String getMonthName() {
@@ -62,10 +64,6 @@ public class VenturaCalendarDate {
 
     public LocalDateTime toLocalDateTime() {
         return LocalDateTime.of((int) this.year, (int) this.month, (int) this.day, (int) this.hour, (int) this.minute, (int) this.second);
-    }
-
-    public Date toDate() {
-        return new Date((int) this.year, (int) this.month, (int) this.day, (int) this.hour, (int) this.minute, (int) this.second);
     }
 }
 

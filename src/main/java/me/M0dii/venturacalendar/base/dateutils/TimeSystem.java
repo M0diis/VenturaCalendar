@@ -13,8 +13,6 @@ import java.util.List;
 public class TimeSystem {
     private final String worldName;
     private final String name;
-    private boolean realTime = false;
-
     // Date parameters.
     private final long ticksPerSecond;
     private final long secondsPerMinute;
@@ -25,7 +23,6 @@ public class TimeSystem {
     private final long monthsPerYear;
     private final List<Long> erasBegin;
     private final List<Long> erasEnd;
-
     // Zero points
     private final long tickZero;
     private final long secondZero;
@@ -36,11 +33,11 @@ public class TimeSystem {
     private final long monthZero;
     private final long yearZero;
     private final long eraZero;
-
     // Date parameter names.
     private final List<Month> months;
     private final List<String> dayNames;
     private final List<String> eraNames;
+    private boolean realTime = false;
 
     public static TimeSystem of(TimeSystem timeSystem) {
         return TimeSystem.builder()

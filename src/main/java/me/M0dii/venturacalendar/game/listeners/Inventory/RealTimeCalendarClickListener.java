@@ -3,7 +3,6 @@ package me.m0dii.venturacalendar.game.listeners.inventory;
 import me.m0dii.venturacalendar.VenturaCalendar;
 import me.m0dii.venturacalendar.base.dateutils.EventDays;
 import me.m0dii.venturacalendar.base.dateutils.RealTimeDate;
-import me.m0dii.venturacalendar.base.events.CalendarOpenEvent;
 import me.m0dii.venturacalendar.base.events.RealTimeCalendarClickEvent;
 import me.m0dii.venturacalendar.base.events.RealTimeCalendarOpenEvent;
 import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
@@ -49,7 +48,7 @@ public class RealTimeCalendarClickListener implements Listener {
 
         ItemStack item = e.getItem();
 
-        if(item == null || item.getType().isAir()) {
+        if (item == null || item.getType().isAir()) {
             return;
         }
 
@@ -58,7 +57,7 @@ public class RealTimeCalendarClickListener implements Listener {
         LocalDateTime currentLocalDateTime = cal.getDate().getLocalDateTime();
 
         if (item.getType().equals(Material.PAPER)) {
-            if(e.getInventoryClickEvent().getSlot() == 8) {
+            if (e.getInventoryClickEvent().getSlot() == 8) {
                 RealTimeDate nextMonthDate = new RealTimeDate(cal.getDate().getEra(), currentLocalDateTime.plusMonths(1));
 
                 RealTimeCalendar nextMonth = new RealTimeCalendar(nextMonthDate, cal.getDate());
@@ -67,10 +66,10 @@ public class RealTimeCalendarClickListener implements Listener {
 
                 Bukkit.getPluginManager().callEvent(new RealTimeCalendarOpenEvent(nextMonth, nextMonth.getInventory(), player));
             }
-            if(e.getInventoryClickEvent().getSlot() == 17) {
+            if (e.getInventoryClickEvent().getSlot() == 17) {
                 RealTimeDate prevMonthDate = new RealTimeDate(cal.getDate().getEra(), currentLocalDateTime.minusMonths(1));
 
-                RealTimeCalendar nextMonth = new RealTimeCalendar(prevMonthDate,  cal.getDate());
+                RealTimeCalendar nextMonth = new RealTimeCalendar(prevMonthDate, cal.getDate());
 
                 player.openInventory(nextMonth.getInventory());
 
@@ -78,7 +77,7 @@ public class RealTimeCalendarClickListener implements Listener {
             }
         }
 
-        HashMap<String, EventDays> redeemableMonths = baseConfig.getRedeemableMonths();
+        Map<String, EventDays> redeemableMonths = baseConfig.getRedeemableMonths();
 
         if (cal.getDate() != null && baseConfig.redeemWhitelistEnabled()) {
             EventDays eventDays = redeemableMonths.get(currentLocalDateTime.getMonth().name());
@@ -107,7 +106,7 @@ public class RealTimeCalendarClickListener implements Listener {
             return;
         }
 
-        if (!baseConfig.getBoolean("rewards.enabled")) {
+        if (Boolean.FALSE.equals(baseConfig.getBoolean("rewards.enabled"))) {
             return;
         }
 
@@ -115,8 +114,7 @@ public class RealTimeCalendarClickListener implements Listener {
             for (String cmd : baseConfig.getListString("rewards.commands")) {
                 Utils.sendCommand(player, cmd);
             }
-        }
-        else {
+        } else {
             Messenger.send(player, Messages.REDEEMED);
         }
     }

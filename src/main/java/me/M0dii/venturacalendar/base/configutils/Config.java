@@ -34,8 +34,7 @@ public class Config {
     protected void saveConfig() {
         try {
             config.save(file);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Messenger.log(Messenger.Level.DEBUG, ex);
         }
     }
@@ -64,8 +63,7 @@ public class Config {
             config.load(file);
 
             Messenger.log(Messenger.Level.INFO, "Successfully loaded " + file.getName() + ".");
-        }
-        catch (IOException | InvalidConfigurationException ex) {
+        } catch (IOException | InvalidConfigurationException ex) {
             Messenger.log(Messenger.Level.WARN, "Error while loading " + file.getName() + ".");
             Messenger.log(Messenger.Level.DEBUG, ex);
         }

@@ -42,7 +42,7 @@ public class CalendarClickListener implements Listener {
             return;
         }
 
-        HashMap<String, EventDays> redeemableMonths = baseConfig.getRedeemableMonths();
+        Map<String, EventDays> redeemableMonths = baseConfig.getRedeemableMonths();
 
         if (cal.getDate() != null && baseConfig.redeemWhitelistEnabled()) {
             EventDays eventDays = redeemableMonths.get(cal.getDate().getMonthName());
@@ -82,8 +82,7 @@ public class CalendarClickListener implements Listener {
             for (String cmd : baseConfig.getListString("rewards.commands")) {
                 Utils.sendCommand(player, cmd);
             }
-        }
-        else {
+        } else {
             Messenger.send(player, Messages.REDEEMED);
         }
     }

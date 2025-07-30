@@ -10,19 +10,27 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BaseConfig extends Config implements ConfigUtils {
-    FileConfiguration cfg;
-
     final HashMap<String, EventDays> redeemableMonths = new HashMap<>();
     final HashMap<Messages, String> messages = new HashMap<>();
+    FileConfiguration cfg;
 
-    public boolean debug() {
+    public BaseConfig(VenturaCalendar plugin) {
+        super(plugin.getDataFolder(), "BaseConfig.yml", plugin);
+
+        cfg = super.loadConfig();
+
+        VenturaCalendar.PREFIX = getString("messages.prefix");
+
+        debug();
+    }
+
+    public void debug() {
         VenturaCalendar.debug = getBoolean("debug");
-
-        return VenturaCalendar.debug;
     }
 
     public boolean updateCheck() {
@@ -37,16 +45,6 @@ public class BaseConfig extends Config implements ConfigUtils {
         return getBoolean("new-day.title.enabled");
     }
 
-    public BaseConfig(VenturaCalendar plugin) {
-        super(plugin.getDataFolder(), "BaseConfig.yml", plugin);
-
-        cfg = super.loadConfig();
-
-        VenturaCalendar.PREFIX = getString("messages.prefix");
-
-        debug();
-    }
-
     public List<String> getNewDayCommands() {
         return getListString("new-day.commands");
     }
@@ -54,7 +52,7 @@ public class BaseConfig extends Config implements ConfigUtils {
     public Optional<String> getNewDayMessage() {
         List<String> msg = getListString("new-day.messages");
 
-        if (msg.size() == 0) {
+        if (msg.isEmpty()) {
             return Optional.empty();
         }
 
@@ -70,7 +68,7 @@ public class BaseConfig extends Config implements ConfigUtils {
     }
 
     public Optional<String> getActionBarMessage() {
-        if (!getBoolean("action-bar.enabled"))
+        if (Boolean.FALSE.equals(getBoolean("action-bar.enabled")))
             return Optional.empty();
 
         return Optional.of(getString("action-bar.text"));
@@ -80,7 +78,7 @@ public class BaseConfig extends Config implements ConfigUtils {
         return cfg.getBoolean("rewards.redeemable-months.enabled");
     }
 
-    public HashMap<String, EventDays> getRedeemableMonths() {
+    public Map<String, EventDays> getRedeemableMonths() {
         ConfigurationSection sec = cfg.getConfigurationSection("rewards.redeemable-months");
 
         if (sec != null) {
@@ -127,6 +125,7 @@ public class BaseConfig extends Config implements ConfigUtils {
         return messages;
     }
 
+    @Override
     public FileConfiguration reloadConfig() {
         cfg = super.reloadConfig();
 
@@ -165,6 +164,6 @@ public class BaseConfig extends Config implements ConfigUtils {
     public List<String> getListString(String path) {
         return cfg.getStringList(path).stream()
                 .map(Utils::format)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -6,12 +6,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class DateCalculator {
+    private static final VenturaCalendar instance = VenturaCalendar.getInstance();
+    private static final TimeSystemUtils timeSystemUtils = instance.getTimeSystemUtils();
     private DateCalculator() {
         // Prevent instantiation
     }
-
-    private static final VenturaCalendar instance = VenturaCalendar.getInstance();
-    private static final TimeSystemUtils timeSystemUtils = instance.getTimeSystemUtils();
 
     public static VenturaCalendarDate fromTicks(long ticks, TimeSystem timeSystem) {
         long tick = 0;
@@ -86,7 +85,19 @@ public class DateCalculator {
                 era = index;
         }
 
-        return new VenturaCalendarDate(timeSystem, rootTicks, tick, second, minute, hour, day, week, month, year, era);
+        return VenturaCalendarDate.builder()
+                .timeSystem(timeSystem)
+                .rootTicks(rootTicks)
+                .tick(tick)
+                .second(second)
+                .minute(minute)
+                .hour(hour)
+                .day(day)
+                .week(week)
+                .month(month)
+                .year(year)
+                .era(era)
+                .build();
     }
 
     public static RealTimeDate realTimeNow() {

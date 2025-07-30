@@ -17,13 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class NewDayListener implements Listener {
+    private static final List<UUID> redeemed = new ArrayList<>();
     private final VenturaCalendar plugin;
 
     public NewDayListener(VenturaCalendar plugin) {
         this.plugin = plugin;
     }
-
-    private static final List<UUID> redeemed = new ArrayList<>();
 
     public static boolean redeem(UUID uuid) {
         if (redeemed.contains(uuid)) {
@@ -56,7 +55,7 @@ public class NewDayListener implements Listener {
             redeemed.clear();
         }
 
-        if(ts.isRealTime()) {
+        if (ts.isRealTime()) {
             for (MonthEvent event : plugin.getEventConfig().getEvents()) {
                 if (event.includesDate(realTimeDate)) {
                     Bukkit.getPluginManager().callEvent(new MonthEventDayEvent(ts, event));
@@ -79,7 +78,7 @@ public class NewDayListener implements Listener {
                 String base = plugin.getBaseConfig().getNewDayMessage().get();
                 String msg = "";
 
-                if(ts.isRealTime()) {
+                if (ts.isRealTime()) {
                     msg = Utils.setPlaceholders(base, realTimeDate, p);
                 } else {
                     msg = Utils.setPlaceholders(base, venturaCalendarDate, p);
@@ -96,13 +95,13 @@ public class NewDayListener implements Listener {
                 int stay = plugin.getBaseConfig().getInteger("new-day.title.stay");
                 int fadeout = plugin.getBaseConfig().getInteger("new-day.title.fade-out");
 
-                if(ts.isRealTime()) {
+                if (ts.isRealTime()) {
                     title = Utils.setPlaceholders(title, realTimeDate, p);
                 } else {
                     title = Utils.setPlaceholders(title, venturaCalendarDate, p);
                 }
 
-                if(ts.isRealTime()) {
+                if (ts.isRealTime()) {
                     subtitle = Utils.setPlaceholders(subtitle, realTimeDate, p);
                 } else {
                     subtitle = Utils.setPlaceholders(subtitle, venturaCalendarDate, p);

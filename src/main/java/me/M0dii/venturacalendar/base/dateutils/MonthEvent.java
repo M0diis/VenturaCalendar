@@ -4,32 +4,24 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 public class MonthEvent {
-    public enum DisplayType {
-        PASSED,
-        CURRENT,
-        FUTURE
-    }
-    private int priority = -1;
-
     private final String eventName;
     private final String eventDisplayName;
     private final String monthName;
-
     private final List<String> description;
     private final EventDays eventDays;
-
     private final List<String> dayNames;
-
-    private int year = -1;
-
     private final Map<DisplayType, Material> display;
     private final List<String> commands;
-
+    private int priority = -1;
+    private int year = -1;
     public MonthEvent(String eventDisplayName,
                       String monthName,
                       String eventName,
@@ -101,19 +93,17 @@ public class MonthEvent {
         return eventDays.getTo();
     }
 
-    public String getDisplayName() {
-        return this.eventDisplayName;
-    }
-
-    public String getName() {
-        return this.eventName;
-    }
-
     public void addDayName(String dayName) {
         this.dayNames.add(dayName);
     }
 
     public boolean hasFromTo() {
         return this.eventDays != null;
+    }
+
+    public enum DisplayType {
+        PASSED,
+        CURRENT,
+        FUTURE
     }
 }
