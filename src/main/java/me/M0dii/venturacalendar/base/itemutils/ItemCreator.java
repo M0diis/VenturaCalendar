@@ -1,6 +1,7 @@
 package me.m0dii.venturacalendar.base.itemutils;
 
 import com.cryptomorin.xseries.XMaterial;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -10,8 +11,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 public class ItemCreator {
-    final ItemStack item;
+    private final ItemStack item;
 
     public ItemCreator(Material material, int amount, String name, List<String> lore) {
         if (material == null) {
@@ -63,7 +65,4 @@ public class ItemCreator {
         }
     }
 
-    public ItemStack getItem() {
-        return item;
-    }
 }

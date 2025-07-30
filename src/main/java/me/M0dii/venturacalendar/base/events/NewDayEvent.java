@@ -2,6 +2,8 @@ package me.m0dii.venturacalendar.base.events;
 
 import lombok.Getter;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
+import me.m0dii.venturacalendar.base.dateutils.VenturaCalendarDate;
+import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,9 +15,13 @@ public class NewDayEvent extends Event implements Cancellable {
     private boolean isCancelled;
 
     private final TimeSystem timeSystem;
+    private final World world;
+    private final VenturaCalendarDate date;
 
-    public NewDayEvent(TimeSystem ts) {
+    public NewDayEvent(TimeSystem ts, World world, VenturaCalendarDate date) {
         this.timeSystem = ts;
+        this.world = world;
+        this.date = date;
     }
 
     @Override

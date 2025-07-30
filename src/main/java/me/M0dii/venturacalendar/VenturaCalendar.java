@@ -197,7 +197,14 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
                 newDay = true;
 
                 Bukkit.getScheduler().runTask(this, () -> {
-                    Bukkit.getPluginManager().callEvent(new NewDayEvent(ts));
+                    World world = Bukkit.getWorld(ts.getWorldName());
+
+                    if (world == null) {
+                        Messenger.log(Messenger.Level.ERROR, "World '" + ts.getWorldName() + "' not found for new day event.");
+                        return;
+                    }
+
+                    Bukkit.getPluginManager().callEvent(new NewDayEvent(ts, world, DateCalculator.fromTicks(world.getFullTime(), ts)));
                 });
             }
 
