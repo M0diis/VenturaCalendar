@@ -4,7 +4,7 @@
 [resourceId]: 94096
 
 [banner]: https://i.imgur.com/TN49lsh.png
-[ratingImage]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=rating&query=%24.rating.average&suffix=%20%2F%205&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F94096
+[ratingImage]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=rating&query=%24.rating.average&suffix=%20%2F%205&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F99128
 [buildImage]: https://github.com/M0diis/VenturaCalendar/actions/workflows/gradle.yml/badge.svg
 [downloadsImage]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=downloads%20%28spigotmc.org%29&query=%24.downloads&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F99128
 [updatedImage]: https://badges.pufler.dev/updated/M0diis/VenturaCalendar
