@@ -6,8 +6,13 @@ import org.bukkit.Server;
 @SuppressWarnings("java:S115")
 public enum Version implements Comparable<Version> {
     // https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/
-    v1_20_R4(21), // 1.20.6 / 1.20.5
-    v1_20_R3(22), // 1.20.3 / 1.20.4
+    // https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-21/
+    v1_21_R4(28), // 1.21.5
+    v1_21_R3(27), // 1.21.4 / 1.21.5
+    v1_21_R2(26), // 1.21.2 / 1.21.3
+    v1_21_R1(25), // 1.21 / 1.21.1
+    v1_20_R4(24), // 1.20.6 / 1.20.5
+    v1_20_R3(23), // 1.20.3 / 1.20.4
     v1_20_R2(22), // 1.20.2
     v1_20_R1(21), // 1.20 / 1.20.1
     v1_19_R3(20), // 1.19.4
