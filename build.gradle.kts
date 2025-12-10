@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.M0dii"
-version = "2.6.5"
+version = "2.6.6"
 
 tasks.shadowJar {
     relocate("org.bstats", "me.m0dii.venturacalendar")

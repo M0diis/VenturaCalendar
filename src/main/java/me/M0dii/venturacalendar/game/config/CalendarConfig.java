@@ -10,7 +10,6 @@ import me.m0dii.venturacalendar.base.utils.Utils;
 import me.m0dii.venturacalendar.game.gui.InventoryProperties;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +17,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CalendarConfig extends Config implements ConfigUtils {
-    final Map<InventoryProperties, Object> calendar = new EnumMap<>(InventoryProperties.class);
-    final Map<Items, Map<ItemProperties, Object>> items = new EnumMap<>(Items.class);
+    final Map<InventoryProperties, Object> calendar = new HashMap<>();
+    final Map<Items, Map<ItemProperties, Object>> items = new HashMap<>();
+
     public CalendarConfig(VenturaCalendar plugin) {
         super(plugin.getDataFolder(), "CalendarConfig.yml", plugin);
 
