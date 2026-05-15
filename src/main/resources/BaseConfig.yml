@@ -12,6 +12,7 @@
 #    venturacalendar.command.reload - Permission to the reload the config
 #    venturacalendar.command.calendar - Permission to the calendar command
 #    venturacalendar.command.changetime - Permission to the add/subtract time, set starting year
+#    venturacalendar.command.events - Permission to create, list and remove events
 #
 #  Placeholders:
 #    - %tick%       - displays the current tick.
@@ -96,6 +97,9 @@ messages:
     &2/vc set offset sec/min/hour/day/week/month/year <value> &8- &asets the real-time offset.
     &2/vc fastforward/ff/rewind/rew <time> &8- &afast-forwards or rewinds time in a gradual way, instead of setting instantly.
     &2/vc add/subtract sec/min/hour/day/week <time> &8- &aadds or subtracts the time by the specified criteria.
+    &2/vc event create <event-id> <month|any> <day> [display-name] &8- &acreates a new event.
+    &2/vc event delete <event-id> &8- &aremoves an existing event.
+    &2/vc event list &8- &alists configured events.
     &r
     &71 second in Minecraft is 20 ticks. 1 day is 24000 ticks.
 translations:

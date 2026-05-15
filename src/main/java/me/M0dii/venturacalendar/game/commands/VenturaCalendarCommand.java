@@ -13,11 +13,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 public class VenturaCalendarCommand {
     private final List<BukkitRunnable> tasks = new ArrayList<>();
 
     public VenturaCalendarCommand(CommandSender sender, String[] args, VenturaCalendar plugin) {
+        if (args.length >= 1 && alias(args[0], "event, events")) {
+            handleEventCommand(sender, args, plugin);
+            return;
+        }
+
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (!sender.hasPermission("venturacalendar.command.reload")) {
@@ -352,5 +359,121 @@ public class VenturaCalendarCommand {
         }
 
         return false;
+    }
+
+    private void handleEventCommand(CommandSender sender, String[] args, VenturaCalendar plugin) {
+        if (!sender.hasPermission("venturacalendar.command.events")) {
+            Messenger.send(sender, Messages.NO_PERMISSION);
+            return;
+        }
+
+        if (args.length < 2) {
+            Messenger.send(sender, "&cUsage: /vc event <create|delete|list> ...");
+            return;
+        }
+
+        String action = args[1].toLowerCase(Locale.ROOT);
+
+        if (action.equals("list")) {
+            List<String> eventNames = plugin.getEventConfig().getEventNames();
+
+            if (eventNames.isEmpty()) {
+                Messenger.send(sender, "&eThere are currently no configured events.");
+                return;
+            }
+
+            Messenger.send(sender, "&aConfigured events (&2" + eventNames.size() + "&a): &2" + String.join("&a, &2", eventNames));
+            return;
+        }
+
+        if (action.equals("delete")) {
+            if (args.length < 3) {
+                Messenger.send(sender, "&cUsage: /vc event delete <event-id>");
+                return;
+            }
+
+            String eventId = args[2].toLowerCase(Locale.ROOT);
+
+            if (!isValidEventId(eventId)) {
+                Messenger.send(sender, "&cInvalid event id. Use only letters, numbers, dashes and underscores.");
+                return;
+            }
+
+            if (!plugin.getEventConfig().deleteEvent(eventId)) {
+                Messenger.send(sender, "&cEvent '&4" + eventId + "&c' does not exist.");
+                return;
+            }
+
+            Messenger.send(sender, "&aRemoved event &2" + eventId + "&a.");
+            return;
+        }
+
+        if (action.equals("create")) {
+            if (args.length < 5) {
+                Messenger.send(sender, "&cUsage: /vc event create <event-id> <month|any> <day> [display-name]");
+                return;
+            }
+
+            String eventId = args[2].toLowerCase(Locale.ROOT);
+
+            if (!isValidEventId(eventId)) {
+                Messenger.send(sender, "&cInvalid event id. Use only letters, numbers, dashes and underscores.");
+                return;
+            }
+
+            Optional<Month> monthOpt = plugin.getTimeConfig().getTimeSystem().getMonths().stream()
+                    .filter(month -> month.getName().equalsIgnoreCase(args[3]))
+                    .findFirst();
+
+            String month = args[3];
+
+            if (!month.equalsIgnoreCase("any") && !month.equalsIgnoreCase("all") && monthOpt.isEmpty()) {
+                Messenger.send(sender, "&cUnknown month '&4" + args[3] + "&c'.");
+                return;
+            }
+
+            if (monthOpt.isPresent()) {
+                month = monthOpt.get().getName();
+            }
+
+            int day;
+
+            try {
+                day = Integer.parseInt(args[4]);
+            } catch (NumberFormatException ex) {
+                Messenger.send(sender, "&cDay must be a number.");
+                return;
+            }
+
+            if (day <= 0) {
+                Messenger.send(sender, "&cDay must be greater than 0.");
+                return;
+            }
+
+            if (monthOpt.isPresent() && day > monthOpt.get().getDays()) {
+                Messenger.send(sender, "&cDay '&4" + day + "&c' is out of range for month '&4" + monthOpt.get().getName() + "&c'.");
+                return;
+            }
+
+            String displayName = "&a| &2" + eventId.replace('-', ' ').replace('_', ' ');
+
+            if (args.length > 5) {
+                displayName = String.join(" ", java.util.Arrays.copyOfRange(args, 5, args.length));
+            }
+
+            if (!plugin.getEventConfig().createEvent(eventId, month, day, displayName)) {
+                Messenger.send(sender, "&cEvent '&4" + eventId + "&c' already exists.");
+                return;
+            }
+
+            Messenger.send(sender, "&aCreated event &2" + eventId + "&a for &2" + month + " day " + day + "&a.");
+            return;
+        }
+
+        Messenger.send(sender, "&cUsage: /vc event <create|delete|list> ...");
+    }
+
+    private boolean isValidEventId(String eventId) {
+        return eventId.matches("[a-zA-Z0-9_-]+");
     }
 }

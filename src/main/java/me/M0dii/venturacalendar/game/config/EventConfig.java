@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class EventConfig extends Config implements ConfigUtils {
     private final List<MonthEvent> events;
@@ -39,6 +40,53 @@ public class EventConfig extends Config implements ConfigUtils {
                 .filter(event -> event.getEventName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<String> getEventNames() {
+        ConfigurationSection sec = cfg.getConfigurationSection("events");
+
+        if (sec == null) {
+            return List.of();
+        }
+
+        return sec.getKeys(false).stream().sorted().toList();
+    }
+
+    public boolean createEvent(String eventId, String month, int day, String displayName) {
+        String normalizedEventId = eventId.toLowerCase(Locale.ROOT);
+        String path = "events." + normalizedEventId;
+
+        if (cfg.contains(path)) {
+            return false;
+        }
+
+        cfg.set(path + ".name", displayName);
+        cfg.set(path + ".month", month);
+        cfg.set(path + ".day", day);
+        cfg.set(path + ".description", List.of());
+        cfg.set(path + ".commands", List.of());
+        cfg.set(path + ".display-material", "WHITE_STAINED_GLASS_PANE");
+
+        saveConfig();
+        reloadConfig();
+
+        return true;
+    }
+
+    public boolean deleteEvent(String eventId) {
+        String normalizedEventId = eventId.toLowerCase(Locale.ROOT);
+        String path = "events." + normalizedEventId;
+
+        if (!cfg.contains(path)) {
+            return false;
+        }
+
+        cfg.set(path, null);
+
+        saveConfig();
+        reloadConfig();
+
+        return true;
     }
 
     public void loadEvents() {

@@ -57,6 +57,7 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 addCompletesMatching(completes, args[0],
                         "reload",
+                        "event",
                         "set",
                         "add",
                         "subtract",
@@ -76,7 +77,12 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
             }
 
             if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("set")) {
+                if (args[0].equalsIgnoreCase("event")) {
+                    addCompletesMatching(completes, args[1],
+                            "create",
+                            "delete",
+                            "list");
+                } else if (args[0].equalsIgnoreCase("set")) {
                     addCompletesMatching(completes, args[1],
                             "startyear",
                             "date",
@@ -93,6 +99,18 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
             }
 
             if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("event") && args[1].equalsIgnoreCase("delete")) {
+                    for (String eventName : plugin.getEventConfig().getEventNames()) {
+                        if (eventName.toLowerCase().contains(args[2].toLowerCase())) {
+                            completes.add(eventName);
+                        }
+                    }
+                }
+
+                if (args[0].equalsIgnoreCase("event") && args[1].equalsIgnoreCase("create")) {
+                    completes.add("<event-id>");
+                }
+
                 if (args[1].equalsIgnoreCase("offset")) {
                     addCompletesMatching(completes, args[2],
                             "seconds",
@@ -106,6 +124,20 @@ public class CmdExecutor implements CommandExecutor, TabCompleter {
                 if (args[2].equalsIgnoreCase("date")) {
                     completes.add("YYYY/MM/DD");
                 }
+            }
+
+            if (args.length == 4 && args[0].equalsIgnoreCase("event") && args[1].equalsIgnoreCase("create")) {
+                addCompletesMatching(completes, args[3], "any", "all");
+
+                plugin.getTimeConfig().getTimeSystem().getMonths().forEach(month -> {
+                    if (month.getName().toLowerCase().contains(args[3].toLowerCase())) {
+                        completes.add(month.getName());
+                    }
+                });
+            }
+
+            if (args.length == 5 && args[0].equalsIgnoreCase("event") && args[1].equalsIgnoreCase("create")) {
+                completes.add("<day>");
             }
         }
 

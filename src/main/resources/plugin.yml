@@ -25,5 +25,8 @@ permissions:
   venturacalendar.command.reload:
     description: Permission to reload the plugin.
     default: op
+  venturacalendar.command.events:
+    description: Permission to create, list and remove calendar events.
+    default: op
   venturacalendar.command.calendar:
     description: Permission to use the calendar command.
