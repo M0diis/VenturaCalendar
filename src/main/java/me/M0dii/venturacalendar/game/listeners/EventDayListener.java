@@ -22,8 +22,13 @@ public class EventDayListener implements Listener {
         }
 
         for (Player p : Bukkit.getOnlinePlayers()) {
+            if (e.getWorld() != null && "current".equalsIgnoreCase(e.getTimeSystem().getWorldName())
+                    && !p.getWorld().equals(e.getWorld())) {
+                continue;
+            }
+
             for (String cmd : e.getMonthEvent().getCommands()) {
-                Bukkit.getScheduler().runTask(this.plugin, () -> Utils.sendCommand(p, cmd));
+                Utils.sendCommand(p, cmd);
             }
         }
     }

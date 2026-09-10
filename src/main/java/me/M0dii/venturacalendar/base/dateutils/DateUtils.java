@@ -2,10 +2,10 @@ package me.m0dii.venturacalendar.base.dateutils;
 
 import me.m0dii.venturacalendar.VenturaCalendar;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class DateUtils {
     private final VenturaCalendar plugin;
@@ -37,7 +37,7 @@ public class DateUtils {
         return dateMap;
     }
 
-    @Nonnull
+    @NotNull
     public VenturaCalendarDate addZeroPoints(VenturaCalendarDate venturaCalendarDate) {
         venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
 
@@ -89,6 +89,10 @@ public class DateUtils {
     private VenturaCalendarDate calculate(DateEnum unit, int count, VenturaCalendarDate venturaCalendarDate, boolean down) {
         venturaCalendarDate = VenturaCalendarDate.clone(venturaCalendarDate);
 
+        if (count <= 0) {
+            return venturaCalendarDate;
+        }
+
         TimeSystem timeSystem = TimeSystem.of(venturaCalendarDate.getTimeSystem());
 
         long ticks = venturaCalendarDate.getRootTicks();
@@ -135,9 +139,21 @@ public class DateUtils {
                 yield DateCalculator.fromTicks(ticks - (ticksPerWeek * count), timeSystem);
             }
             case MONTH -> {
-                if (!down)
-                    yield DateCalculator.fromTicks(ticks + ticksPerMonth.get((int) venturaCalendarDate.getMonth() - 1), timeSystem);
-                yield DateCalculator.fromTicks(ticks - ticksPerMonth.get((int) venturaCalendarDate.getMonth() - 1), timeSystem);
+                int monthCount = ticksPerMonth.size();
+                int month = Math.floorMod((int) venturaCalendarDate.getMonth(), monthCount);
+                long monthTicks = 0;
+
+                for (int i = 0; i < count; i++) {
+                    if (down) {
+                        month = Math.floorMod(month - 1, monthCount);
+                        monthTicks += ticksPerMonth.get(month);
+                    } else {
+                        monthTicks += ticksPerMonth.get(month);
+                        month = Math.floorMod(month + 1, monthCount);
+                    }
+                }
+
+                yield DateCalculator.fromTicks(down ? ticks - monthTicks : ticks + monthTicks, timeSystem);
             }
             case YEAR -> {
                 if (!down) yield DateCalculator.fromTicks(ticks + (ticksPerYear * count), timeSystem);
@@ -164,6 +180,12 @@ public class DateUtils {
         int m = (int) (26 * (venturaCalendarDate.getMonth() + 1) / 10);
         int d = (int) venturaCalendarDate.getDay();
 
-        return (int) ((c + y + m + d) % venturaCalendarDate.getTimeSystem().getDaysPerWeek());
+        long daysPerWeek = venturaCalendarDate.getTimeSystem().getDaysPerWeek();
+
+        if (daysPerWeek <= 0) {
+            return 0L;
+        }
+
+        return Math.floorMod(c + y + m + d, daysPerWeek);
     }
 }

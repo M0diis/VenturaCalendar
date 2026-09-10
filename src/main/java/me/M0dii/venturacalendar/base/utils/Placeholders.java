@@ -10,7 +10,10 @@ import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Placeholders extends PlaceholderExpansion {
 
@@ -74,10 +77,13 @@ public class Placeholders extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String id) {
+        id = id.toLowerCase(Locale.ROOT);
         TimeSystem ts = plugin.getTimeConfig().getTimeSystem();
 
         if (id.startsWith("event_")) {
-            String eventName = id.split("_")[1];
+            String eventData = id.substring("event_".length());
+            int suffixStart = eventData.lastIndexOf('_');
+            String eventName = suffixStart < 0 ? eventData : eventData.substring(0, suffixStart);
 
             MonthEvent event = plugin.getEventConfig().getEvent(eventName);
 
@@ -108,12 +114,17 @@ public class Placeholders extends PlaceholderExpansion {
         }
 
         if (ts.isRealTime()) {
-            return parseRealTimeDatePlaceholders(DateCalculator.realTimeNow(), id.toLowerCase());
+            return parseRealTimeDatePlaceholders(DateCalculator.realTimeNow(), id);
         }
 
         String worldName = ts.getWorldName();
+        World w;
 
-        World w = Bukkit.getWorld(worldName);
+        if (worldName != null && worldName.equalsIgnoreCase("current")) {
+            w = player == null ? null : player.getPlayer() == null ? null : player.getPlayer().getWorld();
+        } else {
+            w = worldName == null ? null : Bukkit.getWorld(worldName);
+        }
 
         if (w == null) {
             return "Error: Time-system world not found.";
@@ -223,12 +234,14 @@ public class Placeholders extends PlaceholderExpansion {
                     return "Error: Invalid season names.";
                 }
 
-                if (date.getMonth() < 3 || date.getMonth() > 10) {
-                    return "4";
-                } else if (date.getMonth() < 6) {
-                    return "1";
-                } else if (date.getMonth() < 9) {
-                    return "2";
+            int monthIndex = (int) date.getMonth() - 1;
+
+            if (monthIndex < 3 || monthIndex > 10) {
+                return "4";
+            } else if (monthIndex < 6) {
+                return "1";
+            } else if (monthIndex < 9) {
+                return "2";
                 } else {
                     return "3";
                 }
@@ -240,21 +253,25 @@ public class Placeholders extends PlaceholderExpansion {
                 return String.valueOf(date.getEra());
             }
             case "date_day_name" -> {
-                return dayNames.get(date.getLocalDateTime().getDayOfWeek().getValue() - 1);
+                int dayIndex = date.getLocalDateTime().getDayOfWeek().getValue() - 1;
+                return dayIndex < dayNames.size() ? dayNames.get(dayIndex) : "";
             }
             case "date_month_name" -> {
-                return monthNames.get(date.getLocalDateTime().getMonthValue() - 1);
+                int monthIndex = date.getLocalDateTime().getMonthValue() - 1;
+                return monthIndex < monthNames.size() ? monthNames.get(monthIndex) : "";
             }
             case "date_season_name" -> {
                 if (seasonNames.size() < 4) {
                     return "Error: Invalid season names.";
                 }
 
-                if (date.getMonth() < 3 || date.getMonth() > 10) {
+                int monthIndex = (int) date.getMonth() - 1;
+
+                if (monthIndex < 3 || monthIndex > 10) {
                     return seasonNames.get(3);
-                } else if (date.getMonth() < 6) {
+                } else if (monthIndex < 6) {
                     return seasonNames.getFirst();
-                } else if (date.getMonth() < 9) {
+                } else if (monthIndex < 9) {
                     return seasonNames.get(1);
                 } else {
                     return seasonNames.get(2);
@@ -283,7 +300,7 @@ public class Placeholders extends PlaceholderExpansion {
 
                 Month m = ts.getMonth(month);
 
-                return m.getSeasonName() == null ? "" : m.getSeasonName();
+                return m == null || m.getSeasonName() == null ? "" : m.getSeasonName();
             }
 
             if (id.endsWith("_days")) {
@@ -297,15 +314,21 @@ public class Placeholders extends PlaceholderExpansion {
 
         // %venturacalendar_date_formatted_<simple-date-format>%
         if (id.startsWith("date_formatted_")) {
-            String pattern = id.split("_")[2];
+            String pattern = id.substring("date_formatted_".length());
 
             if (pattern == null || pattern.isEmpty()) {
                 return "";
             }
 
-            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-
-            return sdf.format(venturaCalendarDate.toLocalDateTime());
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                Date date = Date.from(venturaCalendarDate.toLocalDateTime()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant());
+                return sdf.format(date);
+            } catch (RuntimeException ex) {
+                return "";
+            }
         }
 
         switch (id) {

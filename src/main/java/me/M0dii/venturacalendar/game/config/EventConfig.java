@@ -204,7 +204,7 @@ public class EventConfig extends Config implements ConfigUtils {
 
     @Override
     public Long getLong(String path) {
-        return Long.valueOf(cfg.getString(path, "0"));
+        return cfg.getLong(path, 0L);
     }
 
     @Override

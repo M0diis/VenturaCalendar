@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class VenturaCalendarDate {
-    private final VenturaCalendar plugin = VenturaCalendar.getInstance();
-
     private final TimeSystem timeSystem;
 
     private long rootTicks;
@@ -45,21 +43,52 @@ public class VenturaCalendarDate {
     }
 
     public String getMonthName() {
-        return this.getTimeSystem().getMonths().get(((int) this.month)).getName();
+        int index = (int) this.month;
+
+        if (index < 0 || index >= this.getTimeSystem().getMonths().size()) {
+            return "";
+        }
+
+        return this.getTimeSystem().getMonths().get(index).getName();
     }
 
     public String getSeasonName() {
-        return this.getTimeSystem().getMonths().get(((int) this.month)).getSeasonName();
+        int index = (int) this.month;
+
+        if (index < 0 || index >= this.getTimeSystem().getMonths().size()) {
+            return "";
+        }
+
+        String seasonName = this.getTimeSystem().getMonths().get(index).getSeasonName();
+        return seasonName == null ? "" : seasonName;
     }
 
     public String getDayName() {
+        VenturaCalendar plugin = VenturaCalendar.getInstance();
+
+        if (plugin == null) {
+            return "";
+        }
+
         long dow = plugin.getDateUtils().getDayOfWeek(this);
 
-        return this.getTimeSystem().getDayNames().get((int) dow);
+        int index = (int) dow;
+
+        if (index < 0 || index >= this.getTimeSystem().getDayNames().size()) {
+            return "";
+        }
+
+        return this.getTimeSystem().getDayNames().get(index);
     }
 
     public String getEraName() {
-        return this.getTimeSystem().getEraNames().get((int) this.era);
+        int index = (int) this.era;
+
+        if (index < 0 || index >= this.getTimeSystem().getEraNames().size()) {
+            return "";
+        }
+
+        return this.getTimeSystem().getEraNames().get(index);
     }
 
     public LocalDateTime toLocalDateTime() {

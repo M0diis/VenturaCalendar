@@ -46,7 +46,7 @@ public enum Version implements Comparable<Version> {
     }
 
     public static boolean serverIsOlderThan(Version version) {
-        return !getServerVersion(Bukkit.getServer()).isNewerThan(version);
+        return getServerVersion(Bukkit.getServer()).isOlderThan(version);
     }
 
     /**
@@ -87,8 +87,8 @@ public enum Version implements Comparable<Version> {
      * @throws IllegalArgumentException if this version or the given version, is the version UNKNOWN
      */
     public boolean isNewerThan(Version version) {
-        if (checkUnknown(version)) {
-            return true;
+        if (hasUnknown(version)) {
+            return this == UNKNOWN && version != UNKNOWN;
         }
 
         return value > version.value;
@@ -103,8 +103,8 @@ public enum Version implements Comparable<Version> {
      * @throws IllegalArgumentException if this version or the given version, is the version UNKNOWN
      */
     public boolean isNewerOrSameThan(Version version) {
-        if (checkUnknown(version)) {
-            return true;
+        if (hasUnknown(version)) {
+            return this == UNKNOWN || version == UNKNOWN && this != UNKNOWN;
         }
 
         return value >= version.value;
@@ -119,21 +119,30 @@ public enum Version implements Comparable<Version> {
      * @throws IllegalArgumentException if this version or the given version, is the version UNKNOWN
      */
     public boolean isOlderThan(Version version) {
-        if (!checkUnknown(version)) {
-            return true;
+        if (hasUnknown(version)) {
+            return this != UNKNOWN && version == UNKNOWN;
         }
 
         return value < version.value;
     }
 
-    private boolean checkUnknown(Version version) {
+    private boolean hasUnknown(Version version) {
+        if (version == null) {
+            throw new IllegalArgumentException("Version cannot be null.");
+        }
+
+        boolean unknown = version == UNKNOWN || this == UNKNOWN;
+
+        if (!unknown) {
+            return false;
+        }
+
         if (version == UNKNOWN && !notified) {
             Messenger.log(Messenger.Level.WARN, "Provided version is UNKNOWN. Some features may not work correctly.");
             Messenger.log(Messenger.Level.WARN, "Assuming using the latest version.");
 
             notified = true;
 
-            return true;
         }
 
         if (this == UNKNOWN && !notified) {
@@ -142,10 +151,9 @@ public enum Version implements Comparable<Version> {
 
             notified = true;
 
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -157,8 +165,8 @@ public enum Version implements Comparable<Version> {
      * @throws IllegalArgumentException if this version or the given version, is the version UNKNOWN
      */
     public boolean isOlderOrSameThan(Version version) {
-        if (!checkUnknown(version)) {
-            return true;
+        if (hasUnknown(version)) {
+            return this != UNKNOWN;
         }
 
         return value <= version.value;

@@ -11,7 +11,6 @@ import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.m0dii.venturacalendar.base.itemutils.Items;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +32,7 @@ public class RealTimeCalendar implements InventoryHolder {
     private final List<MonthEvent> events;
     private RealTimeDate creationDate;
     private RealTimeDate realTimeCurrentDate;
+    private int todaySlot = -1;
 
     public RealTimeCalendar(RealTimeDate date) {
         this.date = new RealTimeDate(date);
@@ -60,6 +59,14 @@ public class RealTimeCalendar implements InventoryHolder {
 
     public void setDate(RealTimeDate date) {
         this.date.setLocalDateTime(date.getLocalDateTime());
+        this.date.setSecond(date.getSecond());
+        this.date.setMinute(date.getMinute());
+        this.date.setHour(date.getHour());
+        this.date.setDay(date.getDay());
+        this.date.setWeek(date.getWeek());
+        this.date.setMonth(date.getMonth());
+        this.date.setYear(date.getYear());
+        this.date.setEra(date.getEra());
     }
 
     public @NotNull Inventory getInventory() {
@@ -80,11 +87,10 @@ public class RealTimeCalendar implements InventoryHolder {
 
         double daysPerMonth = date.getLocalDateTime().getMonth().length(false);
 
-        int firstWeekDay = date.getLocalDateTime().withDayOfMonth(1).get(ChronoField.DAY_OF_WEEK);
-
-        if (Boolean.FALSE.equals(VenturaCalendar.getInstance().getTimeConfig().getBoolean("main-time-system.real-time.first-day-sunday"))) {
-            firstWeekDay--;
-        }
+        int dayOfWeek = date.getLocalDateTime().withDayOfMonth(1).get(ChronoField.DAY_OF_WEEK);
+        boolean firstDaySunday = Boolean.TRUE.equals(VenturaCalendar.getInstance()
+                .getTimeConfig().getBoolean("main-time-system.real-time.first-day-sunday"));
+        int firstWeekDay = firstDaySunday ? dayOfWeek % 7 : (dayOfWeek + 6) % 7;
 
         int daysPerWeek = 7;
 
@@ -96,8 +102,8 @@ public class RealTimeCalendar implements InventoryHolder {
         int dayOfMonth = 1;
         long weekOfMonth = 0;
 
-        Map<Items, HashMap<ItemProperties, Object>> itemProperties =
-                (HashMap<Items, HashMap<ItemProperties, Object>>)
+        Map<Items, Map<ItemProperties, Object>> itemProperties =
+                (Map<Items, Map<ItemProperties, Object>>)
                         calendarProperties.get(InventoryProperties.ITEMS);
 
         Map<ItemProperties, Object> todayProps = itemProperties.get(Items.TODAY);
@@ -107,7 +113,7 @@ public class RealTimeCalendar implements InventoryHolder {
 
         LocalDateTime copy = LocalDateTime.of(date.getLocalDateTime().toLocalDate(), date.getLocalDateTime().toLocalTime());
 
-        for (int week = 0; week <= weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9) {
+        for (int week = 0; week < weeksThisMonth; week++, weekOfMonth++, weekSlot = weekSlot + 9) {
             date.setWeek(weekOfMonth);
 
             copy = LocalDateTime.of((int) date.getYear(), date.getLocalDateTime().getMonth(), dayOfMonth, date.getLocalDateTime().getHour(), date.getLocalDateTime().getMinute(), date.getLocalDateTime().getSecond());
@@ -135,6 +141,7 @@ public class RealTimeCalendar implements InventoryHolder {
 
                     if (todayItem != null && daySlot < 55) {
                         newInventory.setItem(daySlot, todayItem);
+                        todaySlot = daySlot;
                     }
                 } else if (isFuture(date, creationDate)) {
                     ItemStack dayItem = createItem(futureDayProps, date, false, MonthEvent.DisplayType.FUTURE);
@@ -166,64 +173,14 @@ public class RealTimeCalendar implements InventoryHolder {
             daySlot = daySlot + (8 - (daysPerWeek - 1));
         }
 
-        Map<ItemProperties, Object> nextMonthProps = itemProperties.get(Items.NEXT_MONTH);
-        String nextMonthName = Utils.setPlaceholders((String) nextMonthProps.get(ItemProperties.NAME), creationDate, true);
-        Material nextMonthMaterial = (Material) nextMonthProps.get(ItemProperties.MATERIAL);
-        int nextMonthAmount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(nextMonthProps.get(ItemProperties.AMOUNT)), creationDate, true));
-
-        List<String> nextMonthLore = new ArrayList<>();
-
-        if (itemProperties.get(Items.NEXT_MONTH) != null) {
-            var nextMonthLoreList = nextMonthProps.get(ItemProperties.LORE);
-
-            nextMonthLore = new ArrayList<>((List<String>) nextMonthLoreList)
-                    .stream().map(str -> Utils.setPlaceholders(str, creationDate, true))
-                    .toList();
+        ItemStack nextMonthItem = createItem(itemProperties.get(Items.NEXT_MONTH), creationDate, true, null);
+        if (nextMonthItem != null) {
+            newInventory.setItem(8, nextMonthItem);
         }
 
-        ItemCreator nextMonthItem = new ItemCreator(nextMonthMaterial, nextMonthAmount, nextMonthName, nextMonthLore);
-
-        Map<ItemProperties, Object> prevMonthProps = itemProperties.get(Items.PREVIOUS_MONTH);
-        String prevMonthName = Utils.setPlaceholders((String) prevMonthProps.get(ItemProperties.NAME), creationDate, true);
-        Material prevMonthMaterial = (Material) prevMonthProps.get(ItemProperties.MATERIAL);
-        int prevMonthAmount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(prevMonthProps.get(ItemProperties.AMOUNT)), creationDate, true));
-
-        List<String> prevMonthLore = new ArrayList<>();
-
-        if (itemProperties.get(Items.PREVIOUS_MONTH) != null) {
-            var prevMonthLoreList = prevMonthProps.get(ItemProperties.LORE);
-
-            prevMonthLore = new ArrayList<>((List<String>) prevMonthLoreList)
-                    .stream().map(str -> Utils.setPlaceholders(str, creationDate, true))
-                    .toList();
-        }
-
-        ItemCreator previousMonthItem = new ItemCreator(prevMonthMaterial, prevMonthAmount, prevMonthName, prevMonthLore);
-
-        newInventory.setItem(8, nextMonthItem.getItem());
-        newInventory.setItem(17, previousMonthItem.getItem());
-
-        boolean lastRowEmpty = false;
-
-        if (newInventory.getSize() == 54) {
-            for (int i = 45; i < 54; i++) {
-                if (newInventory.getItem(i) == null) {
-                    lastRowEmpty = true;
-                } else {
-                    lastRowEmpty = false;
-                    break;
-                }
-            }
-        }
-
-        if (lastRowEmpty) {
-            Inventory smallerInventory = Bukkit.createInventory(this, 45, title);
-
-            for (int i = 0; i < 45; i++) {
-                smallerInventory.setItem(i, newInventory.getItem(i));
-            }
-
-            return smallerInventory;
+        ItemStack previousMonthItem = createItem(itemProperties.get(Items.PREVIOUS_MONTH), creationDate, true, null);
+        if (previousMonthItem != null) {
+            newInventory.setItem(17, previousMonthItem);
         }
 
         return newInventory;
@@ -245,9 +202,26 @@ public class RealTimeCalendar implements InventoryHolder {
 
     public ItemStack createItem(Map<ItemProperties, Object> itemProperties, RealTimeDate date, boolean week,
                                 MonthEvent.DisplayType type) {
+        if (itemProperties == null) {
+            return null;
+        }
+
         String name = Utils.setPlaceholders((String) itemProperties.get(ItemProperties.NAME), date, true);
-        Material material = (Material) itemProperties.get(ItemProperties.MATERIAL);
-        int amount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(itemProperties.get(ItemProperties.AMOUNT)), date, true));
+        org.bukkit.Material material = (org.bukkit.Material) itemProperties.get(ItemProperties.MATERIAL);
+
+        if (material == null) {
+            return null;
+        }
+
+        int amount;
+
+        try {
+            amount = Integer.parseInt(Utils.setPlaceholders(String.valueOf(itemProperties.get(ItemProperties.AMOUNT)), date, true));
+        } catch (NumberFormatException ex) {
+            amount = 1;
+        }
+
+        amount = Math.clamp(amount, 1, 99);
 
         List<String> lore = new ArrayList<>();
 
@@ -270,7 +244,7 @@ public class RealTimeCalendar implements InventoryHolder {
             }
         }
 
-        if ((boolean) itemProperties.get(ItemProperties.TOGGLE)) {
+        if (Boolean.TRUE.equals(itemProperties.get(ItemProperties.TOGGLE))) {
             if (skullOwner == null) {
                 return new ItemCreator(material, amount, name, lore).getItem();
             } else {
@@ -288,8 +262,7 @@ public class RealTimeCalendar implements InventoryHolder {
     }
 
     private boolean isFuture(@NotNull RealTimeDate date, @NotNull RealTimeDate currentDate) {
-        return date.getMonth() >= currentDate.getMonth()
-                && date.getDay() > currentDate.getDay();
+        return date.getLocalDateTime().toLocalDate().isAfter(currentDate.getLocalDateTime().toLocalDate());
     }
 
     private int getInventorySize(RealTimeDate date) {
@@ -298,7 +271,10 @@ public class RealTimeCalendar implements InventoryHolder {
         int slots = 0;
 
         double daysPerMonth = date.getLocalDateTime().getMonth().length(false);
-        double firstWeekDay = date.getLocalDateTime().withDayOfMonth(1).get(ChronoField.DAY_OF_WEEK);
+        int dayOfWeek = date.getLocalDateTime().withDayOfMonth(1).get(ChronoField.DAY_OF_WEEK);
+        boolean firstDaySunday = Boolean.TRUE.equals(VenturaCalendar.getInstance()
+                .getTimeConfig().getBoolean("main-time-system.real-time.first-day-sunday"));
+        double firstWeekDay = firstDaySunday ? dayOfWeek % 7 : (dayOfWeek + 6) % 7;
 
         double weeksPerMonth = Math.ceil((daysPerMonth + firstWeekDay) / 7);
 
@@ -306,6 +282,11 @@ public class RealTimeCalendar implements InventoryHolder {
             slots = slots + 9;
         }
 
-        return slots > 54 ? 54 : Math.max(slots, 9);
+        Object configuredSize = VenturaCalendar.getInstance().getCalendarConfig()
+                .getCalendarProperties(false).get(InventoryProperties.SIZE);
+        int minimumSize = configuredSize instanceof Number number ? number.intValue() : 18;
+        minimumSize = Math.clamp(((Math.max(9, minimumSize) + 8) / 9) * 9, 18, 54);
+
+        return slots > 54 ? 54 : Math.min(54, Math.max(slots, minimumSize));
     }
 }

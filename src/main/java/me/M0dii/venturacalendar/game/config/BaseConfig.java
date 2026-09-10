@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,17 +80,32 @@ public class BaseConfig extends Config implements ConfigUtils {
     }
 
     public Map<String, EventDays> getRedeemableMonths() {
+        redeemableMonths.clear();
         ConfigurationSection sec = cfg.getConfigurationSection("rewards.redeemable-months");
 
         if (sec != null) {
             sec.getValues(false).forEach((k, v) -> {
                 if (!k.equalsIgnoreCase("enabled")) {
-                    String[] fromToString = String.valueOf(v).split("-");
+                    String[] fromToString = String.valueOf(v).split("-", -1);
 
-                    int from = Integer.parseInt(fromToString[0]);
-                    int to = Integer.parseInt(fromToString[1]);
+                    if (fromToString.length != 2) {
+                        plugin.getLogger().warning("Invalid redeemable day range for '" + k + "': " + v);
+                        return;
+                    }
 
-                    redeemableMonths.put(k, new EventDays(from, to));
+                    try {
+                        int from = Integer.parseInt(fromToString[0].trim());
+                        int to = Integer.parseInt(fromToString[1].trim());
+
+                        if (from < 1 || to < from) {
+                            plugin.getLogger().warning("Invalid redeemable day range for '" + k + "': " + v);
+                            return;
+                        }
+
+                        redeemableMonths.put(k.toLowerCase(Locale.ROOT), new EventDays(from, to));
+                    } catch (NumberFormatException ex) {
+                        plugin.getLogger().warning("Invalid redeemable day range for '" + k + "': " + v);
+                    }
                 }
             });
         }
@@ -128,6 +144,8 @@ public class BaseConfig extends Config implements ConfigUtils {
     @Override
     public FileConfiguration reloadConfig() {
         cfg = super.reloadConfig();
+        VenturaCalendar.PREFIX = getString("messages.prefix");
+        debug();
 
         return cfg;
     }
@@ -152,7 +170,7 @@ public class BaseConfig extends Config implements ConfigUtils {
 
     @Override
     public Long getLong(String path) {
-        return Long.valueOf(cfg.getString(path, "0"));
+        return cfg.getLong(path, 0L);
     }
 
     @Override

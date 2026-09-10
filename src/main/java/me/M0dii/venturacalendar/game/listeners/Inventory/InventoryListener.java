@@ -12,40 +12,57 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public final class InventoryListener implements Listener {
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e) {
-        Player player = (Player) e.getWhoClicked();
+        if (!(e.getWhoClicked() instanceof Player player)) {
+            return;
+        }
 
-        Inventory inv = e.getClickedInventory();
-        ItemStack item = e.getCurrentItem();
+        Inventory top = e.getView().getTopInventory();
 
-        if (inv == null || !(inv.getHolder() instanceof Calendar cal)) {
+        if (!(top.getHolder() instanceof Calendar cal)) {
             return;
         }
 
         e.setCancelled(true);
 
-        Bukkit.getPluginManager().callEvent(new CalendarClickEvent(cal, inv, player, item));
+        if (e.getClickedInventory() == top) {
+            Bukkit.getPluginManager().callEvent(new CalendarClickEvent(cal, e, top, player, e.getCurrentItem()));
+        }
     }
 
     @EventHandler
     public void onInventoryClickRealTimeCalendar(final InventoryClickEvent e) {
-        Player player = (Player) e.getWhoClicked();
+        if (!(e.getWhoClicked() instanceof Player player)) {
+            return;
+        }
 
-        Inventory inv = e.getClickedInventory();
-        ItemStack item = e.getCurrentItem();
+        Inventory top = e.getView().getTopInventory();
 
-        if (inv == null || !(inv.getHolder() instanceof RealTimeCalendar cal)) {
+        if (!(top.getHolder() instanceof RealTimeCalendar cal)) {
             return;
         }
 
         e.setCancelled(true);
 
-        Bukkit.getPluginManager().callEvent(new RealTimeCalendarClickEvent(cal, e, inv, player, item));
+        if (e.getClickedInventory() == top) {
+            Bukkit.getPluginManager().callEvent(new RealTimeCalendarClickEvent(cal, e, top, player, e.getCurrentItem()));
+        }
+    }
+
+    @EventHandler
+    public void onInventoryDrag(final InventoryDragEvent e) {
+        Inventory top = e.getView().getTopInventory();
+
+        if (top.getHolder() instanceof Calendar || top.getHolder() instanceof RealTimeCalendar) {
+            if (e.getRawSlots().stream().anyMatch(slot -> slot < top.getSize())) {
+                e.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
@@ -54,7 +71,7 @@ public final class InventoryListener implements Listener {
 
         if (e.getPlayer() instanceof Player player) {
 
-            if (inventory instanceof Calendar cal) {
+            if (inventory.getHolder() instanceof Calendar cal) {
                 Bukkit.getPluginManager().callEvent(new CalendarCloseEvent(cal, inventory, player));
             }
         }
@@ -66,7 +83,7 @@ public final class InventoryListener implements Listener {
 
         if (e.getPlayer() instanceof Player player) {
 
-            if (inventory instanceof RealTimeCalendar cal) {
+            if (inventory.getHolder() instanceof RealTimeCalendar cal) {
                 Bukkit.getPluginManager().callEvent(new RealTimeCalendarCloseEvent(cal, inventory, player));
             }
         }

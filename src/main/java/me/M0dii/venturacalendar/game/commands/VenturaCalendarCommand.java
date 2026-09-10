@@ -11,15 +11,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
 public class VenturaCalendarCommand {
-    private final List<BukkitRunnable> tasks = new ArrayList<>();
+    private final VenturaCalendar plugin;
 
     public VenturaCalendarCommand(CommandSender sender, String[] args, VenturaCalendar plugin) {
+        this.plugin = plugin;
         if (args.length >= 1 && alias(args[0], "event, events")) {
             handleEventCommand(sender, args, plugin);
             return;
@@ -53,6 +53,7 @@ public class VenturaCalendarCommand {
                 return;
             } else {
                 Messenger.send(sender, Messages.HELP);
+                return;
             }
         }
 
@@ -63,9 +64,7 @@ public class VenturaCalendarCommand {
                     return;
                 }
 
-                for (BukkitRunnable task : tasks) {
-                    task.cancel();
-                }
+                plugin.cancelFastForwardTasks();
 
                 return;
             }
@@ -87,10 +86,32 @@ public class VenturaCalendarCommand {
                 long ticksToAdd = 0;
 
                 for (int i = 1; i < args.length; i++) {
-                    ticksToAdd += Utils.getTicksFromTime(args[i]);
+                    long ticks = Utils.getTicksFromTime(args[i]);
+
+                    if (ticks < 0) {
+                        Messenger.send(sender, "&cInvalid time format: &4" + args[i]);
+                        return;
+                    }
+
+                    try {
+                        ticksToAdd = Math.addExact(ticksToAdd, ticks);
+                    } catch (ArithmeticException ex) {
+                        Messenger.send(sender, "&cThe requested time is too large.");
+                        return;
+                    }
                 }
 
-                World w = p.getWorld();
+                if (ticksToAdd <= 0) {
+                    Messenger.send(sender, "&cTime must be greater than zero.");
+                    return;
+                }
+
+                World w = plugin.getTimeSystemWorld(p);
+
+                if (w == null) {
+                    Messenger.send(sender, "&cThe configured time-system world was not found.");
+                    return;
+                }
 
                 final long[] total = {ticksToAdd};
 
@@ -99,10 +120,17 @@ public class VenturaCalendarCommand {
                 BukkitRunnable runnable = new BukkitRunnable() {
                     @Override
                     public void run() {
-                        long toAdd = 50;
+                        long toAdd = Math.min(50L, total[0]);
 
-                        if (total[0] < toAdd) {
-                            toAdd = total[0];
+                        if (!add) {
+                            toAdd = Math.min(toAdd, w.getFullTime());
+                        }
+
+                        if (toAdd <= 0) {
+                            total[0] = 0;
+                            plugin.untrackFastForwardTask(this);
+                            this.cancel();
+                            return;
                         }
 
                         if (add) {
@@ -114,18 +142,14 @@ public class VenturaCalendarCommand {
                         total[0] -= toAdd;
 
                         if (total[0] <= 0) {
+                            plugin.untrackFastForwardTask(this);
                             this.cancel();
-                        }
-
-                        if (toAdd % 100 == 0) {
-                            toAdd += 10;
                         }
                     }
                 };
 
                 runnable.runTaskTimer(plugin, 0, 1);
-
-                tasks.add(runnable);
+                plugin.trackFastForwardTask(runnable);
 
                 return;
             }
@@ -210,7 +234,19 @@ public class VenturaCalendarCommand {
                     try {
                         long worldTicks = Long.parseLong(args[2]);
 
-                        p.getWorld().setFullTime(worldTicks);
+                         World world = plugin.getTimeSystemWorld(p);
+
+                         if (world == null) {
+                             Messenger.send(p, "&cThe configured time-system world was not found.");
+                             return;
+                         }
+
+                         if (worldTicks < 0) {
+                             Messenger.send(p, "&cWorld time cannot be negative.");
+                             return;
+                         }
+
+                         world.setFullTime(worldTicks);
 
                         Messenger.send(p, "&aSuccessfully set world ticks to " + worldTicks);
                     } catch (NumberFormatException ex) {
@@ -229,13 +265,14 @@ public class VenturaCalendarCommand {
                     }
 
                     try {
-                        String[] values = args[2].split("/");
+                         String[] values = args[2].split("/", -1);
 
-                        if (values.length < 2) {
+                         if (values.length != 3) {
+                             Messenger.send(p, "&cUse the format YYYY/MM/DD.");
                             return;
                         }
 
-                        String year = values[0];
+                         long year = Long.parseLong(values[0]);
                         String month = values[1];
                         String day = values[2];
 
@@ -243,14 +280,7 @@ public class VenturaCalendarCommand {
 
                         int maxMonth = ts.getMonths().size() - 1;
 
-                        int m = 1;
-
-                        try {
-                            m = Integer.parseInt(month) - 1;
-                        } catch (NumberFormatException ex) {
-                            Messenger.send(p, "&cIllegal month number format.");
-                            Messenger.log(Messenger.Level.DEBUG, ex);
-                        }
+                        int m = Integer.parseInt(month) - 1;
 
                         if (m > maxMonth || m < 0) {
                             Messenger.send(p, "&cSpecified month does not exist.");
@@ -262,14 +292,7 @@ public class VenturaCalendarCommand {
 
                         int maxDays = (int) mn.getDays();
 
-                        int d = 1;
-
-                        try {
-                            d = Integer.parseInt(day);
-                        } catch (NumberFormatException ex) {
-                            Messenger.send(p, "&cIllegal day number format.");
-                            Messenger.log(Messenger.Level.DEBUG, ex);
-                        }
+                        int d = Integer.parseInt(day);
 
                         if (d > maxDays || d <= 0) {
                             Messenger.send(p, "&cSpecified day in month " + mn.getName() + " does not exist.");
@@ -283,7 +306,14 @@ public class VenturaCalendarCommand {
 
                         Messenger.send(p, "&aDate has been set to " + year + "/" + month + "/" + day);
 
-                        p.getWorld().setFullTime(0);
+                        World world = plugin.getTimeSystemWorld(p);
+
+                        if (world == null) {
+                            Messenger.send(p, "&cThe configured time-system world was not found.");
+                            return;
+                        }
+
+                        world.setFullTime(0);
 
                         plugin.getTimeConfig().reloadConfig();
                         plugin.getBaseConfig().reloadConfig();
@@ -306,47 +336,67 @@ public class VenturaCalendarCommand {
 
                 boolean sub = args[0].equalsIgnoreCase("subtract");
 
-                if (alias(args[1], "s, sec, second, seconds"))
-                    fastForwards(args[2], p, 20L, " second.", " hours.", sub);
-
-                if (alias(args[1], "m, min, minute, minutes"))
-                    fastForwards(args[2], p, 1200L, " second.", " hours.", sub);
-
-                if (alias(args[1], "h, hour, hours"))
-                    fastForwards(args[2], p, 1000L, " hour.", " hours.", sub);
-
-                if (alias(args[1], "d, day, days"))
-                    fastForwards(args[2], p, 24000L, " day.", " days.", sub);
-
-                if (alias(args[1], "w, week, weeks"))
-                    fastForwards(args[2], p, 168000L, " week.", " weeks.", sub);
+                if (alias(args[1], "s, sec, second, seconds")
+                        || alias(args[1], "m, min, minute, minutes")
+                        || alias(args[1], "h, hour, hours")
+                        || alias(args[1], "d, day, days")
+                        || alias(args[1], "w, week, weeks")) {
+                    adjustTime(args[1], args[2], p, timeSystem, sub);
+                }
             }
         } else Messenger.send(sender, Messages.HELP);
     }
 
-    private void fastForwards(String amt, Player p, long oneAmount, String s, String s2, boolean subtract) {
+    private void adjustTime(String unit, String amountText, Player p, TimeSystem timeSystem, boolean subtract) {
         try {
-            amt = amt.replaceAll("\\D", "");
+            long amount = Long.parseLong(amountText);
 
-            if (amt.isEmpty())
-                amt = "0";
+            if (amount < 0) {
+                throw new NumberFormatException("negative amount");
+            }
 
-            if (subtract)
-                amt = '-' + amt;
+            long ticksPerUnit = switch (unit.toLowerCase(Locale.ROOT)) {
+                case "s", "sec", "second", "seconds" -> timeSystem.getTicksPerSecond();
+                case "m", "min", "minute", "minutes" -> Math.multiplyExact(
+                        timeSystem.getTicksPerSecond(), timeSystem.getSecondsPerMinute());
+                case "h", "hour", "hours" -> Math.multiplyExact(
+                        Math.multiplyExact(timeSystem.getTicksPerSecond(), timeSystem.getSecondsPerMinute()),
+                        timeSystem.getMinutesPerHour());
+                case "d", "day", "days" -> Math.multiplyExact(
+                        Math.multiplyExact(
+                                Math.multiplyExact(timeSystem.getTicksPerSecond(), timeSystem.getSecondsPerMinute()),
+                                timeSystem.getMinutesPerHour()),
+                        timeSystem.getHoursPerDay());
+                case "w", "week", "weeks" -> Math.multiplyExact(
+                        Math.multiplyExact(
+                                Math.multiplyExact(
+                                        Math.multiplyExact(timeSystem.getTicksPerSecond(), timeSystem.getSecondsPerMinute()),
+                                        timeSystem.getMinutesPerHour()),
+                                timeSystem.getHoursPerDay()),
+                        timeSystem.getDaysPerWeek());
+                default -> throw new NumberFormatException("unknown unit");
+            };
 
-            int amount = Integer.parseInt(amt);
+            long total = Math.multiplyExact(amount, ticksPerUnit);
+            World world = plugin.getTimeSystemWorld(p);
 
-            long total = oneAmount * amount;
+            if (world == null) {
+                Messenger.send(p, "&cThe configured time-system world was not found.");
+                return;
+            }
 
-            World w = p.getWorld();
+            long current = world.getFullTime();
+            long target = subtract
+                    ? total >= current ? 0L : current - total
+                    : Math.addExact(current, total);
+            world.setFullTime(target);
 
-            if (w.getFullTime() + total > 0) {
-                w.setFullTime(w.getFullTime() + total);
-
-                Messenger.send(p, "&aFast-forwarded the time by " + amount + (amt.charAt(0) == '1' ? s : s2));
-            } else Messenger.send(p, "&aWorld time can not go below 0 days.");
+            String verb = subtract ? "Subtracted" : "Added";
+            Messenger.send(p, "&a" + verb + " &2" + amount + " " + unit + "&a.");
         } catch (NumberFormatException ex) {
             Messenger.send(p, "&cProvided amount is not valid.");
+        } catch (ArithmeticException ex) {
+            Messenger.send(p, "&cThe requested time is too large.");
         }
     }
 
@@ -374,100 +424,100 @@ public class VenturaCalendarCommand {
 
         String action = args[1].toLowerCase(Locale.ROOT);
 
-        if (action.equals("list")) {
-            List<String> eventNames = plugin.getEventConfig().getEventNames();
+        switch (action) {
+            case "list" -> {
+                List<String> eventNames = plugin.getEventConfig().getEventNames();
 
-            if (eventNames.isEmpty()) {
-                Messenger.send(sender, "&eThere are currently no configured events.");
+                if (eventNames.isEmpty()) {
+                    Messenger.send(sender, "&eThere are currently no configured events.");
+                    return;
+                }
+
+                Messenger.send(sender, "&aConfigured events (&2" + eventNames.size() + "&a): &2" + String.join("&a, &2", eventNames));
                 return;
             }
+            case "delete" -> {
+                if (args.length < 3) {
+                    Messenger.send(sender, "&cUsage: /vc event delete <event-id>");
+                    return;
+                }
 
-            Messenger.send(sender, "&aConfigured events (&2" + eventNames.size() + "&a): &2" + String.join("&a, &2", eventNames));
-            return;
-        }
+                String eventId = args[2].toLowerCase(Locale.ROOT);
 
-        if (action.equals("delete")) {
-            if (args.length < 3) {
-                Messenger.send(sender, "&cUsage: /vc event delete <event-id>");
+                if (!isValidEventId(eventId)) {
+                    Messenger.send(sender, "&cInvalid event id. Use only letters, numbers, dashes and underscores.");
+                    return;
+                }
+
+                if (!plugin.getEventConfig().deleteEvent(eventId)) {
+                    Messenger.send(sender, "&cEvent '&4" + eventId + "&c' does not exist.");
+                    return;
+                }
+
+                Messenger.send(sender, "&aRemoved event &2" + eventId + "&a.");
                 return;
             }
+            case "create" -> {
+                if (args.length < 5) {
+                    Messenger.send(sender, "&cUsage: /vc event create <event-id> <month|any> <day> [display-name]");
+                    return;
+                }
 
-            String eventId = args[2].toLowerCase(Locale.ROOT);
+                String eventId = args[2].toLowerCase(Locale.ROOT);
 
-            if (!isValidEventId(eventId)) {
-                Messenger.send(sender, "&cInvalid event id. Use only letters, numbers, dashes and underscores.");
+                if (!isValidEventId(eventId)) {
+                    Messenger.send(sender, "&cInvalid event id. Use only letters, numbers, dashes and underscores.");
+                    return;
+                }
+
+                Optional<Month> monthOpt = plugin.getTimeConfig().getTimeSystem().getMonths().stream()
+                        .filter(month -> month.getName().equalsIgnoreCase(args[3]))
+                        .findFirst();
+
+                String month = args[3];
+
+                if (!month.equalsIgnoreCase("any") && !month.equalsIgnoreCase("all") && monthOpt.isEmpty()) {
+                    Messenger.send(sender, "&cUnknown month '&4" + args[3] + "&c'.");
+                    return;
+                }
+
+                if (monthOpt.isPresent()) {
+                    month = monthOpt.get().getName();
+                }
+
+                int day;
+
+                try {
+                    day = Integer.parseInt(args[4]);
+                } catch (NumberFormatException ex) {
+                    Messenger.send(sender, "&cDay must be a number.");
+                    return;
+                }
+
+                if (day <= 0) {
+                    Messenger.send(sender, "&cDay must be greater than 0.");
+                    return;
+                }
+
+                if (monthOpt.isPresent() && day > monthOpt.get().getDays()) {
+                    Messenger.send(sender, "&cDay '&4" + day + "&c' is out of range for month '&4" + monthOpt.get().getName() + "&c'.");
+                    return;
+                }
+
+                String displayName = "&a| &2" + eventId.replace('-', ' ').replace('_', ' ');
+
+                if (args.length > 5) {
+                    displayName = String.join(" ", java.util.Arrays.copyOfRange(args, 5, args.length));
+                }
+
+                if (!plugin.getEventConfig().createEvent(eventId, month, day, displayName)) {
+                    Messenger.send(sender, "&cEvent '&4" + eventId + "&c' already exists.");
+                    return;
+                }
+
+                Messenger.send(sender, "&aCreated event &2" + eventId + "&a for &2" + month + " day " + day + "&a.");
                 return;
             }
-
-            if (!plugin.getEventConfig().deleteEvent(eventId)) {
-                Messenger.send(sender, "&cEvent '&4" + eventId + "&c' does not exist.");
-                return;
-            }
-
-            Messenger.send(sender, "&aRemoved event &2" + eventId + "&a.");
-            return;
-        }
-
-        if (action.equals("create")) {
-            if (args.length < 5) {
-                Messenger.send(sender, "&cUsage: /vc event create <event-id> <month|any> <day> [display-name]");
-                return;
-            }
-
-            String eventId = args[2].toLowerCase(Locale.ROOT);
-
-            if (!isValidEventId(eventId)) {
-                Messenger.send(sender, "&cInvalid event id. Use only letters, numbers, dashes and underscores.");
-                return;
-            }
-
-            Optional<Month> monthOpt = plugin.getTimeConfig().getTimeSystem().getMonths().stream()
-                    .filter(month -> month.getName().equalsIgnoreCase(args[3]))
-                    .findFirst();
-
-            String month = args[3];
-
-            if (!month.equalsIgnoreCase("any") && !month.equalsIgnoreCase("all") && monthOpt.isEmpty()) {
-                Messenger.send(sender, "&cUnknown month '&4" + args[3] + "&c'.");
-                return;
-            }
-
-            if (monthOpt.isPresent()) {
-                month = monthOpt.get().getName();
-            }
-
-            int day;
-
-            try {
-                day = Integer.parseInt(args[4]);
-            } catch (NumberFormatException ex) {
-                Messenger.send(sender, "&cDay must be a number.");
-                return;
-            }
-
-            if (day <= 0) {
-                Messenger.send(sender, "&cDay must be greater than 0.");
-                return;
-            }
-
-            if (monthOpt.isPresent() && day > monthOpt.get().getDays()) {
-                Messenger.send(sender, "&cDay '&4" + day + "&c' is out of range for month '&4" + monthOpt.get().getName() + "&c'.");
-                return;
-            }
-
-            String displayName = "&a| &2" + eventId.replace('-', ' ').replace('_', ' ');
-
-            if (args.length > 5) {
-                displayName = String.join(" ", java.util.Arrays.copyOfRange(args, 5, args.length));
-            }
-
-            if (!plugin.getEventConfig().createEvent(eventId, month, day, displayName)) {
-                Messenger.send(sender, "&cEvent '&4" + eventId + "&c' already exists.");
-                return;
-            }
-
-            Messenger.send(sender, "&aCreated event &2" + eventId + "&a for &2" + month + " day " + day + "&a.");
-            return;
         }
 
         Messenger.send(sender, "&cUsage: /vc event <create|delete|list> ...");

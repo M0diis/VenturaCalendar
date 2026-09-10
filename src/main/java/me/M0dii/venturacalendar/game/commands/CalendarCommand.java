@@ -25,27 +25,25 @@ public class CalendarCommand {
             TimeSystem timeSystem = plugin.getTimeConfig().getTimeSystem();
 
             if (args.length == 0) {
-                if (!pl.hasPermission("venturacalendar.calendar")) {
+                if (!pl.hasPermission("venturacalendar.command.calendar")) {
                     Messenger.send(pl, Messages.NO_PERMISSION);
 
                     return;
                 }
 
-                String worldName = timeSystem.getWorldName();
-                World world = Bukkit.getWorld(worldName);
-
-                if (worldName.equalsIgnoreCase("current")) {
-                    world = pl.getWorld();
-                }
+                World world = plugin.getTimeSystemWorld(pl);
 
                 if (timeSystem.isRealTime()) {
                     RealTimeDate date = DateCalculator.realTimeNow();
 
                     RealTimeCalendar calendar = new RealTimeCalendar(date);
 
-                    pl.openInventory(calendar.getInventory());
+                    RealTimeCalendarOpenEvent openEvent = new RealTimeCalendarOpenEvent(calendar, calendar.getInventory(), pl);
+                    Bukkit.getPluginManager().callEvent(openEvent);
 
-                    Bukkit.getPluginManager().callEvent(new RealTimeCalendarOpenEvent(calendar, calendar.getInventory(), pl));
+                    if (!openEvent.isCancelled()) {
+                        pl.openInventory(calendar.getInventory());
+                    }
 
                     return;
                 } else if (world == null) {
@@ -66,15 +64,18 @@ public class CalendarCommand {
 
                 Calendar calendar = new Calendar(venturaCalendarDate, creationVenturaCalendarDate, plugin);
 
-                pl.openInventory(calendar.getInventory());
+                CalendarOpenEvent openEvent = new CalendarOpenEvent(calendar, calendar.getInventory(), pl);
+                Bukkit.getPluginManager().callEvent(openEvent);
 
-                Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
+                if (!openEvent.isCancelled()) {
+                    pl.openInventory(calendar.getInventory());
+                }
 
                 return;
             }
 
             if (args.length == 1 && args[0].equalsIgnoreCase("realtime")) {
-                if (!pl.hasPermission("venturacalendar.calendar.realtime")) {
+                if (!pl.hasPermission("venturacalendar.command.calendar.realtime")) {
                     Messenger.send(pl, Messages.NO_PERMISSION);
 
                     return;
@@ -84,22 +85,24 @@ public class CalendarCommand {
 
                 RealTimeCalendar calendar = new RealTimeCalendar(date);
 
-                pl.openInventory(calendar.getInventory());
+                RealTimeCalendarOpenEvent openEvent = new RealTimeCalendarOpenEvent(calendar, calendar.getInventory(), pl);
+                Bukkit.getPluginManager().callEvent(openEvent);
 
-                Bukkit.getPluginManager().callEvent(new RealTimeCalendarOpenEvent(calendar, calendar.getInventory(), pl));
+                if (!openEvent.isCancelled()) {
+                    pl.openInventory(calendar.getInventory());
+                }
 
                 return;
             }
 
             if (args.length == 1 && args[0].equalsIgnoreCase("game")) {
-                if (!pl.hasPermission("venturacalendar.calendar.game")) {
+                if (!pl.hasPermission("venturacalendar.command.calendar.game")) {
                     Messenger.send(pl, Messages.NO_PERMISSION);
 
                     return;
                 }
 
-                String worldName = timeSystem.getWorldName();
-                World world = Bukkit.getWorld(worldName);
+                World world = plugin.getTimeSystemWorld(pl);
 
                 if (world == null) {
                     Messenger.log(Messenger.Level.WARN, "World '" + timeSystem.getWorldName() + "' was not found.");
@@ -112,15 +115,18 @@ public class CalendarCommand {
 
                         return;
                     }
+                }
 
-                    VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
-                    VenturaCalendarDate creationVenturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+                VenturaCalendarDate creationVenturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
 
-                    Calendar calendar = new Calendar(venturaCalendarDate, creationVenturaCalendarDate, plugin);
+                Calendar calendar = new Calendar(venturaCalendarDate, creationVenturaCalendarDate, plugin);
 
+                CalendarOpenEvent openEvent = new CalendarOpenEvent(calendar, calendar.getInventory(), pl);
+                Bukkit.getPluginManager().callEvent(openEvent);
+
+                if (!openEvent.isCancelled()) {
                     pl.openInventory(calendar.getInventory());
-
-                    Bukkit.getPluginManager().callEvent(new CalendarOpenEvent(calendar, calendar.getInventory(), pl));
                 }
 
                 return;

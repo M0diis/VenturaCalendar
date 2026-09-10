@@ -16,7 +16,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
 import org.bstats.charts.MultiLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
+import org.bukkit.GameRules;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -26,14 +26,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class VenturaCalendar extends JavaPlugin implements Listener {
     private static final String SPIGOT_URL = "https://www.spigotmc.org/resources/99128/";
     public static boolean debug = false;
     public static String PREFIX;
-    static boolean newDay = false;
     @Getter
     private static VenturaCalendar instance;
     private Placeholders placeholders;
@@ -44,6 +48,8 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
     private EventConfig eventConfig;
     private BaseConfig baseConfig;
     private boolean papiEnabled = false;
+    private final Map<UUID, String> newDayWorldDates = new HashMap<>();
+    private final Set<BukkitRunnable> fastForwardTasks = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -75,22 +81,21 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
             return;
         }
 
-        World w = Bukkit.getWorld(timeSystem.getWorldName());
-
-        if (w == null) {
-            return;
-        }
-
-        w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, !getTimeConfig().getBoolean("main-time-system.real-time.sync"));
-
         Bukkit.getScheduler().runTaskTimer(this, () -> {
-            if (Boolean.FALSE.equals(getTimeConfig().getBoolean("main-time-system.real-time.sync"))) {
-                return;
-            }
-
+            boolean sync = Boolean.TRUE.equals(getTimeConfig().getBoolean("main-time-system.real-time.sync"));
             RealTimeDate now = DateCalculator.realTimeNow();
+            long time = Math.floorMod(
+                    (now.getHour() * 3600L) + (now.getMinute() * 60L) + now.getSecond() - (6L * 3600L),
+                    24L * 3600L
+            ) * 24000L / (24L * 3600L);
 
-            w.setTime(24000 - (now.getHour() * 1000 + now.getMinute() * 1000 / 60));
+            for (World world : getTimeSystemWorlds(timeSystem)) {
+                world.setGameRule(GameRules.ADVANCE_TIME, !sync);
+
+                if (sync) {
+                    world.setTime(time);
+                }
+            }
         }, 0L, 20L);
     }
 
@@ -107,7 +112,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
+        Bukkit.getScheduler().runTaskTimer(this, () ->
         {
             if (getBaseConfig().getActionBarMessage().isEmpty()) {
                 return;
@@ -127,18 +132,21 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
 
             TimeSystem timeSystem = getTimeConfig().getTimeSystem();
 
-            World world = Bukkit.getWorld(timeSystem.getWorldName());
-
             if (timeSystem.isRealTime()) {
                 RealTimeDate realTime = DateCalculator.realTimeNow();
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), realTime, p));
                 }
-            } else if (world != null) {
-                VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
-
+            } else {
                 for (Player p : Bukkit.getOnlinePlayers()) {
+                    World world = getTimeSystemWorld(p);
+
+                    if (world == null) {
+                        continue;
+                    }
+
+                    VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
                     p.sendActionBar(Utils.setPlaceholders(msgOpt.get(), venturaCalendarDate, p));
                 }
             }
@@ -148,7 +156,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
     private void checkForUpdates() {
         new UpdateChecker(this, 99128).getVersion(ver ->
         {
-            String curr = this.getDescription().getVersion();
+            String curr = this.getPluginMeta().getVersion();
 
             if (!curr.equalsIgnoreCase(ver)) {
                 getLogger().info("You are running an outdated version of VenturaCalendar.");
@@ -176,30 +184,27 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
     }
 
     private void newDayCheckTimer() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () ->
+        Bukkit.getScheduler().runTaskTimer(this, () ->
         {
             TimeSystem ts = getTimeConfig().getTimeSystem();
 
-            World w = Bukkit.getWorld(ts.getWorldName());
+            Set<UUID> configuredWorlds = new HashSet<>();
 
-            if (w != null && w.getTime() >= 0 && w.getTime() <= 200 && !newDay) {
-                newDay = true;
+            for (World world : getTimeSystemWorlds(ts)) {
+                configuredWorlds.add(world.getUID());
 
-                Bukkit.getScheduler().runTask(this, () -> {
-                    World world = Bukkit.getWorld(ts.getWorldName());
+                VenturaCalendarDate date = DateCalculator.fromTicks(world.getFullTime(), ts);
+                String dateKey = ts.isRealTime()
+                        ? "real:" + DateCalculator.realTimeNow().getLocalDateTime().toLocalDate()
+                        : date.getYear() + ":" + date.getMonth() + ":" + date.getDay();
+                String previousDateKey = newDayWorldDates.put(world.getUID(), dateKey);
 
-                    if (world == null) {
-                        Messenger.log(Messenger.Level.ERROR, "World '" + ts.getWorldName() + "' not found for new day event.");
-                        return;
-                    }
-
-                    Bukkit.getPluginManager().callEvent(new NewDayEvent(ts, world, DateCalculator.fromTicks(world.getFullTime(), ts)));
-                });
+                if (previousDateKey != null && !previousDateKey.equals(dateKey)) {
+                    Bukkit.getPluginManager().callEvent(new NewDayEvent(ts, world, date));
+                }
             }
 
-            if (w != null && w.getTime() > 200) {
-                newDay = false;
-            }
+            newDayWorldDates.keySet().retainAll(configuredWorlds);
 
         }, 0L, 90L);
     }
@@ -227,7 +232,7 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
     private void registerCommands() {
         CmdExecutor commandCaller = new CmdExecutor(this);
 
-        for (String cmd : Arrays.asList("calendar", "date", "venturacalendar")) {
+        for (String cmd : Arrays.asList("calendar", "venturacalendar")) {
             PluginCommand pcmd = getCommand(cmd);
 
             if (pcmd != null)
@@ -251,9 +256,11 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
 
         Plugin pAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
 
-        if (pAPI != null && pAPI.isEnabled()) {
+        if (pAPI != null && pAPI.isEnabled() && placeholders != null) {
             placeholders.unregister();
         }
+
+        cancelFastForwardTasks();
 
         getLogger().info("VenturaCalendar has been disabled.");
     }
@@ -307,5 +314,55 @@ public class VenturaCalendar extends JavaPlugin implements Listener {
         }
 
         return eventConfig;
+    }
+
+    public World getTimeSystemWorld(Player player) {
+        TimeSystem timeSystem = getTimeConfig().getTimeSystem();
+        String worldName = timeSystem.getWorldName();
+
+        if (worldName != null && worldName.equalsIgnoreCase("current")) {
+            return player == null ? null : player.getWorld();
+        }
+
+        return worldName == null ? null : Bukkit.getWorld(worldName);
+    }
+
+    private List<World> getTimeSystemWorlds(TimeSystem timeSystem) {
+        if (timeSystem.getWorldName() != null && timeSystem.getWorldName().equalsIgnoreCase("current")) {
+            return Bukkit.getWorlds();
+        }
+
+        World world = timeSystem.getWorldName() == null ? null : Bukkit.getWorld(timeSystem.getWorldName());
+        return world == null ? List.of() : List.of(world);
+    }
+
+    public String getRewardDateKey(Player player) {
+        TimeSystem timeSystem = getTimeConfig().getTimeSystem();
+
+        if (timeSystem.isRealTime()) {
+            return "real:" + DateCalculator.realTimeNow().getLocalDateTime().toLocalDate();
+        }
+
+        World world = getTimeSystemWorld(player);
+
+        if (world == null) {
+            return null;
+        }
+
+        VenturaCalendarDate date = DateCalculator.fromTicks(world.getFullTime(), timeSystem);
+        return "game:" + world.getUID() + ":" + date.getYear() + ":" + date.getMonth() + ":" + date.getDay();
+    }
+
+    public void trackFastForwardTask(BukkitRunnable task) {
+        fastForwardTasks.add(task);
+    }
+
+    public void untrackFastForwardTask(BukkitRunnable task) {
+        fastForwardTasks.remove(task);
+    }
+
+    public void cancelFastForwardTasks() {
+        fastForwardTasks.forEach(BukkitRunnable::cancel);
+        fastForwardTasks.clear();
     }
 }

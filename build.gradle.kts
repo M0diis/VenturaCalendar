@@ -1,10 +1,10 @@
 plugins {
     java
-    id("com.gradleup.shadow") version "8.3.5"
+    id("com.gradleup.shadow") version "8.3.10"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
-group = "me.M0dii"
+group = "me.m0dii"
 version = "2.6.6"
 
 tasks.shadowJar {
@@ -37,15 +37,17 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-    compileOnly("org.projectlombok:lombok:1.18.30")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.123-stable")
+    compileOnly("org.projectlombok:lombok:1.18.48")
 
     // compileOnly("org.spigotmc:spigot:1.19.2-R0.1-SNAPSHOT") // Only local
     // compileOnly("com.arcaniax:HeadDatabase-API:1.3.1")
     compileOnly("me.clip:placeholderapi:2.11.6")
     implementation("org.bstats:bstats-bukkit:2.2.1")
     implementation("com.github.cryptomorin:XSeries:8.6.1")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    testImplementation("junit:junit:4.13.2")
+    testRuntimeOnly("io.papermc.paper:paper-api:26.2.build.123-stable")
+    annotationProcessor("org.projectlombok:lombok:1.18.48")
     // https://github.com/PlaceholderAPI/PlaceholderAPI
 }
 
@@ -55,7 +57,7 @@ tasks.compileJava {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
@@ -65,6 +67,6 @@ tasks {
             modrinth("viaversion", "5.5.0-SNAPSHOT+793")
             modrinth("viabackwards", "5.4.2")
         }
-        minecraftVersion("1.21.8")
+        minecraftVersion("26.2")
     }
 }

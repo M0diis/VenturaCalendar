@@ -37,6 +37,7 @@ public class TimeSystem {
     private final List<Month> months;
     private final List<String> dayNames;
     private final List<String> eraNames;
+    @Builder.Default
     private boolean realTime = false;
 
     public static TimeSystem of(TimeSystem timeSystem) {
@@ -76,7 +77,10 @@ public class TimeSystem {
     }
 
     public Month getMonth(@NotNull String name) {
-        return months.stream().filter(month -> month.getName().equals(name)).findFirst().orElse(null);
+        return months.stream()
+                .filter(month -> month.getName().equalsIgnoreCase(name.trim()))
+                .findFirst()
+                .orElse(null);
 
     }
 

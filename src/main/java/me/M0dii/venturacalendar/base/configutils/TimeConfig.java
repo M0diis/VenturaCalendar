@@ -52,31 +52,35 @@ public class TimeConfig extends Config implements ConfigUtils {
         String path = "main-time-system.";
         String worldName = getString(path + "world-name");
 
+        if (worldName.isBlank()) {
+            worldName = "world";
+        }
+
         boolean realTime = getBoolean(path + "real-time.enabled");
 
         // Tick
         long tickZero = 0;
 
         // Second
-        long ticksPerSecond = getLong(path + "ticks-per-second");
+        long ticksPerSecond = positive(path + "ticks-per-second", 20L);
         long secondZero = 0;
 
         // Minute
-        long secondsPerMinute = getLong(path + "seconds-per-minute");
+        long secondsPerMinute = positive(path + "seconds-per-minute", 60L);
         long minuteZero = 0;
 
         // Hour
-        long minutesPerHour = getLong(path + "minutes-per-hour");
+        long minutesPerHour = positive(path + "minutes-per-hour", 60L);
         long hourZero = 1;
 
         // Day
-        long hoursPerDay = getLong(path + "hours-per-day");
+        long hoursPerDay = positive(path + "hours-per-day", 24L);
         long dayZero = getLong(path + "day-offset");
 
         List<String> dayNames = getListString(path + "days");
 
         // Week
-        long daysPerWeek = getLong(path + "days-per-week");
+        long daysPerWeek = positive(path + "days-per-week", 7L);
         long weekZero = getLong(path + "week-offset");
 
         // Month
@@ -84,11 +88,29 @@ public class TimeConfig extends Config implements ConfigUtils {
         List<Long> monthDays = new ArrayList<>();
 
         for (String month : getListString(path + "months")) {
-            String[] split = month.split(", ");
+            String[] split = month.split(",", -1);
+
+            if (split.length != 3) {
+                plugin.getLogger().warning("Invalid month format: " + month);
+                plugin.getLogger().warning("Expected format: 'Month Name, Days, Season Name'.");
+                continue;
+            }
 
             String monthName = split[0].trim();
-            long monthDaysCount = Long.parseLong(split[1].trim());
+            long monthDaysCount;
             String seasonName = split[2].trim();
+
+            try {
+                monthDaysCount = Long.parseLong(split[1].trim());
+            } catch (NumberFormatException ex) {
+                plugin.getLogger().warning("Invalid month day count: " + month);
+                continue;
+            }
+
+            if (monthName.isEmpty() || monthDaysCount <= 0) {
+                plugin.getLogger().warning("Invalid month definition: " + month);
+                continue;
+            }
 
             Month m = new Month(monthName, monthDaysCount, seasonName);
 
@@ -97,10 +119,19 @@ public class TimeConfig extends Config implements ConfigUtils {
             months.add(m);
         }
 
+        if (months.isEmpty()) {
+            throw new IllegalArgumentException("At least one valid month must be configured.");
+        }
+
         long monthZero = getLong(path + "month-offset");
 
         // Year
-        long monthsPerYear = getLong(path + "months-per-year");
+        long monthsPerYear = positive(path + "months-per-year", months.size());
+
+        if (monthsPerYear != months.size()) {
+            plugin.getLogger().warning("months-per-year does not match the configured month list; using " + months.size() + ".");
+            monthsPerYear = months.size();
+        }
         long yearZero = getLong(path + "starting-year");
 
         // Era
@@ -109,11 +140,30 @@ public class TimeConfig extends Config implements ConfigUtils {
         List<Long> erasEnd = new ArrayList<>();
 
         for (String era : getListString(path + "eras")) {
-            String[] split = era.split(", ");
+            String[] split = era.split(",", -1);
+
+            if (split.length != 3) {
+                plugin.getLogger().warning("Invalid era format: " + era);
+                plugin.getLogger().warning("Expected format: 'Era Name, Begin Year, End Year'.");
+                continue;
+            }
 
             String eraName = split[0].trim();
-            long eraBegin = Long.parseLong(split[1].trim());
-            long eraEnd = Long.parseLong(split[2].trim());
+            long eraBegin;
+            long eraEnd;
+
+            try {
+                eraBegin = Long.parseLong(split[1].trim());
+                eraEnd = Long.parseLong(split[2].trim());
+            } catch (NumberFormatException ex) {
+                plugin.getLogger().warning("Invalid era years: " + era);
+                continue;
+            }
+
+            if (eraName.isEmpty() || eraEnd < eraBegin) {
+                plugin.getLogger().warning("Invalid era definition: " + era);
+                continue;
+            }
 
             eraNames.add(eraName);
             erasBegin.add(eraBegin);
@@ -151,6 +201,17 @@ public class TimeConfig extends Config implements ConfigUtils {
         ts.setRealTime(realTime);
 
         return ts;
+    }
+
+    private long positive(String path, long fallback) {
+        long value = getLong(path);
+
+        if (value > 0) {
+            return value;
+        }
+
+        plugin.getLogger().warning("Invalid or missing value for '" + path + "'; using " + fallback + ".");
+        return fallback;
     }
 
     @Override

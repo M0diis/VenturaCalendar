@@ -1,0 +1,188 @@
+[CENTER][URL='https://github.com/M0diis/VenturaCalendar'][IMG]https://raw.githubusercontent.com/M0diis/M0-Development/main/github_small.png[/IMG][/URL]
+[URL='https://discord.gg/ZSzJTSWxmv'][IMG]https://raw.githubusercontent.com/M0diis/M0-Development/main/Discord%20Assets/discord_v2.png[/IMG][/URL]
+[SIZE=6][COLOR=#b30000][FONT=Book Antiqua][B]From version 1.6.0+[/B][/FONT][/COLOR][/SIZE]
+[B][FONT=Book Antiqua][SIZE=6][COLOR=#b30000]you need to have Java 25 installed.[/COLOR][/SIZE]
+[/FONT][/B]
+[ATTACH=full]677661[/ATTACH]
+[/CENTER]
+[FONT=Book Antiqua][SIZE=5]Minecraft Calendar continuation of the old [URL='https://www.spigotmc.org/resources/thetime-the-custom-calendar.25146/']TheTime[/URL] plugin.
+
+The plugin is now paid for the people who want to support me and get something in return as well.
+
+The original plugin will stay free but will not be updated.
+
+If you wish to try out the plugin before buying, you can find the resource here:
+[URL='https://www.spigotmc.org/resources/venturacalendar-your-own-custom-calendar-1-13-1-18.94096/']VenturaCalendar | Your own custom calendar [1.13 - 1.18][/URL][/SIZE][/FONT]
+
+[CENTER][IMG]https://i.imgur.com/TN49lsh.png[/IMG]
+
+[IMG]https://i.imgur.com/Jsbz4ga.png[/IMG]
+[/CENTER]
+
+[CENTER][ATTACH=full]677666[/ATTACH][/CENTER]
+[LEFT][/LEFT]
+[LIST]
+[*][FONT=Book Antiqua][SIZE=5]Fully customizable events that take place on specified days, months;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Time synchronization (noon real-time - noon in-game);[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Highly customizable, simple & easy to use;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Time manipulation via commands;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]New day messages, titles, subtitles;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Simple configuration;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Custom placeholders;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]PlaceholderAPI support;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Daily rewards;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Configurable reward months and days;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Console and player sending commands for rewards;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Various actions additionally to command sending;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Automatic command execution on events or new days;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]Option to use real world time and have real-time calendar;[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=5]HEX color support;[/SIZE][/FONT]
+[/LIST]
+[CENTER][ATTACH=full]677665[/ATTACH][/CENTER]
+[LEFT]
+[FONT=Book Antiqua][SIZE=4]Base command & reload:[/SIZE]
+[FONT=Book Antiqua][SIZE=4][B]/venturacalendar reload[/B]
+
+Time manipulation:
+[B]/venturacalendar <add/subtract><sec/min/h/d/weeks> <amount>[/B]
+
+Set starting year without editing config:
+[B]/venturacalendar set startyear <year>[/B]
+
+Set the starting date in the config. (resets the world time)
+[B]/venturacalendar set date <YYYY/MM/DD>[/B]
+
+Calendar GUI command:
+[B]/calendar[/B]
+[/SIZE][/FONT]
+[SIZE=4]Real-time calendar:
+[B]/calendar realtime[/B][/SIZE][/FONT]
+
+[/LEFT]
+[CENTER][ATTACH=full]677664[/ATTACH][/CENTER]
+[LEFT]
+Permission to the base command:
+[FONT=Book Antiqua][B]venturacalendar.command.venturacalendar[/B]
+
+Permission to the reload the config:
+[B]venturacalendar.command.reload:[/B]
+
+Permission to open the calendar:
+[B]venturacalendar.command.calendar[/B]
+
+Permission to manipulate time using add/subtract/set:
+[B]venturacalendar.command.changetime[/B]
+
+[FONT=Book Antiqua]Permission to open real-time calendar:[/FONT]
+[B][FONT=Book Antiqua][B]venturacalendar.command.calendar.realtime[/B][/FONT][/B]
+
+
+You can find more information in the wiki:
+[URL='https://github.com/M0diis/VenturaCalendar/wiki/Usage']Usage · M0diis/VenturaCalendar Wiki (github.com)[/URL]
+ [/FONT][/LEFT]
+[CENTER][ATTACH=full]677663[/ATTACH][/CENTER]
+
+[FONT=Book Antiqua]There are multiple configuration files, most of the configuration is self explanatory and does not require a lot of understandment.
+
+To setup the a Time System you should first understand what it does.
+The Time System will be used to calculate the date, it provides information about the length of the different time units like seconds, minutes, hours, etc.
+
+It also provides information about your eras and about the different names of the days and months, so it's the most important part of the configuration.[/FONT]
+
+[FONT=Book Antiqua]For more information on configuration, go to VenturaCalendar Github wiki page:
+[B][URL='https://github.com/M0diis/VenturaCalendar/wiki/Configuration']Configuration · M0diis/VenturaCalendar Wiki (github.com)[/URL] [/B][/FONT]
+
+
+[CENTER][ATTACH=full]677662[/ATTACH][/CENTER]
+
+[B][URL='https://www.spigotmc.org/resources/placeholderapi.6245/']PlaceholderAPI | [/URL]Optional[/B]
+
+[CENTER][ATTACH=full]677667[/ATTACH][/CENTER]
+
+[FONT=Book Antiqua][B]You can use the following placeholders with PlaceholderAPI:[/B][/FONT]
+[LIST]
+[*][FONT=Book Antiqua]%venturacalendar_month_<month-name>_season%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_month_<month-name>_days%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_event_<event-config-name>_start%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_event_<event-config-name>_end%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_event_<event-config-name>_description%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_newday_message%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_actionbar_message%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_date_event_name%[/FONT]
+[*][FONT=Book Antiqua]%venturacalendar_date_event_description%[/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_tick%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_second%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_minute%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_hour%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_day%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_day_name%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_dayofweek%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_week%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_month%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_month_name%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_season_name%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_year%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_era%[/SIZE][/FONT]
+[*][FONT=Book Antiqua][SIZE=4]%venturacalendar_date_era_name[/SIZE]%[/FONT]
+[/LIST]
+[FONT=Book Antiqua]
+[ATTACH=full]679502[/ATTACH]
+
+The plugin currently has several events that are dispatched.
+You can find some examples below. The rest is on github wiki.
+[URL='https://github.com/M0diis/VenturaCalendar/wiki/API']API · M0diis/VenturaCalendar Wiki (github.com)[/URL]
+
+[B]MonthEventDayEvent[/B]
+Event is called when the new day (at 00:00) has some event scheduled on it.
+[code=Java]
+ @EventHandler
+ public void onEventDay(MonthEventDayEvent event)
+ {
+    MonthEvent event = event.getMonthEvent();
+ }
+[/code]
+
+[B]NewDayEvent[/B]
+Event is called on every new day. (at 00:00)
+[FONT=Book Antiqua][code=Java]
+@EventHandler
+public void onNewDay(NewDayEvent event)
+{
+    TimeSystem timeSystem = event.getTimeSystem();
+}
+[/code]
+[/FONT]
+[B]CalendarClickEvent [/B]
+Event is called when player clicks on an item in the GUI.
+[FONT=Book Antiqua][code=Java]
+@EventHandler
+public void onCalendarClick(CalendarClickEvent event)
+{
+    Player player = event.getPlayer();
+    ItemStack item = event.getItem();
+    Calendar calendar = event.getCalendar(); // The GUI itself
+}
+[/code][/FONT][/FONT]
+
+[ATTACH=full]679503[/ATTACH]
+
+[FONT=Book Antiqua]VenturaCalendar collects anonymous server statistics through [B]bStats[/B], an open-source statistics service for Minecraft software.[/FONT]
+[IMG]https://bstats.org/signatures/bukkit/VenturaCalendar.svg[/IMG]
+[FONT=Book Antiqua]If you'd like to disable metrics collection via bStats, you can edit the /plugins/bStats/config.yml file.
+
+[FONT=Book Antiqua][SIZE=5]Check out my other plugins:[/SIZE][/FONT][/FONT]
+[LIST]
+[*][FONT=Book Antiqua][B]OnlinePlayersGUI[/B][/FONT]
+[URL='https://www.spigotmc.org/resources/m0-onlineplayersgui.86813/'][FONT=Book Antiqua]https://www.spigotmc.org/resources/m0-onlineplayersgui.86813/[/FONT][/URL]
+[*][B][FONT=Book Antiqua]CoreCord[/FONT][/B]
+[FONT=Book Antiqua][URL]https://www.spigotmc.org/resources/m0-corecord-1-13-1-17.91863/[/URL][/FONT]
+[*][FONT=Book Antiqua][B]AntiAnvilRename[/B][/FONT]
+[URL='https://www.spigotmc.org/resources/m0-antianvilrename.86811/'][FONT=Book Antiqua]https://www.spigotmc.org/resources/m0-antianvilrename.86811/[/FONT][/URL]
+[/LIST]
+
+[FONT=Book Antiqua][B]You can find all of them here:[/B]
+[FONT=Book Antiqua][URL='https://www.spigotmc.org/resources/authors/m0dii.450794/']Resources from M0dii[/URL][/FONT]
+
+[FONT=Book Antiqua]If you're feeling generous and enjoy my plugins - you can support my work here:
+- PayPal: [URL]https://www.paypal.com/paypalme/ModestasKazlauskas[/URL]
+- Ko-fi: [URL]https://ko-fi.com/m0dii[/URL][/FONT][/FONT]

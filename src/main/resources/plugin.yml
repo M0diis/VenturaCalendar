@@ -2,13 +2,13 @@ name: VenturaCalendar
 main: me.m0dii.venturacalendar.VenturaCalendar
 description: VenturaCalendar by M0dii
 version: ${version}
-api-version: 1.13
+api-version: '26.2'
 author: M0dii
 softdepend: [PlaceholderAPI]
 commands:
   venturacalendar:
     description: Base command
-    permission: venturacalendar.command.vc
+    permission: venturacalendar.command.venturacalendar
     usage: /<command>
     aliases: [venturacal, vc]
   calendar:
@@ -22,6 +22,10 @@ permissions:
     default: op
   venturacalendar.command.changetime:
     description: Permission to add/subtract time, set starting year.
+    default: op
+  venturacalendar.command.help:
+    description: Permission to view command help.
+    default: op
   venturacalendar.command.reload:
     description: Permission to reload the plugin.
     default: op
@@ -30,3 +34,13 @@ permissions:
     default: op
   venturacalendar.command.calendar:
     description: Permission to use the calendar command.
+    default: op
+  venturacalendar.command.calendar.realtime:
+    description: Permission to open the real-time calendar.
+    default: op
+  venturacalendar.command.calendar.game:
+    description: Permission to open the game-time calendar.
+    default: op
+  venturacalendar.command.fastforward:
+    description: Permission to fast-forward or rewind time.
+    default: op

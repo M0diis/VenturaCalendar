@@ -7,29 +7,34 @@ import me.m0dii.venturacalendar.base.events.NewDayEvent;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import me.m0dii.venturacalendar.game.config.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import org.bukkit.persistence.PersistentDataType;
 
 public class NewDayListener implements Listener {
-    private static final List<UUID> redeemed = new ArrayList<>();
     private final VenturaCalendar plugin;
 
     public NewDayListener(VenturaCalendar plugin) {
         this.plugin = plugin;
     }
 
-    public static boolean redeem(UUID uuid) {
-        if (redeemed.contains(uuid)) {
+    public static boolean redeem(Player player, VenturaCalendar plugin) {
+        String dateKey = plugin.getRewardDateKey(player);
+        if (dateKey == null) {
             return false;
         }
 
-        redeemed.add(uuid);
+        NamespacedKey key = new NamespacedKey(plugin, "daily_reward_date");
+        String previousDate = player.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+
+        if (dateKey.equals(previousDate)) {
+            return false;
+        }
+
+        player.getPersistentDataContainer().set(key, PersistentDataType.STRING, dateKey);
 
         return true;
     }
@@ -41,35 +46,34 @@ public class NewDayListener implements Listener {
         }
 
         TimeSystem ts = e.getTimeSystem();
-
-        World w = Bukkit.getWorld(ts.getWorldName());
+        World w = e.getWorld();
 
         if (w == null) {
             return;
         }
 
-        VenturaCalendarDate venturaCalendarDate = DateCalculator.fromTicks(w.getFullTime(), ts);
+        VenturaCalendarDate venturaCalendarDate = e.getDate();
         RealTimeDate realTimeDate = DateCalculator.realTimeNow();
-
-        if (plugin.getBaseConfig().rewardsEnabled()) {
-            redeemed.clear();
-        }
 
         if (ts.isRealTime()) {
             for (MonthEvent event : plugin.getEventConfig().getEvents()) {
                 if (event.includesDate(realTimeDate)) {
-                    Bukkit.getPluginManager().callEvent(new MonthEventDayEvent(ts, event));
+                    Bukkit.getPluginManager().callEvent(new MonthEventDayEvent(ts, w, event));
                 }
             }
         } else {
             for (MonthEvent event : plugin.getEventConfig().getEvents()) {
                 if (event.includesDate(venturaCalendarDate)) {
-                    Bukkit.getPluginManager().callEvent(new MonthEventDayEvent(ts, event));
+                    Bukkit.getPluginManager().callEvent(new MonthEventDayEvent(ts, w, event));
                 }
             }
         }
 
         for (Player p : Bukkit.getOnlinePlayers()) {
+            if ("current".equalsIgnoreCase(ts.getWorldName()) && !p.getWorld().equals(w)) {
+                continue;
+            }
+
             for (String cmd : plugin.getBaseConfig().getNewDayCommands()) {
                 Utils.sendCommand(p, cmd);
             }

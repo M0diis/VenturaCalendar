@@ -8,6 +8,7 @@ import me.m0dii.venturacalendar.base.itemutils.ItemProperties;
 import me.m0dii.venturacalendar.base.itemutils.Items;
 import me.m0dii.venturacalendar.base.utils.Utils;
 import me.m0dii.venturacalendar.game.gui.InventoryProperties;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -80,11 +81,17 @@ public class CalendarConfig extends Config implements ConfigUtils {
 
         String matName = config.getString(path + "material", "WHITE_STAINED_GLASS_PANE");
 
-        if (matName.contains("player_skull=")) {
-            String uuid = matName.replace("player_skull=", "");
+        if (matName.toLowerCase().startsWith("player_skull=")
+                || matName.toLowerCase().startsWith("player_head=")) {
+            String uuid = matName.substring(matName.indexOf('=') + 1).trim();
+            itemProperties.put(ItemProperties.MATERIAL, Material.PLAYER_HEAD);
 
-//			itemProperties.put(ItemProperties.MATERIAL, Material.PLAYER_HEAD);
-//			itemProperties.put(ItemProperties.META_SKULL_OWNER, uuid);
+            try {
+                java.util.UUID.fromString(uuid);
+                itemProperties.put(ItemProperties.META_SKULL_OWNER, uuid);
+            } catch (IllegalArgumentException ex) {
+                plugin.getLogger().warning("Invalid player head UUID in calendar item: " + uuid);
+            }
         } else {
             itemProperties.put(ItemProperties.MATERIAL, Utils.getMaterial(matName));
         }
@@ -123,7 +130,7 @@ public class CalendarConfig extends Config implements ConfigUtils {
 
     @Override
     public Long getLong(String path) {
-        return Long.valueOf(config.getString(path, "0"));
+        return config.getLong(path, 0L);
     }
 
     @Override

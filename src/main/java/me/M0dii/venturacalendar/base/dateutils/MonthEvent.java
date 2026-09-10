@@ -51,7 +51,8 @@ public class MonthEvent {
 
         boolean includesDay = !hasFromTo() || includesDay((int) venturaCalendarDate.getDay() + 1);
 
-        boolean includesYear = this.year == -1 || this.year == venturaCalendarDate.getYear();
+        long displayYear = venturaCalendarDate.getYear() + venturaCalendarDate.getTimeSystem().getYearZero();
+        boolean includesYear = this.year == -1 || this.year == displayYear;
 
         boolean includesDayName = this.dayNames.isEmpty() || this.dayNames.stream()
                 .anyMatch(dayName -> dayName.equalsIgnoreCase(venturaCalendarDate.getDayName()));

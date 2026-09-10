@@ -3,6 +3,7 @@ package me.m0dii.venturacalendar.base.events;
 import lombok.Getter;
 import me.m0dii.venturacalendar.base.dateutils.MonthEvent;
 import me.m0dii.venturacalendar.base.dateutils.TimeSystem;
+import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,10 +14,16 @@ public class MonthEventDayEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private final TimeSystem timeSystem;
     private final MonthEvent monthEvent;
+    private final World world;
     private boolean isCancelled;
 
     public MonthEventDayEvent(TimeSystem timeSystem, MonthEvent monthEvent) {
+        this(timeSystem, null, monthEvent);
+    }
+
+    public MonthEventDayEvent(TimeSystem timeSystem, World world, MonthEvent monthEvent) {
         this.timeSystem = timeSystem;
+        this.world = world;
         this.monthEvent = monthEvent;
     }
 
